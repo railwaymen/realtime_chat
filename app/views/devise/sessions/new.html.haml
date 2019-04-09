@@ -1,0 +1,12 @@
+%body.text-center
+  = form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'form-signin' }) do |f|
+    %h1.h3.mb-3.font-weight-normal Please sign in
+    %label.sr-only{:for => "inputEmail"} Email address
+    = f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: 'Email address'
+    %label.sr-only{:for => "inputPassword"} Password
+    = f.password_field :password, autocomplete: "current-password", class: 'form-control', placeholder: 'Password'
+    .checkbox.mb-3
+      %label
+        = f.check_box :remember_me
+        Remember me
+    %button.btn.btn-lg.btn-primary.btn-block{:type => "submit"} Sign in
