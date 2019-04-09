@@ -13,6 +13,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'haml-rails'
 gem 'bootstrap', '~> 4.3.1'
+gem 'jquery-rails'
 gem 'jwt', '~> 2.1.0'
 
 group :development, :test do

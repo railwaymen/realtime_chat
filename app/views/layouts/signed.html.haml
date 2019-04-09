@@ -9,7 +9,6 @@
     = javascript_include_tag 'application'
   %body
     .container
-      = link_to 'Logout', destroy_user_session_path, class: 'btn btn-outline-danger', method: :delete
       .row
         .col-12
           = yield
