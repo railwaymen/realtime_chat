@@ -11,4 +11,7 @@
     .container
       .row
         .col-12
-          = yield
+          = render partial: 'shared/navbar'
+          .my-3
+            = yield
+    

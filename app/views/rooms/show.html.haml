@@ -1,0 +1,25 @@
+%h1
+  = @room.name
+.row
+  .col-12.col-md-3
+    = render partial: 'rooms'
+  .col
+    .chat
+      - @room.room_messages.each do |room_message|
+        .chat-message-container
+          .row.no-gutters
+            .col-auto.text-center
+              = room_message.user.username
+            .col
+              .message-content
+                %p.mb-1
+                  = room_message.message
+                .text-right
+                  %small
+                    = room_message.created_at
+    = form_for @room_message, remote: true do |f|
+      .input-group.mb-3
+        = f.text_field :message, as: :string, wrapper: false, label: false, class: 'form-control'
+        .input-group-append
+          = f.submit "Send", class: 'btn btn-primary chat-input'
+      = f.hidden_field :room_id, as: :hidden
