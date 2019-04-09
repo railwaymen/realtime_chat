@@ -1,0 +1,86 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Realtime Chat"
+host: <%= request.host_with_port %>
+basePath: "/api/v1"
+responses:
+  401:
+    description: Invalid or expired token
+  404:
+    description: Record or page not found
+securityDefinitions:
+  User:
+    type: apiKey
+    name: Token
+    in: header
+
+paths:
+  /authentications:
+    post:
+      tags:
+        - Authentication
+      parameters:
+        - in: formData
+          name: email
+          required: true
+          type: string
+          default: user1@example.com
+        - in: formData
+          name: password
+          required: true
+          type: string
+          default: password
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer              
+              email:
+                type: string
+              authentication_token:
+                type: string
+              refresh_token:
+                type: string
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                base:
+                  -
+                    error: email_or_password_invalid
+                email:
+                  - 
+                    error: blank
+                password:
+                  - 
+                    error: blank
+  /authentications/refresh:
+    post:
+      tags:
+        - Authentication
+      security:
+        - User: []
+      parameters:
+        - in: "formData"
+          name: "token"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              authentication_token:
+                type: string
+        401:
+          description: Invalid refresh token
