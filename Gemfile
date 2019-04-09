@@ -15,6 +15,8 @@ gem 'haml-rails'
 gem 'bootstrap', '~> 4.3.1'
 gem 'jquery-rails'
 gem 'jwt', '~> 2.1.0'
+gem 'redis'
+gem 'lodash-rails'
 
 group :development, :test do
   gem 'better_errors'
