@@ -17,6 +17,5 @@ module RealtimeChat
     # the framework and any gems in your application.
 
     config.action_cable.disable_request_forgery_protection = true
-
   end
 end

@@ -22,3 +22,22 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+
+Install go lang
+
+sudo apt-get install golang-go
+
+Install anycable-go
+
+go get -u -f github.com/anycable/anycable-go/cmd/anycable-go
+go install github.com/anycable/anycable-go/cmd/anycable-go
+
+Run anycable-go websocket
+
+~/go/bin/anycable-go
+
+
+Run anycable
+
+bundle exec anycable
