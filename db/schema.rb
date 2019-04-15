@@ -12,9 +12,12 @@
 
 ActiveRecord::Schema.define(version: 2019_04_09_114133) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "room_messages", force: :cascade do |t|
-    t.integer "room_id"
-    t.integer "user_id"
+    t.bigint "room_id"
+    t.bigint "user_id"
     t.text "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -44,4 +47,6 @@ ActiveRecord::Schema.define(version: 2019_04_09_114133) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "room_messages", "rooms"
+  add_foreign_key "room_messages", "users"
 end
