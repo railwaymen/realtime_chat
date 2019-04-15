@@ -1,0 +1,14 @@
+variables:
+  RAILS_ENV: test
+
+before_script:
+  - cp .env.example .env
+  - bundle install --path=/home/gitlab-runner/builds/shared/${CI_PROJECT_NAME}/gems
+  - yarn install
+
+staging:
+  stage: deploy
+  only:
+    - master
+  script:
+    - bundle exec cap staging deploy
