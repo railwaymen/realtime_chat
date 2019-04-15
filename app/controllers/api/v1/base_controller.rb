@@ -5,7 +5,7 @@ module Api
     class BaseController < ApplicationController
       self.responder = ApiResponder
       respond_to :json
-      protect_from_forgery with: :null_session
+      skip_before_action :verify_authenticity_token
     end
   end
 end
