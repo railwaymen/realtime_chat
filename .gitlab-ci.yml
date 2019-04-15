@@ -9,6 +9,6 @@ before_script:
 staging:
   stage: deploy
   only:
-    - master
+    - foreman
   script:
     - bundle exec cap staging deploy
