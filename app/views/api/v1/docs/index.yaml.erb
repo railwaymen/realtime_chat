@@ -55,14 +55,11 @@ paths:
             example:
               errors:
                 base:
-                  -
-                    error: email_or_password_invalid
+                  - error: email_or_password_invalid
                 email:
-                  - 
-                    error: blank
+                  - error: blank
                 password:
-                  - 
-                    error: blank
+                  - error: blank
   /authentications/refresh:
     post:
       tags:
@@ -84,3 +81,101 @@ paths:
                 type: string
         401:
           description: Invalid refresh token
+  /rooms:
+    get:
+      tags:
+        - Chat
+      security:
+        - User: []
+      responses:
+        200:
+          description: OK
+          schema:
+            schema: 
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: room 1
+    post:
+      tags:
+        - Chat
+      security:
+        - User: []
+      parameters:
+        - in: formData
+          name: name
+          required: true
+          type: string
+          default: Room 1
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: room 1
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                name:
+                  - error: blank
+  /rooms/{id}:
+    put:
+      tags:
+        - Chat
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: id
+          type: string 
+          required: true
+        - in: formData
+          name: name
+          required: true
+          type: string
+          default: Room 1
+      responses:
+        200:
+          description: OK
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                name:
+                  - error: blank
+    delete:
+      tags:
+        - Chat
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: id
+          type: string 
+          required: true
+      responses:
+        200:
+          description: OK
