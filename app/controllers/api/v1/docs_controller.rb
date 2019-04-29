@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class DocsController < BaseController
+    class DocsController < Api::V1::BaseController
       def index; end
     end
   end
