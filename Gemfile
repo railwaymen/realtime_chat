@@ -20,9 +20,9 @@ gem 'redis'
 gem 'lodash-rails'
 gem 'anycable-rails'
 gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
+gem 'foreman'
 
 group :development, :test do
-  gem 'foreman'
   gem 'better_errors'
   gem 'binding_of_caller'
 end
