@@ -1,3 +1,3 @@
-web: bundle exec rails s puma -b 0.0.0.0
+web: bundle exec puma
 rpc: bundle exec anycable
-ws: anycable-go --port $WEBSOCKET_PORT --debug
+ws: anycable-go --port $WEBSOCKET_PORT --headers cookie,token --debug
