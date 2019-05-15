@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class RoomsController < BaseController
+    class RoomsController < Api::V1::BaseController
       before_action :authenticate_user!
       
       def index

@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class AuthenticationsController < BaseController
+    class AuthenticationsController < Api::V1::BaseController
       def create
         @sign_in_form = SignInForm.new(email: params[:email], password: params[:password])
         @sign_in_form.save
