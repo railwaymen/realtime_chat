@@ -4,5 +4,8 @@ development:
 test:
   adapter: async
 
+staging:
+  adapter: any_cable
+
 production:
   adapter: any_cable
