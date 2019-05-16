@@ -83,6 +83,17 @@ paths:
           description: Invalid refresh token
   /rooms:
     get:
+      description: |
+        Application provides single socket to listen for events from selected room. 
+        Socket URL is: <%= Rails.application.config.action_cable.url %>. 
+        Socket requires authentiation using token which needs to be passed in the header as 'Token: value'.
+        After succesful connection to socket one needs to subscribe to selected room chanel using command: {"command":"subscribe","identifier":"{\"channel\":\"RoomChannel\",\"room\":\"2\"}"} 
+        ```
+        websocat <%= Rails.application.config.action_cable.url %> -H 'Token: xxxxx'
+        {"type":"welcome"}
+        > {"command":"subscribe","identifier":"{\"channel\":\"RoomChannel\",\"room\":\"1\"}"}
+        {"identifier":"{\"channel\":\"RoomChannel\",\"room\":\"1\"}","type":"confirm_subscription"
+        ```
       tags:
         - Chat
       security:
