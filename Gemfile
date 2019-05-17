@@ -20,7 +20,7 @@ gem 'redis'
 gem 'lodash-rails'
 gem 'anycable-rails'
 gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
-gem 'foreman'
+gem 'procodile'
 
 group :development, :test do
   gem 'better_errors'

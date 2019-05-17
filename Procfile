@@ -1,3 +1,3 @@
 web: bundle exec puma
 rpc: bundle exec anycable
-ws: anycable-go --port $WEBSOCKET_PORT --headers cookie,token --debug
+ws: exec anycable-go --port 3334 --headers cookie,token
