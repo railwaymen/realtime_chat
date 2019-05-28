@@ -11,18 +11,18 @@ module Api
       end
 
       def create
-        @room = Room.create(room_params)
+        @room = current_user.rooms.create(room_params)
         respond_with @room
       end
 
       def update
-        @room = Room.find(params[:id])
+        @room = current_user.rooms.find(params[:id])
         @room.update(room_params)
         respond_with @room
       end
 
       def destroy
-        @room = Room.find(params[:id])
+        @room = current_user.rooms.find(params[:id])
         @room.destroy!
         respond_with @room
       end

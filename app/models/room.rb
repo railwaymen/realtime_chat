@@ -1,3 +1,4 @@
 class Room < ApplicationRecord
-  has_many :room_messages, dependent: :destroy
+  belongs_to :user
+  has_many :messages, class_name: 'RoomMessage', dependent: :destroy
 end

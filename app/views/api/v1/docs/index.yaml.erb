@@ -95,7 +95,7 @@ paths:
         {"identifier":"{\"channel\":\"RoomChannel\",\"room\":\"1\"}","type":"confirm_subscription"
         ```
       tags:
-        - Chat
+        - Rooms
       security:
         - User: []
       responses:
@@ -115,7 +115,7 @@ paths:
                     example: room 1
     post:
       tags:
-        - Chat
+        - Rooms
       security:
         - User: []
       parameters:
@@ -150,7 +150,7 @@ paths:
   /rooms/{id}:
     put:
       tags:
-        - Chat
+        - Rooms
       security:
         - User: []
       parameters:
@@ -179,10 +179,135 @@ paths:
                   - error: blank
     delete:
       tags:
-        - Chat
+        - Rooms
       security:
         - User: []
       parameters:
+        - in: path
+          name: id
+          type: string 
+          required: true
+      responses:
+        200:
+          description: OK
+  /rooms/{room_id}/messages:
+    get:
+      tags:
+        - Messages
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: room_id
+          type: string 
+          required: true
+          default: 1
+      responses:
+        200:
+          description: OK
+          schema:
+            schema: 
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  body:
+                    type: string
+                    example: Hello
+                  created_at:
+                    type: string
+                    example: "2019-04-15T09:41:42.602Z"
+    post:
+      tags:
+        - Messages
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: room_id
+          type: string 
+          required: true
+          default: 1
+        - in: formData
+          name: body
+          required: true
+          type: string
+          default: Hello
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              body:
+                type: string
+                example: Hello
+              created_at:
+                type: string
+                example: "2019-04-15T09:41:42.602Z"
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                name:
+                  - error: blank
+  /rooms/{room_id}/messages/{id}:
+    put:
+      tags:
+        - Messages
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: room_id
+          type: string 
+          required: true
+          default: 1
+        - in: path
+          name: id
+          type: string 
+          required: true
+        - in: formData
+          name: body
+          required: true
+          type: string
+          default: Updated message
+      responses:
+        200:
+          description: OK
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                body:
+                  - error: blank
+    delete:
+      tags:
+        - Messages
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: room_id
+          type: string 
+          required: true
+          default: 1
         - in: path
           name: id
           type: string 

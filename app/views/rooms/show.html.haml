@@ -5,22 +5,22 @@
     = render partial: 'rooms'
   .col
     .chat#chat-body
-      - @room.room_messages.each do |room_message|
+      - @room.messages.each do |message|
         .chat-message-container
           .row.no-gutters
             .col-auto.text-center
-              = room_message.user.username
+              = message.user.username
             .col
               .message-content
                 %p.mb-1
-                  = room_message.message
+                  = message.body
                 .text-right
                   %small
-                    = room_message.created_at
+                    = message.created_at
       #chat-typing-container
     = form_for @room_message, remote: true do |f|
       .input-group.mb-3
-        = f.text_field :message, class: 'form-control', id: 'chat-input'
+        = f.text_field :body, class: 'form-control', id: 'chat-input'
         .input-group-append
           = f.submit "Send", class: 'btn btn-primary'
       = f.hidden_field :room_id, as: :hidden

@@ -5,6 +5,8 @@ class User < ApplicationRecord
   REFRESH_TOKEN_EXPIRATION_LENGTH = 1.year
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+  has_many :rooms
+  has_many :messages, class_name: 'RoomMessage'
   
   def generate_authentication_token
     self.authentication_token = JwtService.encode(payload: { id: id, exp: TOKEN_EXPIRATION_LENGTH.from_now.to_i }).as_json

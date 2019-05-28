@@ -13,7 +13,7 @@ const initializeRoom = function(roomId) {
       </div> \
       <div class="col"> \
         <div class="message-content"> \
-          <p class="mb-1"><%= message %></p> \
+          <p class="mb-1"><%= body %></p> \
           <div class="text-right"> \
             <small><%= updatedAt %></small> \
           </div> \
@@ -40,7 +40,7 @@ const initializeRoom = function(roomId) {
   }
 
   const handleNewMessage = function(data) {
-    this.$chatTyping.before(this.messageTemplate({ username: data.username, message: data.message, updatedAt: data.updated_at }))
+    this.$chatTyping.before(this.messageTemplate({ username: data.username, body: data.body, updatedAt: data.updated_at }))
   }
 
   const initializeCable = function() {
