@@ -6,7 +6,7 @@ module Api
       before_action :authenticate_user!
       
       def index
-        @messages = room.messages
+        @messages = room.messages.includes(:user)
         respond_with @messages
       end
 
