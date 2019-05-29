@@ -1,16 +1,15 @@
 class RoomMessagesController < BaseController
-  before_action :load_entities
-
   def create
+    room = Room.find params.dig(:room_message, :room_id)
     @room_message = RoomMessage.create user: current_user,
-                                       room: @room,
+                                       room: room,
                                        body: params.dig(:room_message, :body)
-    RoomChannel.broadcast_to @room, @room_message
+    RoomChannel.broadcast_to room, message_representation(@room_message)
   end
 
   private
 
-  def load_entities
-    @room = Room.find params.dig(:room_message, :room_id)
+  def message_representation(message)
+    message.slice(:id, :user_id, :body, :updated_at, :created_at).merge(user: { username: message.user.username })
   end
 end
