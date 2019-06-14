@@ -24,7 +24,7 @@ module Api
       def destroy
         @room = current_user.rooms.find(params[:id])
         @room.destroy!
-        respond_with @room
+        head :no_content
       end
 
       private
