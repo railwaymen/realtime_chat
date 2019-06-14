@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "name", "channel_name"],
+    "properties": {
+      "id" : { "type" : ["string", "number"] },
+
+      "name" : { "type" : "string" },
+
+      "channel_name" : { "type" : "string" }
+    }
+  }
+}

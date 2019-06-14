@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :room_messages
   resources :rooms
   
-  namespace :api do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :rooms, only: %i[index show create update destroy] do
         resources :messages
