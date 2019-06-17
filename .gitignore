@@ -32,3 +32,6 @@
 /config/database.yml
 vendor/bundle
 .env
+
+/coverage
+/pids
