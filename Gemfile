@@ -21,6 +21,7 @@ gem 'lodash-rails'
 gem 'anycable-rails'
 gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
 gem 'procodile'
+gem 'discard', '~> 1.0'
 
 group :development, :test do
   gem 'better_errors'

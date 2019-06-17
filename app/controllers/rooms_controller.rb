@@ -1,21 +1,18 @@
 class RoomsController < BaseController
-  def index
-    @rooms = Room.all
-  end
+  before_action :fetch_rooms, except: %i[create update]
+
+  def index; end
 
   def new
-    @rooms = Room.all
     @room = Room.new
   end
   
   def show
-    @rooms = Room.all
     @room = Room.find(params[:id])
     @room_message = RoomMessage.new(room: @room)
   end
 
   def create
-    @rooms = Room.all
     @room = current_user.rooms.build room_params
 
     if @room.save
@@ -27,13 +24,12 @@ class RoomsController < BaseController
   end
 
   def edit
-    @rooms = Room.all
-    @room = current_user.rooms.find(params[:room_id]) 
+    @room = current_user.rooms.find(params[:id]) 
   end
 
   def update
-    @rooms = Room.all
-    @room = current_user.rooms.find(params[:room_id]) 
+    @room = current_user.rooms.find(params[:id])
+
     if @room.update(room_params)
       flash[:success] = "Room #{@room.name} was updated successfully"
       redirect_to rooms_path
@@ -43,6 +39,10 @@ class RoomsController < BaseController
   end
 
   private
+
+  def fetch_rooms
+    @rooms = Room.order(name: :asc)
+  end
 
   def room_params
     params.require(:room).permit(:name)

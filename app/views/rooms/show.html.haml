@@ -1,29 +1,38 @@
-%h1
-  = @room.name
-.row
-  .col-12.col-md-3
-    = render partial: 'rooms'
-  .col
-    .chat#chat-body
-      - @room.messages.each do |message|
-        .chat-message-container
-          .row.no-gutters
-            .col-auto.text-center
-              = message.user.username
-            .col
-              .message-content
-                %p.mb-1
-                  = message.body
-                .text-right
-                  %small
-                    = message.created_at
-      #chat-typing-container
-    = form_for @room_message, remote: true do |f|
-      .input-group.mb-3
-        = f.text_field :body, class: 'form-control', id: 'chat-input'
-        .input-group-append
-          = f.submit "Send", class: 'btn btn-primary'
-      = f.hidden_field :room_id, as: :hidden
+.room
+  .room__header
+    .room__title
+      %h2= @room.name
+
+    .room__actions
+      - if @room.user_id == current_user.id
+        %ul
+          %li.action__item
+            = link_to 'Edit', edit_room_path(@room), class: 'btn btn-sm btn-outline-primary'
+          %li.action__item
+            = link_to 'Close', '/', class: 'btn btn-sm btn-outline-danger' 
+
+  .row
+    .col
+      .chat#chat-body
+        - @room.messages.each do |message|
+          .chat-message-container
+            .row.no-gutters
+              .col-auto.text-center
+                = message.user.username
+              .col
+                .message-content
+                  %p.mb-1
+                    = message.body
+                  .text-right
+                    %small
+                      = message.created_at
+        #chat-typing-container
+      = form_for @room_message, remote: true do |f|
+        .input-group.mb-3
+          = f.text_field :body, class: 'form-control', id: 'chat-input'
+          .input-group-append
+            = f.submit "Send", class: 'btn btn-primary'
+        = f.hidden_field :room_id, as: :hidden
 
 :javascript
   initializeRoom("#{@room.id}")

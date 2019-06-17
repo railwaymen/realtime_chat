@@ -1,3 +1,14 @@
 = form_for @room do |f|
-  = f.text_field :name
-  = f.submit 'Save', class: 'btn btn-success'
+  .form-group.row
+    = f.label :name, class: 'col-sm-2 col-form-label'
+
+    .col-sm-10
+      .input-group
+        = f.text_field :name, class: ['form-control', ('is-invalid' if @room.errors.messages[:name].present?)]
+      
+        .invalid-feedback
+          = @room.errors.full_messages_for(:name).first
+
+  .form-group.row
+    .col-sm-10
+      = f.submit class: 'btn btn-primary'
