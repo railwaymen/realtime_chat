@@ -4,7 +4,7 @@ class RoomMessagesController < BaseController
     @room_message = RoomMessage.create user: current_user,
                                        room: room,
                                        body: params.dig(:room_message, :body)
-    RoomChannel.broadcast_to room, message_representation(@room_message)
+    RoomChannel.broadcast_to room, type: :create, data: message_representation(@room_message)
   end
 
   private
