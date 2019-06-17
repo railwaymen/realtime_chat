@@ -8,7 +8,7 @@ class RoomsController < BaseController
   end
   
   def show
-    @room = Room.find(params[:id])
+    @room = Room.kept.find(params[:id])
     @room_message = RoomMessage.new(room: @room)
   end
 
@@ -16,7 +16,7 @@ class RoomsController < BaseController
     @room = current_user.rooms.build room_params
 
     if @room.save
-      flash[:success] = "Room #{@room.name} was created successfully"
+      flash[:success] = "Room #{@room.name} has been created successfully"
       redirect_to rooms_path
     else
       render :new
@@ -24,24 +24,31 @@ class RoomsController < BaseController
   end
 
   def edit
-    @room = current_user.rooms.find(params[:id]) 
+    @room = current_user.rooms.kept.find(params[:id]) 
   end
 
   def update
-    @room = current_user.rooms.find(params[:id])
+    @room = current_user.rooms.kept.find(params[:id])
 
     if @room.update(room_params)
-      flash[:success] = "Room #{@room.name} was updated successfully"
+      flash[:success] = "Room #{@room.name} has been updated successfully"
       redirect_to rooms_path
     else
       render :new
     end
   end
 
+  def destroy
+    @room = current_user.rooms.kept.find(params[:id])
+    @room.discard
+
+    redirect_to rooms_path, notice: "Room #{@room.name} has been closed successfully"
+  end
+
   private
 
   def fetch_rooms
-    @rooms = Room.order(name: :asc)
+    @rooms = Room.kept.order(name: :asc)
   end
 
   def room_params

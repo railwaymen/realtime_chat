@@ -7,9 +7,9 @@
       - if @room.user_id == current_user.id
         %ul
           %li.action__item
-            = link_to 'Edit', edit_room_path(@room), class: 'btn btn-sm btn-outline-primary'
+            = link_to 'Edit room', edit_room_path(@room), class: 'btn btn-sm btn-outline-primary'
           %li.action__item
-            = link_to 'Close', '/', class: 'btn btn-sm btn-outline-danger' 
+            = link_to 'Close room', room_path(@room), class: 'btn btn-sm btn-outline-danger', method: :delete, data: {confirm: 'Are you sure?' }
 
   .row
     .col
