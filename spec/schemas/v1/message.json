@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": ["id", "user_id", "body", "created_at", "updated_at", "user"],
+  "properties": {
+    "id" : { "type" : ["string", "number"] },
+
+    "user_id" : { "type" : ["string", "number"] },
+
+    "body" : { "type" : "string" },
+
+    "created_at" : { "type" : "string", "format": "date-time" },
+
+    "updated_at" : { "type" : "string", "format": "date-time" },
+
+    "user": {
+      "type": "object",
+      "required": ["username"],
+      "properties": {
+        "username": { "type": "string" }
+      }
+    }
+  }
+}

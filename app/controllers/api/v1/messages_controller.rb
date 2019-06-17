@@ -6,7 +6,7 @@ module Api
       before_action :authenticate_user!
       
       def index
-        @messages = room.messages.includes(:user)
+        @messages = room.messages.includes(:user).order(created_at: :asc)
         respond_with @messages
       end
 
@@ -19,13 +19,13 @@ module Api
       def update
         @message = room.messages.find(params[:id])
         @message.update(message_params)
-        respond_with @room
+        respond_with @message
       end
 
       def destroy
         @message = room.messages.find(params[:id])
-        @message.destroy
-        respond_with @room
+        @message.destroy!
+        head :no_content
       end
 
       private
