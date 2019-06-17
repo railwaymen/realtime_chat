@@ -27,7 +27,7 @@ group :development, :test do
   gem 'binding_of_caller'
   gem 'factory_bot_rails', '~> 5.0', '>= 5.0.2'
   gem 'faker', '~> 1.9', '>= 1.9.3'
-  gem 'json-schema', '~> 2.8', '>= 2.8.1'
+  gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'pry', '~> 0.12.2'
   gem 'rspec-rails', '~> 3.8', '>= 3.8.2'
   gem 'shoulda-matchers', '~> 4.1'

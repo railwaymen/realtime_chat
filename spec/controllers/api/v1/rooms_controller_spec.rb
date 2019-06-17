@@ -1,9 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::RoomsController, type: :controller do
-  let(:user) { create(:user_with_rooms) }
+  let(:user) { create(:user) }
 
   describe '#index' do
+    let(:room) { create(:room, user: user) }
+
+    let!(:expected_response) do
+      [
+        {
+          id: room.id,
+          name: room.name,
+          channel_name: room.channel_name
+        }
+      ]
+    end
+
     context 'unauthorized' do
       it 'expects to respond with error' do
         get :index, as: :json
@@ -16,20 +28,28 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
       it 'expects to list all rooms as json' do
         get :index, as: :json
-        expect_success_api_response_for('rooms')
+        expect_api_response(expected_response.to_json)
       end
 
       it 'expects to respond with empty array' do
         Room.destroy_all
 
         get :index, as: :json
-        expect_success_api_response_for('rooms')
+        expect_api_response([].to_json)
       end
     end
   end
 
   describe '#create' do
     let(:params) { attributes_for(:room) }
+
+    let!(:expected_response) do
+      {
+        id: nil,
+        name: params[:name],
+        channel_name: nil
+      }
+    end
 
     context 'unauthorized' do
       it 'expects to respond with error' do
@@ -46,13 +66,26 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
           post :create, params: params, as: :json
         end.to(change { Room.count }.by(1))
 
-        expect_success_api_response_for('room')
+        new_room = user.rooms.last
+
+        expected_response[:id] = new_room.id
+        expected_response[:channel_name] = new_room.channel_name
+
+        expect_api_response(expected_response.to_json)
       end
     end
   end
 
   describe '#update' do
     let(:room) { create(:room, user: user) }
+
+    let!(:expected_response) do
+      {
+        id: room.id,
+        name: 'Conference',
+        channel_name: room.channel_name
+      }
+    end
 
     context 'unauthorized' do
       it 'expects to respond with error' do
@@ -69,7 +102,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
           put :update, params: { id: room.id, name: 'Conference' }, as: :json
         end.to(change { room.reload.name }.to('Conference'))
 
-        expect_success_api_response_for('room')
+        expect_api_response(expected_response.to_json)
       end
 
       it 'expects to respond with invalid error' do

@@ -4,4 +4,8 @@ class Room < ApplicationRecord
 
   # Validations
   validates :name, presence: true
+
+  def channel_name
+    [RoomChannel.channel_name, self.to_gid_param].join(':')
+  end
 end

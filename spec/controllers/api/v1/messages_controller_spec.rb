@@ -5,6 +5,21 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
   let(:user) { room.user }
 
   describe '#index' do
+    let(:message) { create(:room_message, user: user, room: room) }
+
+    let!(:expected_response) do
+      [
+        {
+          id: message.id,
+          user_id: message.user_id,
+          body: message.body,
+          user: {
+            username: user.username
+          }
+        }
+      ]
+    end
+
     context 'unauthorized' do
       it 'expects to respond with error' do
         get :index, params: { room_id: room.id }, as: :json
@@ -17,20 +32,31 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
 
       it 'expects to list all room messages as json' do
         get :index, params: { room_id: room.id }, as: :json
-        expect_success_api_response_for('messages')
+        expect_api_response(expected_response.to_json)
       end
 
       it 'expects to respond with empty array' do
         RoomMessage.destroy_all
 
         get :index, params: { room_id: room.id }, as: :json
-        expect_success_api_response_for('messages')
+        expect_api_response([].to_json)
       end
     end
   end
 
   describe '#create' do
     let(:params) { attributes_for(:room_message).merge(room_id: room.id) }
+
+    let!(:expected_response) do
+      {
+        id: nil,
+        user_id: user.id,
+        body: params[:body],
+        user: {
+          username: user.username
+        }
+      }
+    end
 
     context 'unauthorized' do
       it 'expects to respond with error' do
@@ -47,13 +73,26 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
           post :create, params: params, as: :json
         end.to(change { room.messages.count }.by(1))
 
-        expect_success_api_response_for('message')
+        expected_response[:id] = room.messages.last.id
+
+        expect_api_response(expected_response.to_json)
       end
     end
   end
 
   describe '#update' do
     let(:message) { create(:room_message, room: room, user: user) }
+
+    let!(:expected_response) do
+      {
+        id: message.id,
+        user_id: user.id,
+        body: 'How are you?',
+        user: {
+          username: user.username
+        }
+      }
+    end
 
     context 'unauthorized' do
       it 'expects to respond with error' do
@@ -70,7 +109,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
           put :update, params: { room_id: room.id, id: message.id, body: 'How are you?' }, as: :json
         end.to(change { message.reload.body }.to('How are you?'))
 
-        expect_success_api_response_for('message')
+        expect_api_response(expected_response.to_json)
       end
 
       it 'expects to respond with invalid error' do

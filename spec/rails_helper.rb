@@ -72,5 +72,7 @@ RSpec.configure do |config|
   config.render_views
 
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include JsonSpec::Helpers
+
   config.include ApiHelpers, type: :controller
 end
