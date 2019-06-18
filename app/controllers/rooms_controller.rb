@@ -1,5 +1,5 @@
 class RoomsController < BaseController
-  before_action :fetch_rooms, except: %i[create update]
+  before_action :fetch_rooms
 
   def index; end
 
