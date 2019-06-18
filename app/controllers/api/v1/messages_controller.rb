@@ -4,9 +4,11 @@ module Api
   module V1
     class MessagesController < Api::V1::BaseController
       before_action :authenticate_user!
+      MESSAGES_LIMIT = 10
 
       def index
-        @messages = room.messages.includes(:user).order(created_at: :asc)
+        @messages = room.messages.includes(:user).order(id: :desc).limit(MESSAGES_LIMIT)
+        @messages = @messages.where('id < ?', params[:last_id]) if params[:last_id].present?
         respond_with @messages
       end
 
