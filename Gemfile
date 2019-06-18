@@ -21,6 +21,7 @@ gem 'lodash-rails'
 gem 'anycable-rails'
 gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
 gem 'procodile'
+gem 'discard', '~> 1.0'
 
 group :development, :test do
   gem 'better_errors'
@@ -32,6 +33,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8', '>= 3.8.2'
   gem 'shoulda-matchers', '~> 4.1'
   gem 'simplecov', '~> 0.16.1'
+  gem 'rails-controller-testing'
 end
 
 group :development do

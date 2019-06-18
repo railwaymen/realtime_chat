@@ -1,3 +1,26 @@
 // Place all the styles related to the Rooms controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.room {
+
+  .room__header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .room__actions {
+    margin: 0 1rem;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+
+      .action__item {
+        padding: .5rem
+      }
+    }
+  }
+}

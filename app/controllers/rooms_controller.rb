@@ -1,25 +1,22 @@
 class RoomsController < BaseController
-  def index
-    @rooms = Room.all
-  end
+  before_action :fetch_rooms
+
+  def index; end
 
   def new
-    @rooms = Room.all
     @room = Room.new
   end
   
   def show
-    @rooms = Room.all
-    @room = Room.find(params[:id])
+    @room = Room.kept.find(params[:id])
     @room_message = RoomMessage.new(room: @room)
   end
 
   def create
-    @rooms = Room.all
     @room = current_user.rooms.build room_params
 
     if @room.save
-      flash[:success] = "Room #{@room.name} was created successfully"
+      flash[:success] = "Room #{@room.name} has been created successfully"
       redirect_to rooms_path
     else
       render :new
@@ -27,22 +24,32 @@ class RoomsController < BaseController
   end
 
   def edit
-    @rooms = Room.all
-    @room = current_user.rooms.find(params[:room_id]) 
+    @room = current_user.rooms.kept.find(params[:id]) 
   end
 
   def update
-    @rooms = Room.all
-    @room = current_user.rooms.find(params[:room_id]) 
+    @room = current_user.rooms.kept.find(params[:id])
+
     if @room.update(room_params)
-      flash[:success] = "Room #{@room.name} was updated successfully"
+      flash[:success] = "Room #{@room.name} has been updated successfully"
       redirect_to rooms_path
     else
-      render :new
+      render :edit
     end
   end
 
+  def destroy
+    @room = current_user.rooms.kept.find(params[:id])
+    @room.discard
+
+    redirect_to rooms_path, notice: "Room #{@room.name} has been closed successfully"
+  end
+
   private
+
+  def fetch_rooms
+    @rooms = Room.kept.order(name: :asc)
+  end
 
   def room_params
     params.require(:room).permit(:name)

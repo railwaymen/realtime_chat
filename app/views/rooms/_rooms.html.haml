@@ -1,10 +1,15 @@
-.mb-3
+.username-info.my-3
+  = "Hello #{current_user.username}!"
+
+.my-3
   = link_to new_room_path, class: 'btn btn-primary' do
     Create a room
+
 - if @rooms.present?
-  %nav.nav.flex-column
+  %ul.navbar-nav.px-3
     - @rooms.each do |room|
-      = link_to room.name, room_path(room), class: 'nav-link room-nav-link'
+      = link_to room_path(room) do
+        %li.nav-item.text-nowrap= room.name
 - else
   .text-muted
     The are no rooms

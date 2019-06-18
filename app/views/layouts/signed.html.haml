@@ -9,10 +9,12 @@
     = stylesheet_link_tag    'application', media: 'all'
     = javascript_include_tag 'application'
   %body
-    .container
+    = render partial: 'shared/navbar'
+    
+    .container-fluid
       .row
-        .col-12
-          = render partial: 'shared/navbar'
-          .my-3
-            = yield
+        = render partial: 'shared/sidebar'
+
+        %main.col-md-9.ml-sm-auto.col-lg-10.p-3
+          = yield
     
