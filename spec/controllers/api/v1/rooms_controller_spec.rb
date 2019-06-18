@@ -7,7 +7,8 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
     {
       id: room.id,
       name: room.name,
-      channel_name: room.channel_name
+      channel_name: room.channel_name,
+      editable: room.owner?(user),
     }
   end
 

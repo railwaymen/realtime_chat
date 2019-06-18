@@ -1,6 +1,7 @@
 class RoomMessage < ApplicationRecord
+  include OwnerConcern
+
   belongs_to :room
-  belongs_to :user
 
   # Validations
   validates :body, presence: true
