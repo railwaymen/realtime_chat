@@ -40,7 +40,12 @@ const initializeRoom = function(roomId) {
   }
 
   const handleNewMessage = function(data) {
-    this.$chatTyping.before(this.messageTemplate({ username: data.username, body: data.body, updatedAt: data.updated_at }))
+    const message = data.data
+    this.$chatTyping.before(this.messageTemplate({
+      username: message.username,
+      body: message.body,
+      updatedAt: message.updated_at
+    }))
   }
 
   const initializeCable = function() {

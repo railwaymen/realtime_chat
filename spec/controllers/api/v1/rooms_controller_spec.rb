@@ -7,7 +7,8 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
     {
       id: room.id,
       name: room.name,
-      channel_name: room.channel_name
+      channel_name: room.channel_name,
+      editable: room.owner?(user),
     }
   end
 
@@ -62,6 +63,12 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
         expect_api_response(expected_response(last_room).to_json)
       end
+
+      it 'expects to broadcast new room' do
+        expect do
+          post :create, params: params, as: :json
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
+      end
     end
   end
 
@@ -93,6 +100,12 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
         expect(response).to have_http_status 422
       end
+
+      it 'expects to broadcast updated room' do
+        expect do
+          put :update, params: { id: room.id, name: 'Conference' }, as: :json
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
+      end
     end
   end
 
@@ -115,6 +128,12 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
         end.to(change { Room.count }.by(-1))
 
         expect(response).to have_http_status 204
+      end
+
+      it 'expects to broadcast destroyed room' do
+        expect do
+          delete :destroy, params: { id: room.id }, as: :json
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
     end
   end

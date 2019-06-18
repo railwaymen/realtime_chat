@@ -9,6 +9,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       id: message.id,
       user_id: message.user_id,
       body: message.body,
+      editable: message.owner?(user),
       user: {
         username: message.user.username
       }
@@ -57,7 +58,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
     context 'authorized' do
       before(:each) { sign_in user }
 
-      it 'expects to create new room' do
+      it 'expects to create new message' do
         expect do
           post :create, params: params, as: :json
         end.to(change { room.messages.count }.by(1))
@@ -65,6 +66,12 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
         last_message = room.messages.last
 
         expect_api_response(expected_response(last_message).to_json)
+      end
+
+      it 'expects to broadcast new message' do
+        expect do
+          post :create, params: params, as: :json
+        end.to have_broadcasted_to(room).from_channel(RoomChannel)
       end
     end
   end
@@ -82,7 +89,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
     context 'authorized' do
       before(:each) { sign_in user }
 
-      it 'expects to update room name' do
+      it 'expects to update message body' do
         expect do
           put :update, params: { room_id: room.id, id: message.id, body: 'How are you?' }, as: :json
         end.to(change { message.reload.body }.to('How are you?'))
@@ -96,6 +103,12 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
         end.not_to(change { message.reload.body })
 
         expect(response).to have_http_status 422
+      end
+
+      it 'expects to broadcast updated message' do
+        expect do
+          put :update, params: { room_id: room.id, id: message.id, body: 'How are you?' }, as: :json
+        end.to have_broadcasted_to(room).from_channel(RoomChannel)
       end
     end
   end
@@ -119,6 +132,12 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
         end.to(change { room.messages.count }.by(-1))
 
         expect(response).to have_http_status 204
+      end
+
+      it 'expects to broadcast destroyed message' do
+        expect do
+          delete :destroy, params: { room_id: room.id, id: message.id }, as: :json
+        end.to have_broadcasted_to(room).from_channel(RoomChannel)
       end
     end
   end

@@ -1,7 +1,7 @@
 class Room < ApplicationRecord
   include Discard::Model
+  include OwnerConcern
 
-  belongs_to :user
   has_many :messages, class_name: 'RoomMessage', dependent: :destroy
 
   # Validations

@@ -6,7 +6,7 @@ class RoomsController < BaseController
   def new
     @room = Room.new
   end
-  
+
   def show
     @room = Room.kept.find(params[:id])
     @room_message = RoomMessage.new(room: @room)

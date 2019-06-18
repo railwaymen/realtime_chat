@@ -34,6 +34,7 @@ group :development, :test do
   gem 'shoulda-matchers', '~> 4.1'
   gem 'simplecov', '~> 0.16.1'
   gem 'rails-controller-testing'
+  gem 'action-cable-testing'
 end
 
 group :development do
