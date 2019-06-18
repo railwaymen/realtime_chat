@@ -12,16 +12,14 @@ gem 'jbuilder', '~> 2.5'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'haml-rails'
-gem 'bootstrap', '~> 4.3.1'
-gem 'jquery-rails'
 gem 'jwt', '~> 2.1.0'
 gem 'pg'
 gem 'redis'
-gem 'lodash-rails'
 gem 'anycable-rails'
 gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
 gem 'procodile'
 gem 'discard', '~> 1.0'
+gem 'webpacker', '~> 4.0', '>= 4.0.7'
 
 group :development, :test do
   gem 'better_errors'
