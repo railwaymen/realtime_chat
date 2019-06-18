@@ -39,5 +39,6 @@
 
 :javascript
   document.addEventListener('DOMContentLoaded', function() {
-    window.initializeChat()
+    var data = #{ raw render('rooms/messages') }
+    window.initializeChat(data)
   });
