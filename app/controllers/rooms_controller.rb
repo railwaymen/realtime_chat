@@ -34,7 +34,7 @@ class RoomsController < BaseController
       flash[:success] = "Room #{@room.name} has been updated successfully"
       redirect_to rooms_path
     else
-      render :new
+      render :edit
     end
   end
 

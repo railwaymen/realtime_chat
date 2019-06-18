@@ -33,6 +33,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8', '>= 3.8.2'
   gem 'shoulda-matchers', '~> 4.1'
   gem 'simplecov', '~> 0.16.1'
+  gem 'rails-controller-testing'
 end
 
 group :development do
