@@ -24,6 +24,11 @@ import * as ActiveStorage from 'activestorage';
 Rails.start();
 ActiveStorage.start();
 
+// Chat
+import initializeChat from '@/initializers/chat';
+window.initializeChat = initializeChat;
+
+
 $(function() {
   console.log(`jquery version ${$.fn.jquery}`);
   console.log(`bootstrap version ${$.fn.tooltip.Constructor.VERSION}`);

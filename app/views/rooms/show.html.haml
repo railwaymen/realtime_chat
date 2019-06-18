@@ -11,7 +11,10 @@
           %li.action__item
             = link_to 'Close room', room_path(@room), class: 'btn btn-sm btn-outline-danger', method: :delete, data: {confirm: 'Are you sure?' }
 
-  .row
+.chat
+  #chat__component{ 'data-behavior': 'react' }
+
+  -# .row
     .col
       .chat#chat-body
         - @room.messages.each do |message|
@@ -35,4 +38,6 @@
         = f.hidden_field :room_id, as: :hidden
 
 :javascript
-  // initializeRoom("#{@room.id}")
+  document.addEventListener('DOMContentLoaded', function() {
+    window.initializeChat()
+  });
