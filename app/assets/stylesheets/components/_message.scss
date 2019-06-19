@@ -18,12 +18,16 @@
   }
 
   &__body {
+    margin: 0;
+  }
+
+  &__container {
     padding: .5rem;
     border-radius: .5rem;
   }
 
   &--own {
-    .message__body {
+    .message__container {
       background: #FFF;
     }
   }
@@ -31,7 +35,7 @@
   &--foreign {
     margin-left: 1.5rem;
 
-    .message__body {
+    .message__container {
       background: #7EC6F2;
     }
   }

@@ -9,7 +9,7 @@ class RoomsController < BaseController
 
   def show
     @room = Room.kept.find(params[:id])
-    @messages = RoomMessage.includes(:user).where(room: @room)
+    @messages = RoomMessage.includes(:user).where(room: @room).order(id: :asc)
 
     @room_message = RoomMessage.new(room: @room)
   end

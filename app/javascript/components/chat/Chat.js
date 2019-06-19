@@ -4,6 +4,8 @@ import createChannel from '@/utils/cable';
 
 import Conversation from './Conversation';
 
+import { createMessage } from '@/actions/chat'
+
 class Chat extends Component {
   constructor(props) {
     super(props)
@@ -24,8 +26,10 @@ class Chat extends Component {
         received: response => {
           if (response.message === 'typing') {
             this.handleTypingAction(response)
-          } else {
+          } else if (response.type === 'create') {
             this.handleNewMessage(response.data)
+          } else if (response.type === 'update') {
+            this.handleUpdatedMessage(response.data)
           }
         },
         userTyping: typing => {
@@ -41,6 +45,14 @@ class Chat extends Component {
 
   handleNewMessage = data => {
     const messages = [...this.state.messages, data]
+    this.setState({ messages })
+  }
+
+  handleUpdatedMessage = data => {
+    const messages = [...this.state.messages]
+    const index = _.findIndex(messages, { id: data.id })
+
+    messages.splice(index, 1, data)
     this.setState({ messages })
   }
 
@@ -65,26 +77,13 @@ class Chat extends Component {
 
     if (this.state.currentMessage != '') {
       const params = {
-        authenticity_token: document.querySelector('meta[name=csrf-token]').content,
-        room_message: {
-          room_id: this.props.data.room_id,
-          body: this.state.currentMessage
-        }
+        room_id: this.props.data.room_id,
+        body: this.state.currentMessage
       }
-  
-      fetch('/room_messages', {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(params)
-      })
-      .then(response => {
-        if (response.ok) {
-          this.setState({ currentMessage: '' })
-          this.subscription.userTyping(false)
-        }
+
+      createMessage(params, () => {
+        this.setState({ currentMessage: '' })
+        this.subscription.userTyping(false)
       })
     }
   }
