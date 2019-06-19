@@ -21,11 +21,11 @@ class Chat extends Component {
         room: props.data.room_id
       },
       {
-        received: data => {
-          if (data.message === 'typing') {
-            this.handleTypingAction(data)
+        received: response => {
+          if (response.message === 'typing') {
+            this.handleTypingAction(response)
           } else {
-            this.handleNewMessage(data)
+            this.handleNewMessage(response.data)
           }
         },
         userTyping: typing => {
