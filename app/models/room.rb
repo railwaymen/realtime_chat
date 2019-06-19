@@ -4,6 +4,10 @@ class Room < ApplicationRecord
 
   has_many :messages, class_name: 'RoomMessage', dependent: :destroy
 
+  after_discard do
+    messages.discard_all
+  end
+
   # Validations
   validates :name, presence: true
 

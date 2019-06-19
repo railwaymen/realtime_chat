@@ -6,7 +6,7 @@ module Api
       before_action :authenticate_user!
       
       def index
-        @rooms = Room.all
+        @rooms = Room.kept
         respond_with @rooms
       end
 
@@ -25,7 +25,7 @@ module Api
 
       def destroy
         @room = current_user.rooms.find(params[:id])
-        @room.destroy!
+        @room.discard
         AppChannel.broadcast_to('app', data: @room, type: :room_destroy)
         head :no_content
       end

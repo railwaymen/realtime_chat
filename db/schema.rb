@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_17_132548) do
+ActiveRecord::Schema.define(version: 2019_06_19_071150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 2019_06_17_132548) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_room_messages_on_discarded_at"
     t.index ["room_id"], name: "index_room_messages_on_room_id"
     t.index ["user_id"], name: "index_room_messages_on_user_id"
   end

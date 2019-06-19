@@ -1,4 +1,5 @@
 class RoomMessage < ApplicationRecord
+  include Discard::Model
   include OwnerConcern
 
   belongs_to :room
