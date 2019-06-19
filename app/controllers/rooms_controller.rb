@@ -12,6 +12,7 @@ class RoomsController < BaseController
     @messages = @room.messages.includes(:user).order(id: :asc)
 
     @room_message = RoomMessage.new(room: @room)
+    @room_messages = @room.messages.kept.includes(:user)
   end
 
   def create

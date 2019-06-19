@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :rooms, only: %i[index show create update destroy] do
-        resources :messages
+        resources :messages, shallow: true
       end
       resources :authentications, only: [:create] do
         post :refresh, on: :collection
