@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import createChannel from '@/utils/cable';
 
 import Conversation from './Conversation';
-import MessageArea from './MessageArea'
 
 class Chat extends Component {
   constructor(props) {
@@ -64,6 +63,8 @@ class Chat extends Component {
   }
 
   handleMessageSubmit = e => {
+    e.preventDefault()
+
     const params = {
       authenticity_token: document.querySelector('meta[name=csrf-token]').content,
       room_message: {
@@ -97,12 +98,19 @@ class Chat extends Component {
           typers={this.state.typers}
         />
 
-        <MessageArea
-          value={this.state.currentMessage}
-          onChange={this.handleMessageChange}
-          onType={this.handleUserTyping}
-          onSubmit={this.handleMessageSubmit}
-        />
+        <form onSubmit={this.handleMessageSubmit} className="message-area">
+          <div className="input-group">
+            <input
+              value={this.state.currentMessage}
+              onChange={this.handleMessageChange}
+              onKeyUp={this.handleUserTyping}
+              className="form-control"
+            />
+            <div className="input-group-append">
+              <button type="submit" className="btn btn-primary">Send</button>
+            </div>
+          </div>
+        </form>
       </div>
     )
   }

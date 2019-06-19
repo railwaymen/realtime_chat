@@ -3,6 +3,14 @@ import React, { Component } from 'react';
 import ConversationItem from './ConversationItem';
 
 class Conversation extends Component {
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+  
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
   renderTypingMessage = () => {
     const typers = _.map(this.props.typers, 'username')
 
@@ -15,11 +23,19 @@ class Conversation extends Component {
       case 1:
         result = `${typers[0]} is typing ...`
         break;
+      case 2:
+          result = `${typers.join(' and ')} are typing ...`
+          break;
       default:
-        result = `${typers.join(', ')} are typing ...`
+        const othersCount = typers.length - 1
+        result = `${typers[0]} and ${othersCount} other people are typing ...`
     }
 
     return <span>{result}</span>;
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView();
   }
 
   render() {
@@ -33,6 +49,8 @@ class Conversation extends Component {
           )) : (
             <p>There are no messages</p>
           )}
+
+          <div ref={el => this.messagesEnd = el} />
         </div>
 
         <div className="conversation__typers">
