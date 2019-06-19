@@ -10,6 +10,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       user_id: message.user_id,
       body: message.body,
       editable: message.owner?(user),
+      edited: message.created_at != message.updated_at,
       user: {
         username: message.user.username
       }
