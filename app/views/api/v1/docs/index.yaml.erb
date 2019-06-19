@@ -150,6 +150,11 @@ paths:
           required: true
           type: string
           default: Room 1
+        - in: formData
+          name: public
+          required: false
+          type: boolean
+          default: true
       responses:
         200:
           description: OK
@@ -166,6 +171,9 @@ paths:
                 type: string
                 example: room:Z2lkOi8vcmVhbHRpbWUtY2hhdC9Sb29tLzEy
               editable:
+                type: boolean
+                example: true
+              public:
                 type: boolean
                 example: true
               room_path:
