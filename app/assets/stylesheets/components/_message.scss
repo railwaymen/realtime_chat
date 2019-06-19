@@ -19,13 +19,13 @@
     border-radius: .5rem;
   }
 
-  &__own {
+  &--own {
     .message__body {
       background: #FFF;
     }
   }
 
-  &__foreign {
+  &--foreign {
     margin-left: 1.5rem;
 
     .message__body {

@@ -15,8 +15,7 @@ class ConverationItem extends Component {
     } = this.props;
 
     let classes = ['message']
-
-    currentUserId == user_id ? classes.push('message__own') : classes.push('message__foreign')
+    classes.push(currentUserId == user_id ? 'message--own' : 'message--foreign')
 
     return (
       <div className={classes.join(' ')}>

@@ -10,8 +10,8 @@ class Chat extends Component {
 
     this.state = {
       messages: props.data.messages,
-      currentMessage: '',
       currentUserId: props.data.current_user_id,
+      currentMessage: '',
       typers: []
     }
 
@@ -57,51 +57,58 @@ class Chat extends Component {
 
   handleUserTyping = e => {
     this.setState({ currentMessage: e.target.value })
-
-    const typing = e.target.value != ''
-    this.subscription.userTyping(typing)
+    this.subscription.userTyping(e.target.value != '')
   }
 
   handleMessageSubmit = e => {
     e.preventDefault()
 
-    const params = {
-      authenticity_token: document.querySelector('meta[name=csrf-token]').content,
-      room_message: {
-        room_id: this.props.data.room_id,
-        body: this.state.currentMessage
+    if (this.state.currentMessage != '') {
+      const params = {
+        authenticity_token: document.querySelector('meta[name=csrf-token]').content,
+        room_message: {
+          room_id: this.props.data.room_id,
+          body: this.state.currentMessage
+        }
       }
+  
+      fetch('/room_messages', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+      })
+      .then(response => {
+        if (response.ok) {
+          this.setState({ currentMessage: '' })
+          this.subscription.userTyping(false)
+        }
+      })
     }
-
-    fetch('/room_messages', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(params)
-    })
-    .then(response => {
-      if (response.ok) {
-        this.setState({ currentMessage: '' })
-        this.subscription.userTyping(false)
-      }
-    })
   }
 
   render() {
+    const {
+      messages,
+      currentUserId,
+      currentMessage,
+      typers
+    } = this.state;
+
     return (
       <div className="chat">
         <Conversation
-          currentUserId={this.state.currentUserId}
-          messages={this.state.messages}
-          typers={this.state.typers}
+          currentUserId={currentUserId}
+          messages={messages}
+          typers={typers}
         />
 
         <form onSubmit={this.handleMessageSubmit} className="message-area">
           <div className="input-group">
             <input
-              value={this.state.currentMessage}
+              value={currentMessage}
               onChange={this.handleMessageChange}
               onKeyUp={this.handleUserTyping}
               className="form-control"
