@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         post :refresh, on: :collection
       end
       resources :docs, only: %i[index]
+      resources :users, only: %i[index]
     end
   end
   

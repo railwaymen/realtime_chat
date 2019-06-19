@@ -81,6 +81,29 @@ paths:
                 type: string
         401:
           description: Invalid refresh token
+  /users:
+    get:
+      tags:
+        - Users
+      security:
+        - User: []
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: User 1
+                email:
+                  type: string
+                  example: user1@example.com
   /rooms:
     get:
       description: |
