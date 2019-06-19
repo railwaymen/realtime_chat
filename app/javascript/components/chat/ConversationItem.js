@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import moment from 'moment'
+
 class ConverationItem extends Component {
   render() {
     const {
@@ -7,6 +9,7 @@ class ConverationItem extends Component {
         body,
         user_id,
         created_at,
+        edited,
         user: {
           username
         }
@@ -21,7 +24,8 @@ class ConverationItem extends Component {
       <div className={classes.join(' ')}>
         <div className="message__info">
           <span className="username">{username}</span>
-          <span className="date">{created_at}</span>
+          <span className="date" title={moment(created_at).format('LLLL')}>{moment(created_at).fromNow()}</span>
+          {edited && <span className="edited">(edited)</span>}
         </div>
 
         <p className="message__body">

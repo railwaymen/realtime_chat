@@ -2,14 +2,17 @@
   &__info {
     padding: .5rem;
 
-    .username {
+    span {
       display: inline-block;
-      margin-right: 2rem;
+      margin-right: 1.5rem;
+    }
+
+    .username {
       font-weight: bold;
     }
 
-    .date {
-      display: inline-block;
+    .date,
+    .edited {
       color: #666;
     }
   }
