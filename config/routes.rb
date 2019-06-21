@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :rooms, only: %i[index show create update destroy] do
         resources :messages, shallow: true
+        resources :rooms_users, only: %i[index create destroy], shallow: true
       end
       resources :authentications, only: [:create] do
         post :refresh, on: :collection

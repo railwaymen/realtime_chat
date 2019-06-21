@@ -39,12 +39,14 @@ ActiveRecord::Schema.define(version: 2019_06_19_092829) do
     t.index ["user_id"], name: "index_rooms_on_user_id"
   end
 
-  create_table "rooms_users", id: false, force: :cascade do |t|
+  create_table "rooms_users", force: :cascade do |t|
     t.bigint "room_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["room_id", "user_id"], name: "index_rooms_users_on_room_id_and_user_id", unique: true
+    t.index ["room_id"], name: "index_rooms_users_on_room_id"
+    t.index ["user_id"], name: "index_rooms_users_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

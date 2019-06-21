@@ -231,8 +231,8 @@ paths:
           type: string
           required: true
       responses:
-        200:
-          description: OK
+        204:
+          description: No Content
   /rooms/{room_id}/messages:
     get:
       tags:
@@ -296,11 +296,6 @@ paths:
         - User: []
       parameters:
         - in: path
-          name: room_id
-          type: string
-          required: true
-          default: 1
-        - in: path
           name: id
           type: string
           required: true
@@ -334,17 +329,100 @@ paths:
         - User: []
       parameters:
         - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        204:
+          description: No Content
+  /rooms/{room_id}/rooms_users:
+    get:
+      tags:
+        - Rooms Users
+      security:
+        - User: []
+      parameters:
+        - in: path
           name: room_id
           type: string
           required: true
           default: 1
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                room_id:
+                  type: integer
+                  example: 1
+                user_id:
+                  type: integer
+                  example: 1
+                user:
+                  $ref: '#/definitions/User'
+    post:
+      tags:
+        - Rooms Users
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: room_id
+          type: string
+          required: true
+          default: 1
+        - in: formData
+          name: user_id
+          required: false
+          type: string
+          default: 1
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              room_id:
+                type: integer
+                example: 1
+              user_id:
+                type: integer
+                example: 1
+              user:
+                $ref: '#/definitions/User'
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                user:
+                  - error: blank
+  /rooms_users/{id}:
+    delete:
+      tags:
+        - Rooms Users
+      security:
+        - User: []
+      parameters:
         - in: path
           name: id
           type: string
           required: true
       responses:
-        200:
-          description: OK
+        204:
+          description: No Content
 
 definitions:
   Message:
@@ -374,3 +452,15 @@ definitions:
       editable:
         type: boolean
         example: true
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      username:
+        type: string
+        example: user1
+      email:
+        type: string
+        example: user1@example.com

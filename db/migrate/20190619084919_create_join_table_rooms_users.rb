@@ -1,6 +1,8 @@
 class CreateJoinTableRoomsUsers < ActiveRecord::Migration[5.2]
   def change
-    create_join_table :rooms, :users do |t|
+    create_table :rooms_users do |t|
+      t.belongs_to :room, index: true, null: false
+      t.belongs_to :user, index: true, null: false
       t.timestamps
     end
 
