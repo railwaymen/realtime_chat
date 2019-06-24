@@ -28,6 +28,10 @@ ActiveStorage.start();
 import initializeChat from '@/initializers/chat';
 window.initializeChat = initializeChat;
 
+// RoomsList
+import initializeRoomsList from '@/initializers/rooms_list';
+window.initializeRoomsList = initializeRoomsList;
+
 
 $(function() {
   console.log(`jquery version ${$.fn.jquery}`);

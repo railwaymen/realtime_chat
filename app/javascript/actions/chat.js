@@ -5,13 +5,13 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-const createMessage = (roomParams, successCallback) => {
+const createMessage = (message, successCallback) => {
   fetch('/room_messages', {
     method: 'post',
     headers: headers,
     body: JSON.stringify({
       authenticity_token: csrf,
-      room_message: roomParams
+      room_message: message
     })
   })
   .then(response => response.ok && successCallback());
