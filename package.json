@@ -1,8 +1,23 @@
 {
   "name": "realtime_chat",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "@rails/webpacker": "^4.0.7",
+    "actioncable": "^5.2.3",
+    "activestorage": "^5.2.3",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "bootstrap": "4.3.1",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.11",
+    "popper.js": "^1.15.0",
+    "prop-types": "^15.7.2",
+    "rails-ujs": "^5.2.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
   "devDependencies": {
-    "eslint": "^5.16.0"
+    "eslint": "^5.16.0",
+    "webpack-dev-server": "^3.7.2"
   }
 }

@@ -1,6 +1,6 @@
 class RoomMessagesController < BaseController
   def create
-    room = Room.find params.dig(:room_message, :room_id)
+    room = Room.kept.find params.dig(:room_message, :room_id)
     @room_message = RoomMessage.create user: current_user,
                                        room: room,
                                        body: params.dig(:room_message, :body)
