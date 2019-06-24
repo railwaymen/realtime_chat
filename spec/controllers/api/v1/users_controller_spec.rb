@@ -22,7 +22,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context 'authorized' do
       before(:each) { sign_in user }
 
-      it 'expects to list all rooms as json' do
+      it 'expects to list all users as json' do
         get :index, as: :json
         expect_api_response([expected_response(user)].to_json)
       end
