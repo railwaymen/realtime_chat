@@ -29,11 +29,13 @@ class RoomsController < BaseController
   end
 
   def edit
-    @room = current_user.rooms.kept.find(params[:id])
+    @room = Room.kept.find(params[:id])
+    authorize @room
   end
 
   def update
-    @room = current_user.rooms.kept.find(params[:id])
+    @room = Room.kept.find(params[:id])
+    authorize @room
 
     if @room.update(room_params)
       AppChannel.broadcast_to('app', data: room_representation, type: :room_update)
@@ -46,7 +48,9 @@ class RoomsController < BaseController
   end
 
   def destroy
-    @room = current_user.rooms.kept.find(params[:id])
+    @room = Room.kept.find(params[:id])
+    authorize @room
+
     @room.discard
 
     AppChannel.broadcast_to('app', data: room_representation, type: :room_destroy)
@@ -58,7 +62,7 @@ class RoomsController < BaseController
   private
 
   def fetch_rooms
-    @rooms = Room.kept.order(name: :asc)
+    @rooms = policy_scope(Room).kept.order(name: :asc)
   end
 
   def room_params

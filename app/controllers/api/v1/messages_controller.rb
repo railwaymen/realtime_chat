@@ -13,20 +13,28 @@ module Api
       end
 
       def create
-        @message = room.messages.create(message_params.merge(user: current_user))
+        @message = room.messages.build(message_params.merge(user: current_user))
+        authorize @message
+
+        @message.save
+
         RoomChannel.broadcast_to(@message.room, data: @message, type: :create) if @message.valid?
         respond_with @message
       end
 
       def update
-        @message = current_user.messages.find(params[:id])
+        @message = RoomMessage.find(params[:id])
+        authorize @message
+
         @message.update(message_params)
         RoomChannel.broadcast_to(@message.room, data: @message, type: :update) if @message.valid?
         respond_with @message
       end
 
       def destroy
-        @message = current_user.messages.find(params[:id])
+        @message = RoomMessage.find(params[:id])
+        authorize @message
+
         @message.discard
         RoomChannel.broadcast_to(@message.room, data: @message, type: :destroy)
         head :no_content
@@ -35,7 +43,7 @@ module Api
       private
 
       def room
-        @room ||= Room.find(params[:room_id])
+        @room ||= policy_scope(Room).kept.find(params[:room_id])
       end
 
       def message_params

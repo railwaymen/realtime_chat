@@ -21,5 +21,7 @@ module RealtimeChat
     config.generators do |g|
       g.factory_bot suffix: 'factory'
     end
+
+    config.action_dispatch.rescue_responses['Pundit::NotAuthorizedError'] = :forbidden
   end
 end

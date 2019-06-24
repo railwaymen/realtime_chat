@@ -11,13 +11,17 @@ module Api
       end
 
       def create
-        @rooms_user = room.rooms_users.create(rooms_user_params)
+        @rooms_user = room.rooms_users.build(rooms_user_params)
+        authorize @rooms_user
+
+        @rooms_user.save
         respond_with @rooms_user
       end
 
       def destroy
-        user_rooms_ids = current_user.rooms.ids
-        @rooms_user = RoomsUser.where(room_id: user_rooms_ids).find(params[:id])
+        @rooms_user = RoomsUser.find(params[:id])
+        authorize @rooms_user
+
         @rooms_user.destroy!
         head :no_content
       end
@@ -25,7 +29,7 @@ module Api
       private
 
       def room
-        @room ||= current_user.rooms.find(params[:room_id])
+        @room ||= policy_scope(Room).kept.find(params[:room_id])
       end
 
       def rooms_user_params

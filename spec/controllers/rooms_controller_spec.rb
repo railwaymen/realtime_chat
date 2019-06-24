@@ -119,7 +119,7 @@ RSpec.describe RoomsController, type: :controller do
 
         expect do
           get :edit, params: { id: other_room.id }
-        end.to(raise_exception ActiveRecord::RecordNotFound)
+        end.to(raise_exception Pundit::NotAuthorizedError)
       end
     end
   end
@@ -158,7 +158,7 @@ RSpec.describe RoomsController, type: :controller do
 
         expect do
           put :update, params: { id: other_room.id, room: { name: 'New name' } }
-        end.to(raise_exception ActiveRecord::RecordNotFound)
+        end.to(raise_exception Pundit::NotAuthorizedError)
       end
 
       it 'expects to broadcast updated room' do
@@ -195,7 +195,7 @@ RSpec.describe RoomsController, type: :controller do
 
         expect do
           delete :destroy, params: { id: other_room.id }
-        end.to(raise_exception ActiveRecord::RecordNotFound)
+        end.to(raise_exception Pundit::NotAuthorizedError)
       end
 
       it 'expects to broadcast discarded room' do
