@@ -125,20 +125,9 @@ paths:
         200:
           description: OK
           schema:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  name:
-                    type: string
-                    example: room 1
-                  room_path:
-                    type: string
-                    example: /rooms/1
+            type: array
+            items:
+              $ref: '#/definitions/Room'
     post:
       tags:
         - Rooms
@@ -159,26 +148,7 @@ paths:
         200:
           description: OK
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                example: 1
-              name:
-                type: string
-                example: room 1
-              channel_name:
-                type: string
-                example: room:Z2lkOi8vcmVhbHRpbWUtY2hhdC9Sb29tLzEy
-              editable:
-                type: boolean
-                example: true
-              public:
-                type: boolean
-                example: true
-              room_path:
-                type: string
-                example: /rooms/1
+            $ref: '#/definitions/Room'
         422:
           description: Validation error
           schema:
@@ -209,6 +179,8 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            $ref: '#/definitions/Room'
         422:
           description: Validation error
           schema:
@@ -308,9 +280,7 @@ paths:
         200:
           description: OK
           schema:
-            type: object
-            properties:
-              $ref: '#/definitions/Message'
+            $ref: '#/definitions/Message'
         422:
           description: Validation error
           schema:
@@ -425,6 +395,31 @@ paths:
           description: No Content
 
 definitions:
+  Room:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: Room no. 1
+      channel_name:
+        type: string
+        example: room:Z2lkOi8vcmVhbHRpbWUtY2hhdC9Sb29tLzY
+      editable:
+        type: boolean
+        example: true
+      user_id:
+        type: integer
+        example: 1
+      public:
+        type: boolean
+        example: true
+      room_path:
+        type: string
+        example: /rooms/1
+
   Message:
     type: object
     properties:
@@ -437,6 +432,15 @@ definitions:
       body:
         type: string
         example: Hello
+      editable:
+        type: boolean
+        example: true
+      edited:
+        type: boolean
+        example: false
+      deleted:
+        type: boolean
+        example: false
       user:
         type: object
         properties:
@@ -449,9 +453,7 @@ definitions:
       updated_at:
         type: string
         example: "2019-04-15T09:41:42.602Z"
-      editable:
-        type: boolean
-        example: true
+
   User:
     type: object
     properties:
