@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 json.room_id @room.id
 json.current_user_id current_user.id
 

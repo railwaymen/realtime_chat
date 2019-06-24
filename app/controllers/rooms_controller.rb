@@ -18,6 +18,8 @@ class RoomsController < BaseController
     @room = current_user.rooms.build room_params
 
     if @room.save
+      AppChannel.broadcast_to('app', data: room_representation, type: :room_create)
+
       flash[:success] = "Room #{@room.name} has been created successfully"
       redirect_to rooms_path
     else
@@ -33,6 +35,8 @@ class RoomsController < BaseController
     @room = current_user.rooms.kept.find(params[:id])
 
     if @room.update(room_params)
+      AppChannel.broadcast_to('app', data: room_representation, type: :room_update)
+
       flash[:success] = "Room #{@room.name} has been updated successfully"
       redirect_to rooms_path
     else
@@ -43,6 +47,8 @@ class RoomsController < BaseController
   def destroy
     @room = current_user.rooms.kept.find(params[:id])
     @room.discard
+
+    AppChannel.broadcast_to('app', data: room_representation, type: :room_destroy)
 
     redirect_to rooms_path, notice: "Room #{@room.name} has been closed successfully"
   end
@@ -55,5 +61,17 @@ class RoomsController < BaseController
 
   def room_params
     params.require(:room).permit(:name)
+  end
+
+  def room_representation
+    json = ApplicationController.renderer.render(
+      partial: 'api/v1/rooms/room',
+      locals: {
+        room: @room,
+        current_user: current_user
+      }
+    )
+
+    JSON.parse(json)
   end
 end

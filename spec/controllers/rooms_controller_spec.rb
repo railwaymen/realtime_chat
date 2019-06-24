@@ -21,6 +21,26 @@ RSpec.describe RoomsController, type: :controller do
     end
   end
 
+  describe '#show' do
+    let(:room) { user.rooms.first }
+
+    context 'unauthorized' do
+      it 'expects to respond with error' do
+        get :show, params: { id: room.id }
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    context 'authorized' do
+      before(:each) { sign_in user }
+
+      it 'expects to render view' do
+        get :show, params: { id: room.id }
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
   describe '#new' do
     context 'unauthorized' do
       it 'expects to respond with error' do
@@ -66,6 +86,12 @@ RSpec.describe RoomsController, type: :controller do
         end.not_to(change { Room.count })
 
         expect(response).to render_template 'new'
+      end
+
+      it 'expects to broadcast new room' do
+        expect do
+          post :create, params: room_params
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
     end
   end
@@ -134,6 +160,12 @@ RSpec.describe RoomsController, type: :controller do
           put :update, params: { id: other_room.id, room: { name: 'New name' } }
         end.to(raise_exception ActiveRecord::RecordNotFound)
       end
+
+      it 'expects to broadcast updated room' do
+        expect do
+          put :update, params: { id: room.id, room: { name: 'New name' } }
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
+      end
     end
   end
 
@@ -164,6 +196,12 @@ RSpec.describe RoomsController, type: :controller do
         expect do
           delete :destroy, params: { id: other_room.id }
         end.to(raise_exception ActiveRecord::RecordNotFound)
+      end
+
+      it 'expects to broadcast discarded room' do
+        expect do
+          delete :destroy, params: { id: room.id }
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
     end
   end

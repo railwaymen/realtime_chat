@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 
-import createChannel from '@/utils/cable';
-
 import Conversation from './Conversation';
 
 import { createMessage } from '@/actions/chat'
+import createChannel from '@/utils/cable';
 
 class Chat extends Component {
   constructor(props) {

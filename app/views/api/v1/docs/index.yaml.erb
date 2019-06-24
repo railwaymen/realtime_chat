@@ -113,6 +113,9 @@ paths:
                   name:
                     type: string
                     example: room 1
+                  room_path:
+                    type: string
+                    example: /rooms/1
     post:
       tags:
         - Rooms
@@ -136,6 +139,9 @@ paths:
               name:
                 type: string
                 example: room 1
+              room_path:
+                type: string
+                example: /rooms/1
         422:
           description: Validation error
           schema:

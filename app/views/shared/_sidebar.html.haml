@@ -7,11 +7,10 @@
       = link_to new_room_path, class: 'btn btn-primary' do
         Create a room
 
-    - if @rooms.present?
-      %ul.nav.flex-column
-        - @rooms.each do |room|
-          = link_to room_path(room) do
-            %li.nav-item.text-nowrap= room.name
-    - else
-      .text-muted
-        The are no rooms
+    #rooms-list__component{ 'data-behavior': 'react' }
+
+:javascript
+  document.addEventListener('DOMContentLoaded', function() {
+    var data = #{ raw render('rooms/rooms') }
+    window.initializeRoomsList(data)
+  });

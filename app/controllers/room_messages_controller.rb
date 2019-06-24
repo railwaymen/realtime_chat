@@ -20,7 +20,14 @@ class RoomMessagesController < BaseController
   end
 
   def message_representation
-    json = ApplicationController.renderer.render(partial: 'api/v1/messages/message', locals: { message: @message, current_user: current_user })
+    json = ApplicationController.renderer.render(
+      partial: 'api/v1/messages/message',
+      locals: {
+        message: @message,
+        current_user: current_user
+      }
+    )
+
     JSON.parse(json)
   end
 end
