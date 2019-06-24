@@ -25,10 +25,19 @@ class Chat extends Component {
         received: response => {
           if (response.message === 'typing') {
             this.handleTypingAction(response)
-          } else if (response.type === 'create') {
-            this.handleNewMessage(response.data)
-          } else if (response.type === 'update') {
-            this.handleUpdatedMessage(response.data)
+            return;
+          }
+          
+          switch (response.type) {
+            case 'create':
+              this.handleNewMessage(response.data)
+              break;
+            case 'update':
+              this.handleUpdatedMessage(response.data)
+              break;
+            case 'destroy':
+              this.handleUpdatedMessage(response.data)
+              break;  
           }
         },
         userTyping: typing => {

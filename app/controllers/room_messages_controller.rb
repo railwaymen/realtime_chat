@@ -13,6 +13,13 @@ class RoomMessagesController < BaseController
     RoomChannel.broadcast_to(@message.room, type: :update, data: message_representation) if @message.valid?
   end
 
+  def destroy
+    @message = current_user.messages.includes(:room).find params[:id]
+    @message.discard
+
+    RoomChannel.broadcast_to(@message.room, type: :destroy, data: message_representation)
+  end
+
   private
 
   def message_params
