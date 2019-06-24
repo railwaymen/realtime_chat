@@ -20,7 +20,6 @@ gem 'dotenv-rails', '~> 2.1', '>= 2.1.1'
 gem 'procodile'
 gem 'discard', '~> 1.0'
 gem 'webpacker', '~> 4.0', '>= 4.0.7'
-gem 'awesome_print'
 
 group :development, :test do
   gem 'better_errors'
@@ -40,4 +39,5 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
   gem 'capistrano-rails'
+  gem 'awesome_print'
 end
