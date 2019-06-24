@@ -5,4 +5,8 @@ class RoomMessage < ApplicationRecord
 
   # Validations
   validates :body, presence: true
+
+  def edited?
+    updated_at != created_at
+  end
 end

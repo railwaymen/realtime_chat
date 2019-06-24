@@ -44,9 +44,11 @@ class Conversation extends Component {
     return (
       <div className="conversation">
         <div className="conversation__content">
-          {messages.length > 0 ? messages.map(message => (
-            <ConversationItem key={message.id} message={message} currentUserId={currentUserId} />
-          )) : (
+          {messages.length > 0 ? (
+            messages.map(message => (
+              <ConversationItem key={message.id} message={message} currentUserId={currentUserId} />
+            ))
+          ) : (
             <p>There are no messages</p>
           )}
 

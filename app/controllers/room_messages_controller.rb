@@ -1,15 +1,26 @@
 class RoomMessagesController < BaseController
   def create
-    room = Room.kept.find params.dig(:room_message, :room_id)
-    @room_message = RoomMessage.create user: current_user,
-                                       room: room,
-                                       body: params.dig(:room_message, :body)
-    RoomChannel.broadcast_to room, type: :create, data: message_representation(@room_message)
+    room = Room.kept.includes(:user).find params.dig(:room_message, :room_id)
+    @message = room.messages.create(message_params.merge(user: current_user))
+
+    RoomChannel.broadcast_to(room, type: :create, data: message_representation) if @message.valid?
+  end
+
+  def update
+    @message = current_user.messages.includes(:room).find params[:id]
+    @message.update(message_params)
+
+    RoomChannel.broadcast_to(@message.room, type: :update, data: message_representation) if @message.valid?
   end
 
   private
 
-  def message_representation(message)
-    message.slice(:id, :user_id, :body, :updated_at, :created_at).merge(user: { username: message.user.username })
+  def message_params
+    params.require(:room_message).permit(:body)
+  end
+
+  def message_representation
+    json = ApplicationController.renderer.render(partial: 'api/v1/messages/message', locals: { message: @message, current_user: current_user })
+    JSON.parse(json)
   end
 end
