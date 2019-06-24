@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 
 import createChannel from '@/utils/cable';
 
+import RoomItem from './RoomItem'
+
 class RoomsList extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      rooms: props.rooms
+      currentUserId: props.data.current_user_id,
+      rooms: props.data.rooms
     }
 
     this.subscription = createChannel(
@@ -60,9 +63,7 @@ class RoomsList extends Component {
     return (
       <div className="rooms__list">
         {this.state.rooms.map(room => (
-          <div className="room__item" key={room.id}>
-            <a href={room.room_path}>{room.name}</a>
-          </div>
+          <RoomItem key={room.id} room={room} currentUserId={this.state.currentUserId} />
         ))}
       </div>
     )
