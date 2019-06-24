@@ -1,4 +1,5 @@
 class RoomsController < BaseController
+  include RoomsConcern
   before_action :fetch_rooms
 
   def index; end
@@ -39,6 +40,7 @@ class RoomsController < BaseController
 
     if @room.update(room_params)
       AppChannel.broadcast_to('app', data: room_representation, type: :room_update)
+      create_rooms_user_for_owner!(@room) if @room.public == false
 
       flash[:success] = "Room #{@room.name} has been updated successfully"
       redirect_to rooms_path

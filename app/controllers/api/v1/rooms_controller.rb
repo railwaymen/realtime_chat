@@ -3,6 +3,7 @@
 module Api
   module V1
     class RoomsController < Api::V1::BaseController
+      include RoomsConcern
       before_action :authenticate_user!
 
       def index
@@ -12,7 +13,10 @@ module Api
 
       def create
         @room = current_user.rooms.create(create_room_params)
-        AppChannel.broadcast_to('app', data: @room, type: :room_create) if @room.valid?
+        if @room.valid?
+          AppChannel.broadcast_to('app', data: @room, type: :room_create)
+          create_rooms_user_for_owner!(@room) if @room.public == false
+        end
         respond_with @room
       end
 
