@@ -39,4 +39,5 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
   gem 'capistrano-rails'
+  gem 'awesome_print'
 end

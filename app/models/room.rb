@@ -3,6 +3,12 @@ class Room < ApplicationRecord
   include OwnerConcern
 
   has_many :messages, class_name: 'RoomMessage', dependent: :destroy
+  has_many :rooms_users, dependent: :destroy
+  has_many :users, through: :rooms_users, dependent: :destroy
+
+  after_discard do
+    messages.discard_all
+  end
 
   # Validations
   validates :name, presence: true

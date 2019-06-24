@@ -19,15 +19,15 @@ module Api
       end
 
       def update
-        @message = room.messages.find(params[:id])
+        @message = current_user.messages.find(params[:id])
         @message.update(message_params)
         RoomChannel.broadcast_to(@message.room, data: @message, type: :update) if @message.valid?
         respond_with @message
       end
 
       def destroy
-        @message = room.messages.find(params[:id])
-        @message.destroy!
+        @message = current_user.messages.find(params[:id])
+        @message.discard
         RoomChannel.broadcast_to(@message.room, data: @message, type: :destroy)
         head :no_content
       end

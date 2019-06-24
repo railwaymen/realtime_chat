@@ -10,6 +10,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       channel_name: room.channel_name,
       user_id: room.user_id,
       editable: room.owner?(user),
+      public: room.public,
       room_path: room_path(room)
     }
   end
@@ -125,10 +126,9 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       before(:each) { sign_in user }
 
       it 'expects to destroy room' do
-        expect do
-          delete :destroy, params: { id: room.id }, as: :json
-        end.to(change { Room.count }.by(-1))
+        delete :destroy, params: { id: room.id }, as: :json
 
+        expect(room.reload.discarded?).to be_truthy
         expect(response).to have_http_status 204
       end
 

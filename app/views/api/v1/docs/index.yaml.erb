@@ -38,7 +38,7 @@ paths:
             type: object
             properties:
               id:
-                type: integer              
+                type: integer
               email:
                 type: string
               authentication_token:
@@ -81,13 +81,36 @@ paths:
                 type: string
         401:
           description: Invalid refresh token
+  /users:
+    get:
+      tags:
+        - Users
+      security:
+        - User: []
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: User 1
+                email:
+                  type: string
+                  example: user1@example.com
   /rooms:
     get:
       description: |
-        Application provides single socket to listen for events from selected room. 
-        Socket URL is: <%= Rails.application.config.action_cable.url %>. 
+        Application provides single socket to listen for events from selected room.
+        Socket URL is: <%= Rails.application.config.action_cable.url %>.
         Socket requires authentiation using token which needs to be passed in the header as 'Token: value'.
-        After succesful connection to socket one needs to subscribe to selected room chanel using command: {"command":"subscribe","identifier":"{\"channel\":\"RoomChannel\",\"room\":\"2\"}"} 
+        After succesful connection to socket one needs to subscribe to selected room chanel using command: {"command":"subscribe","identifier":"{\"channel\":\"RoomChannel\",\"room\":\"2\"}"}
         ```
         websocat <%= Rails.application.config.action_cable.url %> -H 'Token: xxxxx'
         {"type":"welcome"}
@@ -102,7 +125,7 @@ paths:
         200:
           description: OK
           schema:
-            schema: 
+            schema:
               type: array
               items:
                 type: object
@@ -127,6 +150,11 @@ paths:
           required: true
           type: string
           default: Room 1
+        - in: formData
+          name: public
+          required: false
+          type: boolean
+          default: true
       responses:
         200:
           description: OK
@@ -139,6 +167,15 @@ paths:
               name:
                 type: string
                 example: room 1
+              channel_name:
+                type: string
+                example: room:Z2lkOi8vcmVhbHRpbWUtY2hhdC9Sb29tLzEy
+              editable:
+                type: boolean
+                example: true
+              public:
+                type: boolean
+                example: true
               room_path:
                 type: string
                 example: /rooms/1
@@ -162,7 +199,7 @@ paths:
       parameters:
         - in: path
           name: id
-          type: string 
+          type: string
           required: true
         - in: formData
           name: name
@@ -191,11 +228,11 @@ paths:
       parameters:
         - in: path
           name: id
-          type: string 
+          type: string
           required: true
       responses:
-        200:
-          description: OK
+        204:
+          description: No Content
   /rooms/{room_id}/messages:
     get:
       tags:
@@ -205,7 +242,7 @@ paths:
       parameters:
         - in: path
           name: room_id
-          type: string 
+          type: string
           required: true
           default: 1
         - in: query
@@ -227,7 +264,7 @@ paths:
       parameters:
         - in: path
           name: room_id
-          type: string 
+          type: string
           required: true
           default: 1
         - in: formData
@@ -251,7 +288,7 @@ paths:
               errors:
                 name:
                   - error: blank
-  /rooms/{room_id}/messages/{id}:
+  /messages/{id}:
     put:
       tags:
         - Messages
@@ -259,13 +296,8 @@ paths:
         - User: []
       parameters:
         - in: path
-          name: room_id
-          type: string 
-          required: true
-          default: 1
-        - in: path
           name: id
-          type: string 
+          type: string
           required: true
         - in: formData
           name: body
@@ -297,17 +329,100 @@ paths:
         - User: []
       parameters:
         - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        204:
+          description: No Content
+  /rooms/{room_id}/rooms_users:
+    get:
+      tags:
+        - Rooms Users
+      security:
+        - User: []
+      parameters:
+        - in: path
           name: room_id
-          type: string 
+          type: string
           required: true
           default: 1
-        - in: path
-          name: id
-          type: string 
-          required: true
       responses:
         200:
           description: OK
+          schema:
+            type: array
+            items:
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                room_id:
+                  type: integer
+                  example: 1
+                user_id:
+                  type: integer
+                  example: 1
+                user:
+                  $ref: '#/definitions/User'
+    post:
+      tags:
+        - Rooms Users
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: room_id
+          type: string
+          required: true
+          default: 1
+        - in: formData
+          name: user_id
+          required: false
+          type: string
+          default: 1
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              room_id:
+                type: integer
+                example: 1
+              user_id:
+                type: integer
+                example: 1
+              user:
+                $ref: '#/definitions/User'
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                user:
+                  - error: blank
+  /rooms_users/{id}:
+    delete:
+      tags:
+        - Rooms Users
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        204:
+          description: No Content
 
 definitions:
   Message:
@@ -334,3 +449,18 @@ definitions:
       updated_at:
         type: string
         example: "2019-04-15T09:41:42.602Z"
+      editable:
+        type: boolean
+        example: true
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      username:
+        type: string
+        example: user1
+      email:
+        type: string
+        example: user1@example.com

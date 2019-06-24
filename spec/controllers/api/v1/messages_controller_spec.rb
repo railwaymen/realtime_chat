@@ -128,10 +128,9 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       before(:each) { sign_in user }
 
       it 'expects to destroy message' do
-        expect do
-          delete :destroy, params: { room_id: room.id, id: message.id }, as: :json
-        end.to(change { room.messages.count }.by(-1))
+        delete :destroy, params: { room_id: room.id, id: message.id }, as: :json
 
+        expect(message.reload.discarded?).to be_truthy
         expect(response).to have_http_status 204
       end
 
