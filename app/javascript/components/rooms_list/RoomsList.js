@@ -11,6 +11,7 @@ class RoomsList extends Component {
     this.state = {
       currentUserId: props.data.current_user_id,
       rooms: props.data.rooms,
+      filteredRooms: props.data.rooms,
       searchValue: ''
     }
 
@@ -36,9 +37,25 @@ class RoomsList extends Component {
     )
   }
 
+  filterRooms = () => {
+    const { searchValue, rooms } = this.state;
+    let filteredRooms;
+
+    if (searchValue.length > 0) {
+      filteredRooms = rooms.filter(room => {
+        return room.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
+      })
+    } else {
+      filteredRooms = [...rooms]
+    }
+    
+    this.setState({ filteredRooms })
+  }
+
   handleNewRoom = room => {
     const sortedRooms = _.orderBy([...this.state.rooms, room], [room => room.name.toLowerCase()], ['asc']);
     this.setState({ rooms: sortedRooms })
+    this.filterRooms()
   }
 
   handleUpdatedRoom = room => {
@@ -49,6 +66,7 @@ class RoomsList extends Component {
     
     const sortedRooms = _.orderBy(rooms, [room => room.name.toLowerCase()], ['asc']);
     this.setState({ rooms: sortedRooms })
+    this.filterRooms()
   }
 
   handleDestroyedRoom = room => {
@@ -58,25 +76,16 @@ class RoomsList extends Component {
     rooms.splice(index, 1)
 
     this.setState({ rooms })
+    this.filterRooms()
   }
 
-  handleSearch = e => {
-    const value = e.target.value
-    let rooms;
-
-    if (value.length > 0) {
-      rooms = this.props.data.rooms.filter(room => {
-        return room.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-      })
-    } else {
-      rooms = this.props.data.rooms
-    }
-    
-    this.setState({ searchValue: value, rooms: rooms })
+  handleSearch = async e => {
+    await this.setState({ searchValue: e.target.value })
+    this.filterRooms()
   }
 
   render() {
-    const { rooms, currentUserId, searchValue } = this.state;
+    const { filteredRooms, currentUserId, searchValue } = this.state;
 
     return (
       <div className="rooms">
@@ -91,7 +100,7 @@ class RoomsList extends Component {
         </div>
 
         <div className="rooms__list mb-2">
-          {rooms.map(room => (
+          {filteredRooms.map(room => (
             <RoomItem key={room.id} room={room} currentUserId={currentUserId} />
           ))}
         </div>
