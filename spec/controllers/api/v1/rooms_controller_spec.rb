@@ -67,6 +67,14 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
         expect_api_response(expected_response(last_room).to_json)
       end
 
+      it 'expects to create new rooms_user for owner' do
+        expect do
+          post :create, params: params.merge(public: false), as: :json
+        end.to(change { RoomsUser.count }.by(1))
+
+        expect(RoomsUser.last.user).to eql(user)
+      end
+
       it 'expects to broadcast new room' do
         expect do
           post :create, params: params, as: :json

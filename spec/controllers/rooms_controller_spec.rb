@@ -80,6 +80,14 @@ RSpec.describe RoomsController, type: :controller do
         expect(response).to redirect_to rooms_path
       end
 
+      it 'expects to create new rooms_user for owner' do
+        expect do
+          post :create, params: { room: attributes_for(:room, public: false) }
+        end.to(change { RoomsUser.count }.by(1))
+
+        expect(RoomsUser.last.user).to eql(user)
+      end
+
       it 'expects to respond with error due to invalid params' do
         expect do
           post :create, params: { room: { name: '' } }
