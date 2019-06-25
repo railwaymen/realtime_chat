@@ -10,7 +10,8 @@ class RoomsList extends Component {
 
     this.state = {
       currentUserId: props.data.current_user_id,
-      rooms: props.data.rooms
+      rooms: props.data.rooms,
+      searchValue: ''
     }
 
     this.subscription = createChannel(
@@ -59,12 +60,41 @@ class RoomsList extends Component {
     this.setState({ rooms })
   }
 
+  handleSearch = e => {
+    const value = e.target.value
+    let rooms;
+
+    if (value.length > 0) {
+      rooms = this.props.data.rooms.filter(room => {
+        return room.name.toLowerCase().indexOf(value.toLowerCase()) > -1
+      })
+    } else {
+      rooms = this.props.data.rooms
+    }
+    
+    this.setState({ searchValue: value, rooms: rooms })
+  }
+
   render() {
+    const { rooms, currentUserId, searchValue } = this.state;
+
     return (
-      <div className="rooms__list">
-        {this.state.rooms.map(room => (
-          <RoomItem key={room.id} room={room} currentUserId={this.state.currentUserId} />
-        ))}
+      <div className="rooms">
+        <div className="rooms__search py-2">
+          <input
+            value={searchValue}
+            className="form-control"
+            type="text"
+            placeholder="Search..."
+            onChange={this.handleSearch}
+          />
+        </div>
+
+        <div className="rooms__list mb-2">
+          {rooms.map(room => (
+            <RoomItem key={room.id} room={room} currentUserId={currentUserId} />
+          ))}
+        </div>
       </div>
     )
   }

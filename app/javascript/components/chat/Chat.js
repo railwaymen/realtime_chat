@@ -10,6 +10,7 @@ class Chat extends Component {
     super(props)
 
     this.state = {
+      isRoomDeleted: props.data.room_deleted,
       messages: props.data.messages,
       currentUserId: props.data.current_user_id,
       currentMessage: '',
@@ -38,6 +39,8 @@ class Chat extends Component {
             case 'destroy':
               this.handleUpdatedMessage(response.data)
               break;  
+            case 'room_close':
+              this.handleClosedRoom()
           }
         },
         userTyping: typing => {
@@ -45,6 +48,10 @@ class Chat extends Component {
         }
       }
     )
+  }
+
+  handleClosedRoom = () => {
+    this.setState({ isRoomDeleted: true })
   }
 
   handleMessageChange = e => {
@@ -98,6 +105,7 @@ class Chat extends Component {
 
   render() {
     const {
+      isRoomDeleted,
       messages,
       currentUserId,
       currentMessage,
@@ -112,19 +120,23 @@ class Chat extends Component {
           typers={typers}
         />
 
-        <form onSubmit={this.handleMessageSubmit} className="message-area">
-          <div className="input-group">
-            <input
-              value={currentMessage}
-              onChange={this.handleMessageChange}
-              onKeyUp={this.handleUserTyping}
-              className="form-control"
-            />
-            <div className="input-group-append">
-              <button type="submit" className="btn btn-primary">Send</button>
+        {isRoomDeleted ? (
+          <p className="chat__info">Room was closed by owner</p>
+        ) : (
+          <form onSubmit={this.handleMessageSubmit} className="message-area">
+            <div className="input-group">
+              <input
+                value={currentMessage}
+                onChange={this.handleMessageChange}
+                onKeyUp={this.handleUserTyping}
+                className="form-control"
+              />
+              <div className="input-group-append">
+                <button type="submit" className="btn btn-primary">Send</button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
     )
   }
