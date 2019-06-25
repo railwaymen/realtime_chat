@@ -203,6 +203,12 @@ RSpec.describe RoomsController, type: :controller do
           delete :destroy, params: { id: room.id }
         end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
+
+      it 'expects to broadcast close room action' do
+        expect do
+          delete :destroy, params: { id: room.id }
+        end.to have_broadcasted_to(room).from_channel(RoomChannel)
+      end
     end
   end
 end

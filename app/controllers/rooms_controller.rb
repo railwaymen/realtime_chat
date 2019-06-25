@@ -50,6 +50,7 @@ class RoomsController < BaseController
     @room.discard
 
     AppChannel.broadcast_to('app', data: room_representation, type: :room_destroy)
+    RoomChannel.broadcast_to(@room, type: :room_close)
 
     redirect_to rooms_path, notice: "Room #{@room.name} has been closed successfully"
   end

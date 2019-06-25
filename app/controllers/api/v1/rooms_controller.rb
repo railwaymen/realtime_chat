@@ -28,6 +28,7 @@ module Api
         @room = current_user.rooms.find(params[:id])
         @room.discard
         AppChannel.broadcast_to('app', data: @room, type: :room_destroy)
+        RoomChannel.broadcast_to(@room, type: :room_close)
         head :no_content
       end
 
