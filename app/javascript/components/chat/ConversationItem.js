@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import moment from 'moment'
 
-import { updateMessage } from '@/actions/chat'
+import { updateMessage, deleteMessage } from '@/actions/chat'
 
 class ConverationItem extends Component {
   constructor(props) {
@@ -40,6 +40,10 @@ class ConverationItem extends Component {
     }
   }
 
+  handleMessageDelete = () => {
+    confirm('Are you sure?') && deleteMessage({ id: this.props.message.id })
+  }
+
   render() {
     const {
       message: {
@@ -47,6 +51,7 @@ class ConverationItem extends Component {
         user_id,
         created_at,
         edited,
+        deleted,
         user: {
           username
         }
@@ -89,9 +94,25 @@ class ConverationItem extends Component {
               </div>
             </div>
           ) : (
-            <p className="message__body" onDoubleClick={this.handleDoubleClick}>
-              {body}
-            </p>
+            <div className="message__body" onDoubleClick={this.handleDoubleClick}>
+              <p>{body}</p>
+
+              {!deleted && currentUserId == user_id && (
+                <div className="message__actions">
+                  <span
+                    className="edit"
+                    onClick={this.handleDoubleClick}
+                  >
+                    &#128394;
+                  </span>
+
+                  <span
+                    className="destroy"
+                    onClick={this.handleMessageDelete}
+                  >&#128465;</span>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

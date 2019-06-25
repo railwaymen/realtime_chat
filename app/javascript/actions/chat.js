@@ -29,7 +29,18 @@ const updateMessage = (message, successCallback) => {
   .then(response => response.ok && successCallback());
 };
 
+const deleteMessage = message => {
+  fetch(`/room_messages/${message.id}`, {
+    method: 'delete',
+    headers: headers,
+    body: JSON.stringify({
+      authenticity_token: csrf
+    })
+  })
+}
+
 export {
   createMessage,
-  updateMessage
+  updateMessage,
+  deleteMessage
 };
