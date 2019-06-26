@@ -27,7 +27,7 @@ module Api
       def update
         @room = Room.kept.find(params[:id])
         authorize @room
-        
+
         if @room.update(update_room_params)
           AppChannel.broadcast_to('app', data: @room.serialized, type: :room_update)
           render json: @room.serialized, status: 200

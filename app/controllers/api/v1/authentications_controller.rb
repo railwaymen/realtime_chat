@@ -15,7 +15,7 @@ module Api
         head(:unauthorized) && return unless @user
         @user.generate_authentication_token
         @user.save!
-        
+
         render json: Api::V1::AuthenticationSerializer.render(@user, view: :refresh), status: 200
       end
     end
