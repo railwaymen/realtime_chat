@@ -11,11 +11,12 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       id: message.id,
       user_id: message.user_id,
       body: message.body,
-      editable: message.owner?(user),
       edited: message.created_at != message.updated_at,
       deleted: message.discarded?,
       user: {
-        username: message.user.username
+        id: message.user.id,
+        username: message.user.username,
+        email: message.user.email
       }
     }
   end

@@ -12,4 +12,8 @@ class RoomMessage < ApplicationRecord
   def edited?
     updated_at != created_at
   end
+
+  def serialized
+    Api::V1::MessageSerializer.render_as_hash(self)
+  end
 end

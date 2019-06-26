@@ -7,7 +7,7 @@ module Api
 
       def index
         @users = User.all
-        respond_with @users
+        render json: Api::V1::UserSerializer.render_as_hash(@users), status: 200
       end
     end
   end
