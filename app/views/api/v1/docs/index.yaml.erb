@@ -93,17 +93,7 @@ paths:
           schema:
             type: array
             items:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  example: 1
-                username:
-                  type: string
-                  example: User 1
-                email:
-                  type: string
-                  example: user1@example.com
+              $ref: '#/definitions/User'
   /rooms:
     get:
       description: |
@@ -323,18 +313,7 @@ paths:
           schema:
             type: array
             items:
-              properties:
-                id:
-                  type: integer
-                  example: 1
-                room_id:
-                  type: integer
-                  example: 1
-                user_id:
-                  type: integer
-                  example: 1
-                user:
-                  $ref: '#/definitions/User'
+              $ref: '#/definitions/RoomsUsers'
     post:
       tags:
         - Rooms Users
@@ -355,19 +334,7 @@ paths:
         200:
           description: OK
           schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                example: 1
-              room_id:
-                type: integer
-                example: 1
-              user_id:
-                type: integer
-                example: 1
-              user:
-                $ref: '#/definitions/User'
+            $ref: '#/definitions/RoomsUsers'
         422:
           description: Validation error
           schema:
@@ -407,9 +374,6 @@ definitions:
       channel_name:
         type: string
         example: room:Z2lkOi8vcmVhbHRpbWUtY2hhdC9Sb29tLzY
-      editable:
-        type: boolean
-        example: true
       user_id:
         type: integer
         example: 1
@@ -419,6 +383,21 @@ definitions:
       room_path:
         type: string
         example: /rooms/1
+
+  RoomsUsers:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      user_id:
+        type: integer
+        example: 1
+      room_id:
+        type: integer
+        example: 1
+      user:
+        $ref: '#/definitions/User'
 
   Message:
     type: object
@@ -432,9 +411,6 @@ definitions:
       body:
         type: string
         example: Hello
-      editable:
-        type: boolean
-        example: true
       edited:
         type: boolean
         example: false
@@ -442,15 +418,8 @@ definitions:
         type: boolean
         example: false
       user:
-        type: object
-        properties:
-          username:
-            type: string
-            example: user1
+        $ref: '#/definitions/User'
       created_at:
-        type: string
-        example: "2019-04-15T09:41:42.602Z"
-      updated_at:
         type: string
         example: "2019-04-15T09:41:42.602Z"
 

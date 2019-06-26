@@ -135,9 +135,6 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.3)
-    jbuilder (2.8.0)
-      activesupport (>= 4.2.0)
-      multi_json (>= 1.2)
     json (2.2.0)
     json_spec (1.1.5)
       multi_json (~> 1.0)
@@ -319,7 +316,6 @@ DEPENDENCIES
   factory_bot_rails (~> 5.0, >= 5.0.2)
   faker (~> 1.9, >= 1.9.3)
   haml-rails
-  jbuilder (~> 2.5)
   json_spec (~> 1.1, >= 1.1.5)
   jwt (~> 2.1.0)
   pg
