@@ -3,6 +3,7 @@
 module Api
   module V1
     class MessagesController < Api::V1::BaseController
+      include RoomMessagesConcern
       before_action :authenticate_user!
       MESSAGES_LIMIT = 10
 
@@ -17,8 +18,7 @@ module Api
         authorize @message
 
         @message.save
-
-        RoomChannel.broadcast_to(@message.room, data: @message, type: :create) if @message.valid?
+        broadcast_message(@message, :room_message_create) if @message.valid?
         respond_with @message
       end
 
@@ -27,7 +27,7 @@ module Api
         authorize @message
 
         @message.update(message_params)
-        RoomChannel.broadcast_to(@message.room, data: @message, type: :update) if @message.valid?
+        broadcast_message(@message, :room_message_update) if @message.valid?
         respond_with @message
       end
 
@@ -36,7 +36,7 @@ module Api
         authorize @message
 
         @message.discard
-        RoomChannel.broadcast_to(@message.room, data: @message, type: :destroy)
+        broadcast_message(@message, :room_message_destroy) if @message.valid?
         head :no_content
       end
 

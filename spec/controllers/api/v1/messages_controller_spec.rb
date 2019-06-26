@@ -73,7 +73,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       it 'expects to broadcast new message' do
         expect do
           post :create, params: params, as: :json
-        end.to have_broadcasted_to(room).from_channel(RoomChannel)
+        end.to have_broadcasted_to(:app).from_channel(RoomChannel)
       end
     end
   end
@@ -110,7 +110,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       it 'expects to broadcast updated message' do
         expect do
           put :update, params: { room_id: room.id, id: message.id, body: 'How are you?' }, as: :json
-        end.to have_broadcasted_to(room).from_channel(RoomChannel)
+        end.to have_broadcasted_to(:app).from_channel(RoomChannel)
       end
     end
   end
@@ -138,7 +138,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       it 'expects to broadcast destroyed message' do
         expect do
           delete :destroy, params: { room_id: room.id, id: message.id }, as: :json
-        end.to have_broadcasted_to(room).from_channel(RoomChannel)
+        end.to have_broadcasted_to(:app).from_channel(RoomChannel)
       end
     end
   end

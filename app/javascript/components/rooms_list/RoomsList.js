@@ -15,24 +15,21 @@ class RoomsList extends Component {
       searchValue: ''
     }
 
-    this.subscription = createChannel(
+    this.appSubscription = createChannel(
       {
         channel: 'AppChannel'
       },
       {
-        received: response => {
-          switch (response.type) {
-            case 'room_create':
-              this.handleNewRoom(response.data)
-              break;
-            case 'room_update':
-              this.handleUpdatedRoom(response.data)
-              break;
-            case 'room_destroy':
-              this.handleDestroyedRoom(response.data)
-              break;
-          }
-        }
+        received: this.handleChannelResponse
+      }
+    )
+
+    this.userSubscription = createChannel(
+      {
+        channel: 'UserChannel'
+      },
+      {
+        received: this.handleChannelResponse
       }
     )
   }
@@ -48,8 +45,20 @@ class RoomsList extends Component {
     } else {
       filteredRooms = [...rooms]
     }
-    
+
     this.setState({ filteredRooms })
+  handleChannelResponse = response => {
+    switch (response.type) {
+      case 'room_create':
+        this.handleNewRoom(response.data)
+        break;
+      case 'room_update':
+        this.handleUpdatedRoom(response.data)
+        break;
+      case 'room_destroy':
+        this.handleDestroyedRoom(response.data)
+        break;
+    }
   }
 
   handleNewRoom = room => {
@@ -63,7 +72,7 @@ class RoomsList extends Component {
     const index = _.findIndex(rooms, { id: room.id })
 
     rooms.splice(index, 1, room)
-    
+
     const sortedRooms = _.orderBy(rooms, [room => room.name.toLowerCase()], ['asc']);
     this.setState({ rooms: sortedRooms })
     this.filterRooms()
