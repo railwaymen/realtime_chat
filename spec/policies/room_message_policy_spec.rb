@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RoomMessagePolicy do
   subject { described_class }
   let(:user) { create(:user) }
@@ -5,14 +7,14 @@ describe RoomMessagePolicy do
   permissions :create? do
     it 'grants access to public room' do
       room = create(:room, public: true)
-      rooms_message = create(:rooms_user, user: user, room: room)
+      create(:rooms_user, user: user, room: room)
       message = create(:room_message, user: user, room: room)
       expect(subject).to permit(user, message)
     end
 
     it 'grants access to privare room when users is assigned' do
       room = create(:room, public: false)
-      rooms_message = create(:rooms_user, user: user, room: room)
+      create(:rooms_user, user: user, room: room)
       message = create(:room_message, user: user, room: room)
       expect(subject).to permit(user, message)
     end

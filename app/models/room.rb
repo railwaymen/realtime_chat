@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Room < ApplicationRecord
   include Discard::Model
   include OwnerConcern
@@ -10,6 +12,6 @@ class Room < ApplicationRecord
   validates :name, presence: true
 
   def channel_name
-    [RoomChannel.channel_name, self.to_gid_param].join(':')
+    [RoomChannel.channel_name, to_gid_param].join(':')
   end
 end

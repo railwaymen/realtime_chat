@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RoomMessage < ApplicationRecord
   include Discard::Model
   include OwnerConcern
