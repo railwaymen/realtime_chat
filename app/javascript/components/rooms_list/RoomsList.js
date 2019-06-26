@@ -47,6 +47,8 @@ class RoomsList extends Component {
     }
 
     this.setState({ filteredRooms })
+  }
+
   handleChannelResponse = response => {
     switch (response.type) {
       case 'room_create':
