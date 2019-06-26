@@ -25,6 +25,7 @@ class RoomMessagesController < BaseController
   def destroy
     @message = RoomMessage.find params[:id]
     authorize @message
+
     @message.discard
 
     broadcast_message(@message, :room_message_destroy) if @message.valid?
@@ -34,17 +35,5 @@ class RoomMessagesController < BaseController
 
   def message_params
     params.require(:room_message).permit(:body)
-  end
-
-  def message_representation
-    json = ApplicationController.renderer.render(
-      partial: 'api/v1/messages/message',
-      locals: {
-        message: @message,
-        current_user: current_user
-      }
-    )
-
-    JSON.parse(json)
   end
 end

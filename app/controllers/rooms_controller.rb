@@ -18,10 +18,10 @@ class RoomsController < BaseController
   end
 
   def create
-    @room = current_user.rooms.build create_room_params
+    @room = current_user.rooms.build(create_room_params)
 
     if @room.save
-      AppChannel.broadcast_to('app', data: room_representation, type: :room_create)
+      AppChannel.broadcast_to('app', data: @room.serialized, type: :room_create)
       create_rooms_user_for_owner!(@room) if @room.public == false
 
       flash[:success] = "Room #{@room.name} has been created successfully"
@@ -41,7 +41,7 @@ class RoomsController < BaseController
     authorize @room
 
     if @room.update(update_room_params)
-      AppChannel.broadcast_to('app', data: room_representation, type: :room_update)
+      AppChannel.broadcast_to('app', data: @room.serialized, type: :room_update)
 
       flash[:success] = "Room #{@room.name} has been updated successfully"
       redirect_to rooms_path
@@ -56,7 +56,7 @@ class RoomsController < BaseController
 
     @room.discard
 
-    AppChannel.broadcast_to('app', data: room_representation, type: :room_destroy)
+    AppChannel.broadcast_to('app', data: @room.serialized, type: :room_destroy)
     RoomChannel.broadcast_to(@room, type: :room_close)
 
     redirect_to rooms_path, notice: "Room #{@room.name} has been closed successfully"
@@ -75,17 +75,5 @@ class RoomsController < BaseController
 
   def update_room_params
     params.require(:room).permit(:name)
-  end
-
-  def room_representation
-    json = ApplicationController.renderer.render(
-      partial: 'api/v1/rooms/room',
-      locals: {
-        room: @room,
-        current_user: current_user
-      }
-    )
-
-    JSON.parse(json)
   end
 end
