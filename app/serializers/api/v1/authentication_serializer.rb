@@ -8,7 +8,7 @@ module Api
       end
 
       view :refresh do
-        fields :refresh_token
+        fields :authentication_token
       end
     end
   end
