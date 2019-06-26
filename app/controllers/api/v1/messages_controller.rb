@@ -19,7 +19,7 @@ module Api
         authorize @message
 
         if @message.save
-          broadcast_message(@message.serialized, :room_message_create)
+          broadcast_message(@message, :room_message_create)
           render json: @message.serialized, status: 200
         else
           render json: Api::V1::ErrorSerializer.render_as_hash(@message), status: 422
@@ -31,7 +31,7 @@ module Api
         authorize @message
 
         if @message.update(message_params)
-          broadcast_message(@message.serialized, :room_message_update)
+          broadcast_message(@message, :room_message_update)
           render json: @message.serialized, status: 200
         else
           render json: Api::V1::ErrorSerializer.render_as_hash(@message), status: 422
@@ -43,7 +43,7 @@ module Api
         authorize @message
 
         @message.discard
-        broadcast_message(@message.serialized, :room_message_destroy) if @message.valid?
+        broadcast_message(@message, :room_message_destroy) if @message.valid?
 
         head :no_content
       end
