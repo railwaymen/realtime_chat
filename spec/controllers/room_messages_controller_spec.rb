@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe RoomMessagesController, type: :controller do
@@ -36,7 +38,7 @@ RSpec.describe RoomMessagesController, type: :controller do
 
     context 'unauthorized' do
       it 'expects to respond with error' do
-        put :update, params: { id: message.id, room_message: { body: 'New body'} }
+        put :update, params: { id: message.id, room_message: { body: 'New body' } }
         expect(response).to redirect_to new_user_session_path
       end
     end
@@ -46,25 +48,25 @@ RSpec.describe RoomMessagesController, type: :controller do
 
       it 'expects to create new message' do
         expect do
-          put :update, params: { id: message.id, room_message: { body: 'New body'} }
+          put :update, params: { id: message.id, room_message: { body: 'New body' } }
         end.to(change { message.reload.body }.to('New body'))
       end
 
       it 'expects not to change body if invalid' do
         expect do
-          put :update, params: { id: message.id, room_message: { body: ''} }
+          put :update, params: { id: message.id, room_message: { body: '' } }
         end.not_to(change { message.reload.body })
       end
 
       it 'expects to broadcast updated message' do
         expect do
-          put :update, params: { id: message.id, room_message: { body: 'New body'} }
+          put :update, params: { id: message.id, room_message: { body: 'New body' } }
         end.to have_broadcasted_to(:app).from_channel(RoomChannel)
       end
 
       it 'expects not to broadcast updated message' do
         expect do
-          put :update, params: { id: message.id, room_message: { body: ''} }
+          put :update, params: { id: message.id, room_message: { body: '' } }
         end.not_to have_broadcasted_to(:app).from_channel(RoomChannel)
       end
     end

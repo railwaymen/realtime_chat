@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RoomsController < BaseController
   include RoomsConcern
   before_action :fetch_rooms

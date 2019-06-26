@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RoomsUserPolicy do
   subject { described_class }
   let(:user) { create(:user) }

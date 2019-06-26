@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RoomPolicy do
   subject { described_class }
   let(:user) { create(:user) }
@@ -35,12 +37,12 @@ describe RoomPolicy do
   describe RoomPolicy::Scope do
     it 'returns accessible rooms' do
       public_room = create(:room, public: true)
-      private_room_1 = create(:room, public: false)
-      private_room_2 = create(:room, public: false)
-      create(:rooms_user, room: private_room_1, user: user)
+      private_room1 = create(:room, public: false)
+      create(:room, public: false)
+      create(:rooms_user, room: private_room1, user: user)
 
       rooms = RoomPolicy::Scope.new(user, Room).resolve
-      expect(rooms).to contain_exactly(public_room, private_room_1)
+      expect(rooms).to contain_exactly(public_room, private_room1)
     end
   end
 end

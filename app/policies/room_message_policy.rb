@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RoomMessagePolicy < ApplicationPolicy
   def create?
     record.room.public? || record.room.rooms_users.where(user_id: user.id).exists?

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :room_message do
-    body    { Faker::Lorem.sentence(3, true, 4) }
+    body { Faker::Lorem.sentence(3, true, 4) }
 
     room
     user

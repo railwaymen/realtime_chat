@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.extract! message, :id, :user_id, :created_at
 
 json.body message.discarded? ? '~~ message has been deleted ~~' : message.body

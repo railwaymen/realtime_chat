@@ -20,11 +20,11 @@ class SignInForm
 
   def sign_in_user
     @user = User.find_by(email: email)
-    if @user && @user.valid_password?(password)
+    if @user&.valid_password?(password)
       generate_tokens
     else
       errors.add(base: :email_or_password_invalid)
-    end 
+    end
   end
 
   def generate_tokens

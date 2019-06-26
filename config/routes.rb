@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   devise_for :users
-  
+
   resources :room_messages
   resources :rooms
-  
+
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :rooms, only: %i[index show create update destroy] do
@@ -17,6 +19,6 @@ Rails.application.routes.draw do
       resources :users, only: %i[index]
     end
   end
-  
+
   root controller: :rooms, action: :index
 end

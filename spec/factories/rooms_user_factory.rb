@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :rooms_user do
-
     room
     user
   end

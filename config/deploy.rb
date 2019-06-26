@@ -1,6 +1,8 @@
-# config valid for current version and patch releases of Capistrano
-lock "~> 3.11.0"
+# frozen_string_literal: true
 
+# config valid for current version and patch releases of Capistrano
+
+lock '~> 3.11.0'
 
 set :application, 'realtime-chat'
 # set :bundle_bins, fetch(:bundle_bins, []).concat(%w[sidekiq sidekiqctl])
