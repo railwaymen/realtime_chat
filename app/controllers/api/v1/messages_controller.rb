@@ -8,7 +8,7 @@ module Api
       MESSAGES_LIMIT = 10
 
       def index
-        @messages = room.messages.includes(:user).order(id: :asc).limit(MESSAGES_LIMIT)
+        @messages = room.messages.includes(:user).order(id: :desc).limit(MESSAGES_LIMIT).reverse
         @messages = @messages.where('id < ?', params[:last_id]) if params[:last_id].present?
 
         render json: Api::V1::MessageSerializer.render(@messages), status: 200
