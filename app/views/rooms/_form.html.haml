@@ -5,9 +5,15 @@
     .col-sm-10
       .input-group
         = f.text_field :name, class: ['form-control', ('is-invalid' if @room.errors.messages[:name].present?)]
-      
+
         .invalid-feedback
           = @room.errors.full_messages_for(:name).first
+
+  .form-group.form-check.row
+    .col-sm-10
+      .input-group
+        = f.check_box :public, class: 'form-check-input'
+        = f.label :public, class:'form-check-label'
 
   .form-group.row
     .col-sm-10
