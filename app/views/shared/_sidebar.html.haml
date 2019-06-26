@@ -11,6 +11,6 @@
 
 :javascript
   document.addEventListener('DOMContentLoaded', function() {
-    var data = #{ raw render('rooms/rooms') }
+    var data = #{ raw @rooms_list_data }
     window.initializeRoomsList(data)
   });

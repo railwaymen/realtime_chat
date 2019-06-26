@@ -65,7 +65,8 @@ class RoomsController < BaseController
   private
 
   def fetch_rooms
-    @rooms = policy_scope(Room).kept.order(name: :asc)
+    rooms = policy_scope(Room).kept.order(name: :asc)
+    @rooms_list_data = RoomsListComponent.render(current_user, rooms: rooms)
   end
 
   def create_room_params
