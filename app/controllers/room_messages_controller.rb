@@ -1,23 +1,31 @@
 class RoomMessagesController < BaseController
-  def create
-    room = Room.kept.includes(:user).find params.dig(:room_message, :room_id)
-    @message = room.messages.create(message_params.merge(user: current_user))
+  include RoomMessagesConcern
 
-    RoomChannel.broadcast_to(room, type: :create, data: message_representation) if @message.valid?
+  def create
+    room = Room.kept.find params.dig(:room_message, :room_id)
+    @message = room.messages.build(message_params.merge(user: current_user))
+    authorize @message
+
+    @message.save
+
+    broadcast_message(@message, :room_message_create) if @message.valid?
   end
 
   def update
-    @message = current_user.messages.includes(:room).find params[:id]
+    @message = RoomMessage.find params[:id]
+    authorize @message
+
     @message.update(message_params)
 
-    RoomChannel.broadcast_to(@message.room, type: :update, data: message_representation) if @message.valid?
+    broadcast_message(@message, :room_message_update) if @message.valid?
   end
 
   def destroy
-    @message = current_user.messages.includes(:room).find params[:id]
+    @message = RoomMessage.find params[:id]
+    authorize @message
     @message.discard
 
-    RoomChannel.broadcast_to(@message.room, type: :destroy, data: message_representation)
+    broadcast_message(@message, :room_message_destroy) if @message.valid?
   end
 
   private

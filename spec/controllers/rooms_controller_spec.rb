@@ -80,6 +80,14 @@ RSpec.describe RoomsController, type: :controller do
         expect(response).to redirect_to rooms_path
       end
 
+      it 'expects to create new rooms_user for owner' do
+        expect do
+          post :create, params: { room: attributes_for(:room, public: false) }
+        end.to(change { RoomsUser.count }.by(1))
+
+        expect(RoomsUser.last.user).to eql(user)
+      end
+
       it 'expects to respond with error due to invalid params' do
         expect do
           post :create, params: { room: { name: '' } }
@@ -119,7 +127,7 @@ RSpec.describe RoomsController, type: :controller do
 
         expect do
           get :edit, params: { id: other_room.id }
-        end.to(raise_exception ActiveRecord::RecordNotFound)
+        end.to(raise_exception Pundit::NotAuthorizedError)
       end
     end
   end
@@ -158,7 +166,7 @@ RSpec.describe RoomsController, type: :controller do
 
         expect do
           put :update, params: { id: other_room.id, room: { name: 'New name' } }
-        end.to(raise_exception ActiveRecord::RecordNotFound)
+        end.to(raise_exception Pundit::NotAuthorizedError)
       end
 
       it 'expects to broadcast updated room' do
@@ -195,7 +203,7 @@ RSpec.describe RoomsController, type: :controller do
 
         expect do
           delete :destroy, params: { id: other_room.id }
-        end.to(raise_exception ActiveRecord::RecordNotFound)
+        end.to(raise_exception Pundit::NotAuthorizedError)
       end
 
       it 'expects to broadcast discarded room' do

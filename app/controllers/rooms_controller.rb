@@ -1,4 +1,5 @@
 class RoomsController < BaseController
+  include RoomsConcern
   before_action :fetch_rooms
 
   def index; end
@@ -16,10 +17,11 @@ class RoomsController < BaseController
   end
 
   def create
-    @room = current_user.rooms.build room_params
+    @room = current_user.rooms.build create_room_params
 
     if @room.save
       AppChannel.broadcast_to('app', data: room_representation, type: :room_create)
+      create_rooms_user_for_owner!(@room) if @room.public == false
 
       flash[:success] = "Room #{@room.name} has been created successfully"
       redirect_to rooms_path
@@ -29,13 +31,15 @@ class RoomsController < BaseController
   end
 
   def edit
-    @room = current_user.rooms.kept.find(params[:id])
+    @room = Room.kept.find(params[:id])
+    authorize @room
   end
 
   def update
-    @room = current_user.rooms.kept.find(params[:id])
+    @room = Room.kept.find(params[:id])
+    authorize @room
 
-    if @room.update(room_params)
+    if @room.update(update_room_params)
       AppChannel.broadcast_to('app', data: room_representation, type: :room_update)
 
       flash[:success] = "Room #{@room.name} has been updated successfully"
@@ -46,7 +50,9 @@ class RoomsController < BaseController
   end
 
   def destroy
-    @room = current_user.rooms.kept.find(params[:id])
+    @room = Room.kept.find(params[:id])
+    authorize @room
+
     @room.discard
 
     AppChannel.broadcast_to('app', data: room_representation, type: :room_destroy)
@@ -58,10 +64,14 @@ class RoomsController < BaseController
   private
 
   def fetch_rooms
-    @rooms = Room.kept.order(name: :asc)
+    @rooms = policy_scope(Room).kept.order(name: :asc)
   end
 
-  def room_params
+  def create_room_params
+    params.require(:room).permit(:name, :public)
+  end
+
+  def update_room_params
     params.require(:room).permit(:name)
   end
 
