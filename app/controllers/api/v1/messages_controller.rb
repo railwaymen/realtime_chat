@@ -10,25 +10,32 @@ module Api
       def index
         @messages = room.messages.includes(:user).order(id: :desc).limit(MESSAGES_LIMIT)
         @messages = @messages.where('id < ?', params[:last_id]) if params[:last_id].present?
-        respond_with @messages
+
+        render json: Api::V1::MessageSerializer.render(@messages.reverse), status: 200
       end
 
       def create
         @message = room.messages.build(message_params.merge(user: current_user))
         authorize @message
 
-        @message.save
-        broadcast_message(@message, :room_message_create) if @message.valid?
-        respond_with @message
+        if @message.save
+          broadcast_message(@message, :room_message_create)
+          render json: @message.serialized, status: 200
+        else
+          render json: Api::V1::ErrorSerializer.render_as_hash(@message), status: 422
+        end
       end
 
       def update
         @message = RoomMessage.find(params[:id])
         authorize @message
 
-        @message.update(message_params)
-        broadcast_message(@message, :room_message_update) if @message.valid?
-        respond_with @message
+        if @message.update(message_params)
+          broadcast_message(@message, :room_message_update)
+          render json: @message.serialized, status: 200
+        else
+          render json: Api::V1::ErrorSerializer.render_as_hash(@message), status: 422
+        end
       end
 
       def destroy
@@ -37,6 +44,7 @@ module Api
 
         @message.discard
         broadcast_message(@message, :room_message_destroy) if @message.valid?
+
         head :no_content
       end
 

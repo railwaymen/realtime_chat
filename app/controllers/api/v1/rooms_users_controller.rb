@@ -7,7 +7,7 @@ module Api
 
       def index
         @rooms_users = room.rooms_users.includes(:user)
-        respond_with @rooms_users
+        render json: Api::V1::RoomUserSerializer.render_as_hash(@rooms_users), status: 200
       end
 
       def create
@@ -15,7 +15,7 @@ module Api
         authorize @rooms_user
 
         @rooms_user.save
-        respond_with @rooms_user
+        render json: @rooms_user.serialized, status: 200
       end
 
       def destroy

@@ -8,25 +8,32 @@ module Api
 
       def index
         @rooms = policy_scope(Room).kept
-        respond_with @rooms
+        render json: Api::V1::RoomSerializer.render(@rooms), status: 200
       end
 
       def create
-        @room = current_user.rooms.create(create_room_params)
-        if @room.valid?
-          AppChannel.broadcast_to('app', data: @room, type: :room_create)
+        @room = current_user.rooms.build(create_room_params)
+
+        if @room.save
+          AppChannel.broadcast_to('app', data: @room.serialized, type: :room_create)
           create_rooms_user_for_owner!(@room) if @room.public == false
+
+          render json: @room.serialized, status: 200
+        else
+          render json: Api::V1::ErrorSerializer.render_as_hash(@room), status: 422
         end
-        respond_with @room
       end
 
       def update
         @room = Room.kept.find(params[:id])
         authorize @room
 
-        @room.update(update_room_params)
-        AppChannel.broadcast_to('app', data: @room, type: :room_update) if @room.valid?
-        respond_with @room
+        if @room.update(update_room_params)
+          AppChannel.broadcast_to('app', data: @room.serialized, type: :room_update)
+          render json: @room.serialized, status: 200
+        else
+          render json: Api::V1::ErrorSerializer.render_as_hash(@room), status: 422
+        end
       end
 
       def destroy
@@ -34,7 +41,8 @@ module Api
         authorize @room
 
         @room.discard
-        AppChannel.broadcast_to('app', data: @room, type: :room_destroy)
+
+        AppChannel.broadcast_to('app', data: @room.serialized, type: :room_destroy)
         RoomChannel.broadcast_to(@room, type: :room_close)
         head :no_content
       end

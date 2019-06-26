@@ -14,4 +14,8 @@ class Room < ApplicationRecord
   def channel_name
     [RoomChannel.channel_name, to_gid_param].join(':')
   end
+
+  def serialized
+    Api::V1::RoomSerializer.render_as_hash(self)
+  end
 end

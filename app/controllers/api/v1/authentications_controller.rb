@@ -6,7 +6,8 @@ module Api
       def create
         @sign_in_form = SignInForm.new(email: params[:email], password: params[:password])
         @sign_in_form.save
-        respond_with @sign_in_form
+
+        render json: Api::V1::AuthenticationSerializer.render(@sign_in_form.user, view: :auth), status: 200
       end
 
       def refresh
@@ -14,7 +15,8 @@ module Api
         head(:unauthorized) && return unless @user
         @user.generate_authentication_token
         @user.save!
-        respond_with @user
+
+        render json: Api::V1::AuthenticationSerializer.render(@user, view: :refresh), status: 200
       end
     end
   end

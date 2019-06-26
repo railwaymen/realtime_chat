@@ -11,7 +11,6 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       name: room.name,
       channel_name: room.channel_name,
       user_id: room.user_id,
-      editable: room.owner?(user),
       public: room.public,
       room_path: room_path(room)
     }

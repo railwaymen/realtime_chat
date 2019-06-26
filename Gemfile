@@ -23,6 +23,7 @@ gem 'procodile'
 gem 'discard', '~> 1.0'
 gem 'webpacker', '~> 4.0', '>= 4.0.7'
 gem 'pundit'
+gem 'blueprinter', '~> 0.18.0'
 
 group :development, :test do
   gem 'better_errors'
