@@ -44,4 +44,5 @@ group :development do
   gem 'capistrano-rails'
   gem 'awesome_print'
   gem 'rubocop', require: false
+  gem 'brakeman'
 end
