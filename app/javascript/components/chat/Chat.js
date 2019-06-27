@@ -9,6 +9,8 @@ class Chat extends Component {
   constructor(props) {
     super(props);
 
+    this.charsCount = 0;
+
     this.state = {
       isRoomDeleted: props.data.room_deleted,
       messages: props.data.messages,
@@ -100,8 +102,14 @@ class Chat extends Component {
   }
 
   handleUserTyping = (e) => {
-    this.setState({ currentMessage: e.target.value });
-    this.roomSubscription.userTyping(e.target.value !== '');
+    const currentCharsCount = e.target.value.length;
+    const typingStatusChanged = Boolean(currentCharsCount) !== Boolean(this.charsCount);
+
+    if (typingStatusChanged) {
+      this.setState({ currentMessage: e.target.value });
+      this.roomSubscription.userTyping(e.target.value !== '');
+    }
+    this.charsCount = currentCharsCount;
   }
 
   handleMessageSubmit = (e) => {
