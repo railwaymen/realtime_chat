@@ -5,7 +5,9 @@ module Api
     class MessageSerializer < Blueprinter::Base
       identifier :id
 
-      fields :user_id, :created_at
+      fields :user_id
+
+      field :created_at, datetime_format: -> (date) { date&.iso8601 }
 
       field :body do |message, _options|
         message.discarded? ? '[message deleted]' : message.body
