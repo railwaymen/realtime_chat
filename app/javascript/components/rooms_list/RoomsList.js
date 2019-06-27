@@ -59,7 +59,7 @@ class RoomsList extends Component {
         this.handleDestroyedRoom(response.data);
         break;
       default:
-        throw new Error(`Unknown response type: ${response.type}`);
+        break;
     }
   }
 
