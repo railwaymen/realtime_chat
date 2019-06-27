@@ -28,7 +28,7 @@ RSpec.describe RoomMessagesController, type: :controller do
       it 'expects to broadcast new message' do
         expect do
           post :create, params: { room_message: message_params }
-        end.to have_broadcasted_to(:app).from_channel(RoomChannel)
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
     end
   end
@@ -61,13 +61,13 @@ RSpec.describe RoomMessagesController, type: :controller do
       it 'expects to broadcast updated message' do
         expect do
           put :update, params: { id: message.id, room_message: { body: 'New body' } }
-        end.to have_broadcasted_to(:app).from_channel(RoomChannel)
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
 
       it 'expects not to broadcast updated message' do
         expect do
           put :update, params: { id: message.id, room_message: { body: '' } }
-        end.not_to have_broadcasted_to(:app).from_channel(RoomChannel)
+        end.not_to have_broadcasted_to(:app).from_channel(AppChannel)
       end
     end
   end
@@ -94,7 +94,7 @@ RSpec.describe RoomMessagesController, type: :controller do
       it 'expects to broadcast deleted message' do
         expect do
           delete :destroy, params: { id: message.id }
-        end.to have_broadcasted_to(:app).from_channel(RoomChannel)
+        end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
     end
   end

@@ -12,7 +12,9 @@ class RoomItem extends Component {
     } = this.props;
 
     let classes = ['room__item']
-    if (user_id == currentUserId) classes.push('room__item--own')
+
+    user_id == currentUserId && classes.push('room__item--own')
+    // has_unread_messages && classes.push('room__item--unread-message')
 
     return (
       <div className={classes.join(' ')}>

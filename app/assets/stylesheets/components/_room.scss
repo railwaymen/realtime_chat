@@ -33,4 +33,10 @@
   &__item--own a {
     font-weight: bold;
   }
+
+  &__item--unread-message::after {
+    content: "•";
+    display: inline-block;
+    padding: 0 1rem;
+  }
 }

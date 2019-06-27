@@ -17,37 +17,52 @@ class Chat extends Component {
       typers: []
     }
 
-    this.subscription = createChannel(
+    this.appSubscription = createChannel(
+      {
+        channel: 'AppChannel'
+      },
+      {
+        received: this.handleChannelResponse
+      }
+    )
+
+    this.userSubscription = createChannel(
+      {
+        channel: 'UserChannel'
+      },
+      {
+        received: this.handleChannelResponse
+      }
+    )
+
+    this.roomSubscription = createChannel(
       {
         channel: 'RoomChannel',
-        room: props.data.room_id
+        room_id: props.data.room_id
       },
       {
         received: response => {
           if (response.message === 'typing') {
             this.handleTypingAction(response)
-            return;
-          }
-          
-          switch (response.type) {
-            case 'create':
-              this.handleNewMessage(response.data)
-              break;
-            case 'update':
-              this.handleUpdatedMessage(response.data)
-              break;
-            case 'destroy':
-              this.handleUpdatedMessage(response.data)
-              break;  
-            case 'room_close':
-              this.handleClosedRoom()
           }
         },
         userTyping: typing => {
-          this.subscription.perform('user_typing', { typing: typing, room_id: props.data.room_id })
+          this.roomSubscription.perform('user_typing', { typing: typing, room_id: props.data.room_id })
         }
       }
     )
+  }
+
+  handleChannelResponse = response => {
+    switch (response.type) {
+      case 'room_message_create':
+        this.handleNewMessage(response.data)
+        break;
+      case 'room_message_update':
+      case 'room_message_destroy':
+        this.handleUpdatedMessage(response.data)
+        break;
+    }
   }
 
   handleClosedRoom = () => {
@@ -84,7 +99,7 @@ class Chat extends Component {
 
   handleUserTyping = e => {
     this.setState({ currentMessage: e.target.value })
-    this.subscription.userTyping(e.target.value != '')
+    this.roomSubscription.userTyping(e.target.value != '')
   }
 
   handleMessageSubmit = e => {
@@ -98,7 +113,7 @@ class Chat extends Component {
 
       createMessage(params, () => {
         this.setState({ currentMessage: '' })
-        this.subscription.userTyping(false)
+        this.roomSubscription.userTyping(false)
       })
     }
   }
