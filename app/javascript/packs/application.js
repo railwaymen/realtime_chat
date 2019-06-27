@@ -21,20 +21,18 @@ import 'bootstrap/dist/js/bootstrap';
 import Rails from 'rails-ujs';
 import * as ActiveStorage from 'activestorage';
 
-Rails.start();
-ActiveStorage.start();
-
 // Chat
 import initializeChat from '@/initializers/chat';
-window.initializeChat = initializeChat;
 
 // RoomsList
 import initializeRoomsList from '@/initializers/rooms_list';
+
+Rails.start();
+ActiveStorage.start();
+window.initializeChat = initializeChat;
 window.initializeRoomsList = initializeRoomsList;
 
-
-$(function() {
+$(() => {
   console.log(`jquery version ${$.fn.jquery}`);
   console.log(`bootstrap version ${$.fn.tooltip.Constructor.VERSION}`);
 });
-

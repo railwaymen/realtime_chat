@@ -7,7 +7,7 @@ module Api
 
       fields :user_id
 
-      field :created_at, datetime_format: -> (date) { date&.iso8601 }
+      field :created_at, datetime_format: ->(date) { date&.iso8601 }
 
       field :body do |message, _options|
         message.discarded? ? '[message deleted]' : message.body
