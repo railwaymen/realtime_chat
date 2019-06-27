@@ -2,119 +2,121 @@ import React, { Component } from 'react';
 
 import Conversation from './Conversation';
 
-import { createMessage } from '@/actions/chat'
+import { createMessage } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       isRoomDeleted: props.data.room_deleted,
       messages: props.data.messages,
       currentUserId: props.data.current_user_id,
       currentMessage: '',
-      typers: []
-    }
+      typers: [],
+    };
 
     this.appSubscription = createChannel(
       {
-        channel: 'AppChannel'
+        channel: 'AppChannel',
       },
       {
-        received: this.handleChannelResponse
-      }
-    )
+        received: this.handleChannelResponse,
+      },
+    );
 
     this.userSubscription = createChannel(
       {
-        channel: 'UserChannel'
+        channel: 'UserChannel',
       },
       {
-        received: this.handleChannelResponse
-      }
-    )
+        received: this.handleChannelResponse,
+      },
+    );
 
     this.roomSubscription = createChannel(
       {
         channel: 'RoomChannel',
-        room_id: props.data.room_id
+        room_id: props.data.room_id,
       },
       {
-        received: response => {
+        received: (response) => {
           if (response.message === 'typing') {
-            this.handleTypingAction(response)
+            this.handleTypingAction(response);
           }
         },
-        userTyping: typing => {
-          this.roomSubscription.perform('user_typing', { typing: typing, room_id: props.data.room_id })
-        }
-      }
-    )
+        userTyping: (typing) => {
+          this.roomSubscription.perform('user_typing', { typing, room_id: props.data.room_id });
+        },
+      },
+    );
   }
 
-  handleChannelResponse = response => {
+  handleChannelResponse = (response) => {
     switch (response.type) {
       case 'room_message_create':
-        this.handleNewMessage(response.data)
+        this.handleNewMessage(response.data);
         break;
       case 'room_message_update':
       case 'room_message_destroy':
-        this.handleUpdatedMessage(response.data)
+        this.handleUpdatedMessage(response.data);
         break;
+      default:
+        throw new Error(`Unknown response type: ${response.type}`);
     }
   }
 
   handleClosedRoom = () => {
-    this.setState({ isRoomDeleted: true })
+    this.setState({ isRoomDeleted: true });
   }
 
-  handleMessageChange = e => {
-    this.setState({ currentMessage: e.target.value })
+  handleMessageChange = (e) => {
+    this.setState({ currentMessage: e.target.value });
   }
 
-  handleNewMessage = data => {
-    const messages = [...this.state.messages, data]
-    this.setState({ messages })
+  handleNewMessage = (data) => {
+    const messages = [...this.state.messages, data];
+    this.setState({ messages });
   }
 
-  handleUpdatedMessage = data => {
-    const messages = [...this.state.messages]
-    const index = _.findIndex(messages, { id: data.id })
+  handleUpdatedMessage = (data) => {
+    const messages = [...this.state.messages];
+    const index = _.findIndex(messages, { id: data.id });
 
-    messages.splice(index, 1, data)
-    this.setState({ messages })
+    messages.splice(index, 1, data);
+    this.setState({ messages });
   }
 
-  handleTypingAction = data => {
-    const typers = _.uniqBy([data.user, ...this.state.typers], 'id')
+  handleTypingAction = (data) => {
+    const typers = _.uniqBy([data.user, ...this.state.typers], 'id');
 
-    if (!data.typing || data.user.id == this.state.currentUserId) {
-      const index = typers.indexOf(data.user)
-      typers.splice(index, 1)
+    if (!data.typing || data.user.id === this.state.currentUserId) {
+      const index = typers.indexOf(data.user);
+      typers.splice(index, 1);
     }
 
-    this.setState({ typers })
+    this.setState({ typers });
   }
 
-  handleUserTyping = e => {
-    this.setState({ currentMessage: e.target.value })
-    this.roomSubscription.userTyping(e.target.value != '')
+  handleUserTyping = (e) => {
+    this.setState({ currentMessage: e.target.value });
+    this.roomSubscription.userTyping(e.target.value !== '');
   }
 
-  handleMessageSubmit = e => {
-    e.preventDefault()
+  handleMessageSubmit = (e) => {
+    e.preventDefault();
 
-    if (this.state.currentMessage != '') {
+    if (this.state.currentMessage !== '') {
       const params = {
         room_id: this.props.data.room_id,
-        body: this.state.currentMessage
-      }
+        body: this.state.currentMessage,
+      };
 
       createMessage(params, () => {
-        this.setState({ currentMessage: '' })
-        this.roomSubscription.userTyping(false)
-      })
+        this.setState({ currentMessage: '' });
+        this.roomSubscription.userTyping(false);
+      });
     }
   }
 
@@ -124,7 +126,7 @@ class Chat extends Component {
       messages,
       currentUserId,
       currentMessage,
-      typers
+      typers,
     } = this.state;
 
     return (
@@ -153,7 +155,7 @@ class Chat extends Component {
           </form>
         )}
       </div>
-    )
+    );
   }
 }
 

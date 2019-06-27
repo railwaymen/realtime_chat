@@ -6,29 +6,29 @@ class Conversation extends Component {
   componentDidMount() {
     this.scrollToBottom();
   }
-  
+
   componentDidUpdate() {
     this.scrollToBottom();
   }
 
   renderTypingMessage = () => {
-    const typers = _.map(this.props.typers, 'username')
+    const typers = _.map(this.props.typers, 'username');
+    const othersCount = typers.length - 1;
 
     let result;
 
     switch (typers.length) {
       case 0:
-        result = ''
+        result = '';
         break;
       case 1:
-        result = `${typers[0]} is typing ...`
+        result = `${typers[0]} is typing ...`;
         break;
       case 2:
-          result = `${typers.join(' and ')} are typing ...`
-          break;
+        result = `${typers.join(' and ')} are typing ...`;
+        break;
       default:
-        const othersCount = typers.length - 1
-        result = `${typers[0]} and ${othersCount} other people are typing ...`
+        result = `${typers[0]} and ${othersCount} other people are typing ...`;
     }
 
     return <span>{result}</span>;
@@ -59,7 +59,7 @@ class Conversation extends Component {
           {this.renderTypingMessage()}
         </div>
       </div>
-    )
+    );
   }
 }
 

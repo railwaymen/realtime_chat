@@ -1,47 +1,47 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-import moment from 'moment'
+import moment from 'moment';
 
-import { updateMessage, deleteMessage } from '@/actions/chat'
+import { updateMessage, deleteMessage } from '@/actions/chat';
 
 class ConverationItem extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       editing: false,
-      value: props.message.body
-    }
+      value: props.message.body,
+    };
   }
 
-  handleBodyChange = e => {
-    this.setState({ value: e.target.value })
+  handleBodyChange = (e) => {
+    this.setState({ value: e.target.value });
   }
 
   handleEditingCancel = () => {
-    this.setState({ editing: false, value: this.props.message.body })
+    this.setState({ editing: false, value: this.props.message.body });
   }
 
   handleDoubleClick = () => {
-    const { currentUserId, message: { user_id } } = this.props
-    if (currentUserId == user_id) this.setState({ editing: true })
+    const { currentUserId, message: { user_id } } = this.props;
+    if (currentUserId === user_id) this.setState({ editing: true });
   }
 
   handleMessageEdit = () => {
-    if (this.state.value != '') {
+    if (this.state.value !== '') {
       const params = {
         id: this.props.message.id,
-        body: this.state.value
-      }
-  
+        body: this.state.value,
+      };
+
       updateMessage(params, () => {
-        this.setState({ editing: false })
-      })
+        this.setState({ editing: false });
+      });
     }
   }
 
   handleMessageDelete = () => {
-    confirm('Are you sure?') && deleteMessage({ id: this.props.message.id })
+    if (confirm('Are you sure?')) deleteMessage({ id: this.props.message.id });
   }
 
   render() {
@@ -53,14 +53,14 @@ class ConverationItem extends Component {
         edited,
         deleted,
         user: {
-          username
-        }
+          username,
+        },
       },
-      currentUserId
+      currentUserId,
     } = this.props;
 
-    let classes = ['message']
-    classes.push(currentUserId == user_id ? 'message--own' : 'message--foreign')
+    const classes = ['message'];
+    classes.push(currentUserId === user_id ? 'message--own' : 'message--foreign');
 
     return (
       <div className={classes.join(' ')}>
@@ -84,20 +84,24 @@ class ConverationItem extends Component {
                   onClick={this.handleEditingCancel}
                   className="btn btn-outline-secondary"
                   type="button"
-                >&times;</button>
+                >
+                  &times;
+                </button>
 
                 <button
                   onClick={this.handleMessageEdit}
                   className="btn btn-outline-secondary"
                   type="button"
-                >&#10003;</button>
+                >
+                  &#10003;
+                </button>
               </div>
             </div>
           ) : (
             <div className="message__body" onDoubleClick={this.handleDoubleClick}>
               <p>{body}</p>
 
-              {!deleted && currentUserId == user_id && (
+              {!deleted && currentUserId === user_id && (
                 <div className="message__actions">
                   <span
                     className="edit"
@@ -109,14 +113,16 @@ class ConverationItem extends Component {
                   <span
                     className="destroy"
                     onClick={this.handleMessageDelete}
-                  >&#128465;</span>
+                  >
+                    &#128465;
+                  </span>
                 </div>
               )}
             </div>
           )}
         </div>
       </div>
-    )
+    );
   }
 }
 

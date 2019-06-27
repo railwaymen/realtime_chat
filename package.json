@@ -1,11 +1,15 @@
 {
   "name": "realtime_chat",
   "private": true,
+  "scripts": {
+    "lint": "eslint ./app/javascript"
+  },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
     "@rails/webpacker": "^4.0.7",
     "actioncable": "^5.2.3",
     "activestorage": "^5.2.3",
+    "babel-eslint": "^10.0.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap": "4.3.1",
     "jquery": "^3.4.1",
@@ -19,6 +23,10 @@
   },
   "devDependencies": {
     "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.14.2",
     "webpack-dev-server": "^3.7.2"
   }
 }
