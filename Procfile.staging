@@ -1,2 +1,2 @@
-rpc: bundle exec anycable
+rpc: RAILS_ENV=staging bundle exec anycable
 ws: exec ~/go/bin/anycable-go --port $WEBSOCKET_PORT --headers cookie,token
