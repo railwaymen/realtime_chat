@@ -25,5 +25,7 @@ module RealtimeChat
     end
 
     config.action_dispatch.rescue_responses['Pundit::NotAuthorizedError'] = :forbidden
+
+    config.active_record.schema_format = :sql
   end
 end
