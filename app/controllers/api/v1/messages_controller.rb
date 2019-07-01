@@ -7,12 +7,15 @@ module Api
       before_action :authenticate_user!
       MESSAGES_LIMIT = 10
 
+      # rubocop:disable Metrics/AbcSize
       def index
         @messages = room.messages.includes(:user).order(id: :desc).limit(MESSAGES_LIMIT)
         @messages = @messages.where('id < ?', params[:last_id]) if params[:last_id].present?
 
+        current_user.update_room_activity(room) if params[:last_id].nil?
         render json: Api::V1::MessageSerializer.render(@messages.reverse), status: 200
       end
+      # rubocop:enable Metrics/AbcSize
 
       def create
         @message = room.messages.build(message_params.merge(user: current_user))

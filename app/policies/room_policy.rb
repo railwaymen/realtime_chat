@@ -30,4 +30,8 @@ class RoomPolicy < ApplicationPolicy
   def destroy?
     update?
   end
+
+  def update_activity?
+    show?
+  end
 end

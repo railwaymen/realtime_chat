@@ -195,6 +195,20 @@ paths:
       responses:
         204:
           description: No Content
+  /rooms/{id}/update_activity:
+    post:
+      tags:
+        - Rooms
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        204:
+          description: No Content
   /rooms/{room_id}/messages:
     get:
       tags:
@@ -383,6 +397,9 @@ definitions:
       room_path:
         type: string
         example: /rooms/1
+      last_message_at:
+        type: string
+        example: "2019-07-01T12:50:49Z"
 
   RoomsUsers:
     type: object

@@ -22,4 +22,9 @@ class User < ApplicationRecord
     self.refresh_token = JwtService.encode(payload: { id: id, exp: REFRESH_TOKEN_EXPIRATION_LENGTH.from_now.to_i })
                                    .as_json
   end
+
+  def update_room_activity(room)
+    rooms_activity[room.id] = Time.current
+    save
+  end
 end
