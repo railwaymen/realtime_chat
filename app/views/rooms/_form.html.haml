@@ -1,20 +1,19 @@
 = form_for @room do |f|
-  .form-group.row
-    = f.label :name, class: 'col-sm-2 col-form-label'
+  .row
+    .form-group.col-6
+      = f.label :name, class: 'col-sm-2 col-form-label'
 
-    .col-sm-10
       .input-group
         = f.text_field :name, class: ['form-control', ('is-invalid' if @room.errors.messages[:name].present?)]
 
         .invalid-feedback
           = @room.errors.full_messages_for(:name).first
 
-  .form-group.form-check.row
-    .col-sm-10
-      .input-group
-        = f.check_box :public, class: 'form-check-input'
-        = f.label :public, class:'form-check-label'
-
-  .form-group.row
-    .col-sm-10
+  .row
+    .form-group.form-check.col-6
+      = f.check_box :public
+      = f.label :public, 'Public room', class: 'form-check-label'
+      
+  .row
+    .form-group.col-12
       = f.submit class: 'btn btn-primary'

@@ -21,12 +21,9 @@ class RoomsController < BaseController
   end
 
   def create
-    @room = current_user.rooms.build(create_room_params)
+    @room = Rooms::Creator.new(params: params, user: current_user).call
 
-    if @room.save
-      AppChannel.broadcast_to('app', data: @room.serialized, type: :room_create)
-      create_rooms_user_for_owner!(@room) if @room.public == false
-
+    if @room.persisted?
       flash[:success] = "Room #{@room.name} has been created successfully"
       redirect_to rooms_path
     else
@@ -70,10 +67,6 @@ class RoomsController < BaseController
   def fetch_rooms
     rooms = policy_scope(Room).kept.order(name: :asc)
     @rooms_list_data = RoomsListComponent.render(current_user, rooms: rooms)
-  end
-
-  def create_room_params
-    params.require(:room).permit(:name, :public)
   end
 
   def update_room_params
