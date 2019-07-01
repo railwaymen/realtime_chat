@@ -12,7 +12,8 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       channel_name: room.channel_name,
       user_id: room.user_id,
       public: room.public,
-      room_path: room_path(room)
+      room_path: room_path(room),
+      last_message_at: nil
     }
   end
 
@@ -151,6 +152,29 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
         expect do
           delete :destroy, params: { id: room.id }, as: :json
         end.to have_broadcasted_to(room).from_channel(RoomChannel)
+      end
+    end
+  end
+
+  describe '#update_activity' do
+    let!(:room) { create(:room, user: user) }
+
+    context 'unauthorized' do
+      it 'expects to respond with error' do
+        post :update_activity, params: { id: room.id }, as: :json
+        expect(response).to have_http_status 401
+      end
+    end
+
+    context 'authorized' do
+      before(:each) { sign_in user }
+
+      it 'expects to update room activity' do
+        allow(subject.current_user).to receive(:update_room_activity).with(room)
+        post :update_activity, params: { id: room.id }, as: :json
+
+        expect(subject.current_user).to have_received(:update_room_activity).with(room)
+        expect(response).to have_http_status 204
       end
     end
   end
