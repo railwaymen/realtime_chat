@@ -10,6 +10,7 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
     {
       id: message.id,
       user_id: message.user_id,
+      room_id: message.room_id,
       body: message.body,
       edited: message.created_at != message.updated_at,
       deleted: message.discarded?,
