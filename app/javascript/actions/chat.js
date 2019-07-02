@@ -39,8 +39,19 @@ const deleteMessage = (message) => {
   });
 };
 
+const updateActivity = (room_id) => {
+  fetch(`/rooms/${room_id}/update_activity`, {
+    method: 'post',
+    headers,
+    body: JSON.stringify({
+      authenticity_token: csrf,
+    }),
+  });
+};
+
 export {
   createMessage,
   updateMessage,
   deleteMessage,
+  updateActivity,
 };

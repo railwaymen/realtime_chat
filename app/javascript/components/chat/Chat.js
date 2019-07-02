@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Conversation from './Conversation';
 
-import { createMessage } from '@/actions/chat';
+import { createMessage, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
@@ -53,6 +53,10 @@ class Chat extends Component {
         },
       },
     );
+
+    window.onbeforeunload = () => {
+      updateActivity(props.data.room_id);
+    };
   }
 
   handleChannelResponse = (response) => {
