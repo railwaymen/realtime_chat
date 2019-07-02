@@ -9,6 +9,10 @@ module Api
         @users = User.all
         render json: Api::V1::UserSerializer.render_as_hash(@users), status: 200
       end
+
+      def profile
+        render json: Api::V1::CurrentUserSerializer.render_as_hash(current_user), status: 200
+      end
     end
   end
 end

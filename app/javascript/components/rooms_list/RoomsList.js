@@ -9,7 +9,8 @@ class RoomsList extends Component {
     super(props);
 
     this.state = {
-      currentUserId: props.data.current_user_id,
+      currentUserId: props.data.current_user.id,
+      currentUserActivity: props.data.current_user.rooms_activity,
       rooms: props.data.rooms,
       filteredRooms: props.data.rooms,
       searchValue: '',
@@ -96,7 +97,12 @@ class RoomsList extends Component {
   }
 
   render() {
-    const { filteredRooms, currentUserId, searchValue } = this.state;
+    const {
+      filteredRooms,
+      currentUserId,
+      searchValue,
+      currentUserActivity,
+    } = this.state;
 
     return (
       <div className="rooms">
@@ -112,7 +118,12 @@ class RoomsList extends Component {
 
         <div className="rooms__list mb-2">
           {filteredRooms.map(room => (
-            <RoomItem key={room.id} room={room} currentUserId={currentUserId} />
+            <RoomItem
+              key={room.id}
+              room={room}
+              currentUserId={currentUserId}
+              lastActivity={currentUserActivity[room.id]}
+            />
           ))}
         </div>
       </div>

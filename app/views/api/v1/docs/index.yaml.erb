@@ -94,6 +94,34 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
+  /users/profile:
+    get:
+      tags:
+        - Users
+      security:
+        - User: []
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              username:
+                type: string
+                example: user1
+              email:
+                type: string
+                example: user1@example.com
+              rooms_activity:
+                type: object
+                additionalProperties:
+                  type: string
+                example:
+                  1: "2019-07-02T10:21:54Z"
+                  2: "2019-07-02T09:45:30Z"
   /rooms:
     get:
       description: |

@@ -2,7 +2,7 @@
 
 class RoomsController < BaseController
   include RoomsConcern
-  before_action :fetch_rooms
+  before_action :fetch_rooms, except: :show
 
   def index; end
 
@@ -17,6 +17,7 @@ class RoomsController < BaseController
     @chat_data = ChatComponent.render(@room, messages: messages, current_user: current_user)
 
     current_user.update_room_activity(@room)
+    fetch_rooms
   end
 
   def create
