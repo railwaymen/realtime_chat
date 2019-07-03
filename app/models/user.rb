@@ -24,7 +24,7 @@ class User < ApplicationRecord
   end
 
   def update_room_activity(room)
-    rooms_activity[room.id] = Time.current
+    rooms_activity[room.id] = Time.current.to_s
     save
   end
 end
