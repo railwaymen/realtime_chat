@@ -3,6 +3,8 @@
 module Api
   module V1
     class RoomsController < Api::V1::BaseController
+      include RoomsConcern
+
       before_action :authenticate_user!
 
       def index
