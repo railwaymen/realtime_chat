@@ -53,7 +53,7 @@ module Rooms
           UserChannel.broadcast_to(user, data: @room.serialized, type: :room_open)
         end
 
-        (@users_groups[:deleted]).map do |user|
+        @users_groups[:deleted].map do |user|
           UserChannel.broadcast_to(user, data: @room.serialized, type: :room_close)
         end
       end

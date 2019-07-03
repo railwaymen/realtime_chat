@@ -11,11 +11,5 @@ module RoomsConcern
       current_user.update_room_activity(room)
       head :no_content
     end
-
-    private
-
-    def create_rooms_user_for_owner!(room)
-      RoomsUser.create!(room_id: room.id, user_id: current_user.id)
-    end
   end
 end

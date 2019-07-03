@@ -82,14 +82,6 @@ RSpec.describe RoomsController, type: :controller do
         expect(response).to redirect_to rooms_path
       end
 
-      it 'expects to create new rooms_user for owner' do
-        expect do
-          post :create, params: { room: attributes_for(:room, public: false) }
-        end.to(change { RoomsUser.count }.by(1))
-
-        expect(RoomsUser.last.user).to eql(user)
-      end
-
       it 'expects to respond with error due to invalid params' do
         expect do
           post :create, params: { room: { name: '' } }
@@ -98,10 +90,18 @@ RSpec.describe RoomsController, type: :controller do
         expect(response).to render_template 'new'
       end
 
-      it 'expects to broadcast new room' do
+      it 'expects to broadcast new room from AppChannel' do
         expect do
           post :create, params: room_params
         end.to have_broadcasted_to(:app).from_channel(AppChannel)
+      end
+
+      it 'expects to broadcast new private room from UserChanel' do
+        participant = create(:user)
+
+        expect do
+          post :create, params: { room: attributes_for(:room, public: false), users_ids: "#{participant.id}" }
+        end.to have_broadcasted_to(participant).from_channel(UserChannel)
       end
     end
   end
@@ -124,7 +124,7 @@ RSpec.describe RoomsController, type: :controller do
         expect(response).to have_http_status(200)
       end
 
-      it 'expects to raise not_found for foreign room' do
+      it 'expects to raise unauthorized for foreign room' do
         other_room = create(:room)
 
         expect do
@@ -136,6 +136,7 @@ RSpec.describe RoomsController, type: :controller do
 
   describe '#update' do
     let(:room) { user.rooms.first }
+    let(:private_room) { create(:room_with_participants, user: user) }
 
     context 'unauthorized' do
       it 'expects to respond with error' do
@@ -171,10 +172,16 @@ RSpec.describe RoomsController, type: :controller do
         end.to(raise_exception(Pundit::NotAuthorizedError))
       end
 
-      it 'expects to broadcast updated room' do
+      it 'expects to broadcast updated room from AppChannel' do
         expect do
           put :update, params: { id: room.id, room: { name: 'New name' } }
         end.to have_broadcasted_to(:app).from_channel(AppChannel)
+      end
+
+      it 'expects to broadcast updated room from UserChannel' do
+        expect do
+          put :update, params: { id: private_room.id, room: { name: 'New name' } }
+        end.to have_broadcasted_to(private_room.users.last).from_channel(UserChannel)
       end
     end
   end

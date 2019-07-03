@@ -79,6 +79,14 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
         expect(RoomsUser.last.user).to eql(user)
       end
 
+      it 'expects to respond with error if empty name' do
+        expect do
+          post :create, params: { name: '' }, as: :json
+        end.not_to(change { Room.count })
+
+        expect(response).to have_http_status 422
+      end
+
       it 'expects to broadcast new room' do
         expect do
           post :create, params: params, as: :json

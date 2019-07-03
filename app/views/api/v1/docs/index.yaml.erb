@@ -421,13 +421,19 @@ definitions:
         example: 1
       public:
         type: boolean
-        example: true
+        example: false
+      deleted:
+        type: boolean
+        example: false
       room_path:
         type: string
         example: /rooms/1
       last_message_at:
         type: string
         example: "2019-07-01T12:50:49Z"
+      participants_ids:
+        type: array
+        example: [1, 2, 3]
 
   RoomsUsers:
     type: object
