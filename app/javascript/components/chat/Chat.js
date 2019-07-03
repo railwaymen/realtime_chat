@@ -70,17 +70,17 @@ class Chat extends Component {
         break;
       case 'room_open':
       case 'room_close':
-        this.handleRoomAccess(response.data)
+        this.handleRoomAccess(response.data);
         break;
       default:
-        break
+        break;
     }
   }
 
   handleRoomAccess = (room) => {
     this.setState((state, _props) => {
-      const isAccessible = !room.deleted && (room.public || _.includes(room.participants_ids, state.currentUserId))
-      return { isAccessible }
+      const isAccessible = !room.deleted && (room.public || _.includes(room.participants_ids, state.currentUserId));
+      return { isAccessible };
     });
   }
 

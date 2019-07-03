@@ -12,12 +12,13 @@ module Api
       end
 
       def create
-        @room = current_user.rooms.build(create_room_params)
+        @room = Rooms::Creator.new(
+          room_params: create_room_params,
+          users_ids: params.fetch(:users_ids, ''),
+          user: current_user
+        ).call
 
-        if @room.save
-          AppChannel.broadcast_to('app', data: @room.serialized, type: :room_create)
-          create_rooms_user_for_owner!(@room) if @room.public == false
-
+        if @room.valid?
           render json: @room.serialized, status: 200
         else
           render json: Api::V1::ErrorSerializer.render_as_hash(@room), status: 422
@@ -28,8 +29,14 @@ module Api
         @room = Room.kept.find(params[:id])
         authorize @room
 
-        if @room.update(update_room_params)
-          AppChannel.broadcast_to('app', data: @room.serialized, type: :room_update)
+        Rooms::Updater.new(
+          room_params: update_room_params,
+          users_ids: params.fetch(:users_ids, ''),
+          user: current_user,
+          room: @room
+        ).call
+
+        if @room.valid?
           render json: @room.serialized, status: 200
         else
           render json: Api::V1::ErrorSerializer.render_as_hash(@room), status: 422
@@ -42,8 +49,7 @@ module Api
 
         @room.discard
 
-        AppChannel.broadcast_to('app', data: @room.serialized, type: :room_destroy)
-        RoomChannel.broadcast_to(@room, type: :room_close)
+        AppChannel.broadcast_to('app', data: @room.serialized, type: :room_close)
         head :no_content
       end
 

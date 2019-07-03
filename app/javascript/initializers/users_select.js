@@ -9,7 +9,7 @@ const initializeUsersSelect = (data) => {
   const el = document.querySelector('#users-select__component[data-behavior="react"]');
   if (el != null) ReactDOM.render(<UsersSelect data={data} />, el);
 
-  $('input#room_public').on('change', () => $(el).toggle())
+  $('input#room_public').on('change', () => $(el).toggle());
 };
 
 export default initializeUsersSelect;

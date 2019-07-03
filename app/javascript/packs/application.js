@@ -15,6 +15,8 @@
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
+/* eslint-disable import/newline-after-import, import/first */
+
 import _ from 'lodash';
 import 'bootstrap/dist/js/bootstrap';
 
@@ -32,6 +34,8 @@ window.initializeRoomsList = initializeRoomsList;
 // Chat
 import initializeUsersSelect from '@/initializers/users_select';
 window.initializeUsersSelect = initializeUsersSelect;
+
+/* eslint-enable import/newline-after-import, import/first */
 
 Rails.start();
 ActiveStorage.start();
