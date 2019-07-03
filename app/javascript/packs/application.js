@@ -23,14 +23,18 @@ import * as ActiveStorage from 'activestorage';
 
 // Chat
 import initializeChat from '@/initializers/chat';
+window.initializeChat = initializeChat;
 
 // RoomsList
 import initializeRoomsList from '@/initializers/rooms_list';
+window.initializeRoomsList = initializeRoomsList;
+
+// Chat
+import initializeUsersSelect from '@/initializers/users_select';
+window.initializeUsersSelect = initializeUsersSelect;
 
 Rails.start();
 ActiveStorage.start();
-window.initializeChat = initializeChat;
-window.initializeRoomsList = initializeRoomsList;
 
 $(() => {
   console.log(`jquery version ${$.fn.jquery}`);

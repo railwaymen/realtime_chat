@@ -5,8 +5,8 @@ class ChatComponent < Blueprinter::Base
     room.id
   end
 
-  field :room_deleted do |room, _options|
-    room.discarded?
+  field :is_accessible do |room, options|
+    room.public? || room.rooms_users.where(user_id: options[:current_user]&.id).exists?
   end
 
   field :current_user_id do |_room, options|

@@ -12,7 +12,7 @@ class Chat extends Component {
     this.charsCount = 0;
 
     this.state = {
-      isRoomDeleted: props.data.room_deleted,
+      isAccessible: props.data.is_accessible,
       messages: props.data.messages,
       currentUserId: props.data.current_user_id,
       currentMessage: '',
@@ -68,13 +68,20 @@ class Chat extends Component {
       case 'room_message_destroy':
         this.handleUpdatedMessage(response.data);
         break;
+      case 'room_open':
+      case 'room_close':
+        this.handleRoomAccess(response.data)
+        break;
       default:
-        throw new Error(`Unknown response type: ${response.type}`);
+        break
     }
   }
 
-  handleClosedRoom = () => {
-    this.setState({ isRoomDeleted: true });
+  handleRoomAccess = (room) => {
+    this.setState((state, _props) => {
+      const isAccessible = !room.deleted && (room.public || _.includes(room.participants_ids, state.currentUserId))
+      return { isAccessible }
+    });
   }
 
   handleMessageChange = (e) => {
@@ -134,7 +141,7 @@ class Chat extends Component {
 
   render() {
     const {
-      isRoomDeleted,
+      isAccessible,
       messages,
       currentUserId,
       currentMessage,
@@ -149,7 +156,7 @@ class Chat extends Component {
           typers={typers}
         />
 
-        {isRoomDeleted ? (
+        {!isAccessible ? (
           <p className="chat__info">Room was closed by owner</p>
         ) : (
           <form onSubmit={this.handleMessageSubmit} className="message-area">

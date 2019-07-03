@@ -17,21 +17,27 @@ module Rooms
     private
 
     def create_room
-      @room = user.rooms.create(create_room_params)
+      @room = user.rooms.create(room_params)
     end
 
     def create_rooms_users
       return true if room.public?
 
-      users_ids = params.fetch(:users_ids, []).push(user.id)
+      users_ids.unshift(user.id) unless user.nil?
 
       users_ids.map do |user_id|
         room.rooms_users.create!(user_id: user_id)
       end
     end
 
-    def create_room_params
-      params.require(:room).permit(:name, :public)
+    def broadcast_room_message
+      if room.public?
+        AppChannel.broadcast_to('app', data: room.serialized, type: :room_create)
+      else
+        room.users.map do |user|
+          UserChannel.broadcast_to(user, data: room.serialized, type: :room_create)
+        end
+      end
     end
   end
 end

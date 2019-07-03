@@ -2,23 +2,13 @@
 
 module Rooms
   class Base
-    attr_reader :params, :user, :room
+    attr_reader :room_params, :users_ids, :user, :room
 
-    def initialize(params:, user:)
-      @params = params
+    def initialize(room_params:, users_ids: '', user: nil, room: nil)
+      @room_params = room_params
+      @users_ids = users_ids.split(',').map(&:to_i)
       @user = user
-    end
-
-    private
-
-    def broadcast_room_message
-      if room.public?
-        AppChannel.broadcast_to('app', data: room.serialized, type: :room_create)
-      else
-        room.users.map do |user|
-          UserChannel.broadcast_to(user, data: room.serialized, type: :room_create)
-        end
-      end
+      @room = room
     end
   end
 end

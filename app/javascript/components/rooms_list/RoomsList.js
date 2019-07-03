@@ -51,13 +51,14 @@ class RoomsList extends Component {
   handleChannelResponse = (response) => {
     switch (response.type) {
       case 'room_create':
+      case 'room_open':
         this.handleNewRoom(response.data);
         break;
       case 'room_update':
         this.handleUpdatedRoom(response.data);
         break;
-      case 'room_destroy':
-        this.handleDestroyedRoom(response.data);
+      case 'room_close':
+        this.handleClosedRoom(response.data);
         break;
       default:
         break;
@@ -66,7 +67,7 @@ class RoomsList extends Component {
 
   handleNewRoom = (room) => {
     const sortedRooms = _.orderBy([...this.state.rooms, room], [r => r.name.toLowerCase()], ['asc']);
-    this.setState({ rooms: sortedRooms });
+    this.setState({ rooms: _.uniqBy(sortedRooms, 'id') });
     this.filterRooms();
   }
 
@@ -81,7 +82,7 @@ class RoomsList extends Component {
     this.filterRooms();
   }
 
-  handleDestroyedRoom = (room) => {
+  handleClosedRoom = (room) => {
     const rooms = [...this.state.rooms];
     const index = _.findIndex(rooms, { id: room.id });
 
