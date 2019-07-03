@@ -33,7 +33,7 @@ RSpec.describe Rooms::Updater do
           user: user,
           room: private_room
         ).call
-      end.to(change{ RoomsUser.count }.by(-1))
+      end.to(change { RoomsUser.count }.by(-1))
     end
 
     it 'expects to add new users' do
@@ -47,7 +47,7 @@ RSpec.describe Rooms::Updater do
           user: user,
           room: private_room
         ).call
-      end.to(change{ RoomsUser.count }.by(1))
+      end.to(change { RoomsUser.count }.by(1))
     end
   end
 end

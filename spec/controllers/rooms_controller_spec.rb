@@ -100,7 +100,7 @@ RSpec.describe RoomsController, type: :controller do
         participant = create(:user)
 
         expect do
-          post :create, params: { room: attributes_for(:room, public: false), users_ids: "#{participant.id}" }
+          post :create, params: { room: attributes_for(:room, public: false), users_ids: participant.id.to_s }
         end.to have_broadcasted_to(participant).from_channel(UserChannel)
       end
     end

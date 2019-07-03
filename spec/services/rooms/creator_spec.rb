@@ -21,19 +21,19 @@ RSpec.describe Rooms::Creator do
     it 'expects to create public new room' do
       expect do
         Rooms::Creator.new(room_params: attributes_for(:room, public: true), user: user).call
-      end.to(change{ Room.count }.by(1))
+      end.to(change { Room.count }.by(1))
     end
 
     it 'expects to create private room with owner as participant' do
       expect do
         Rooms::Creator.new(room_params: attributes_for(:room, public: false), user: user).call
-      end.to(change{ RoomsUser.count }.by(1))
+      end.to(change { RoomsUser.count }.by(1))
     end
 
     it 'expects not to create room without name' do
       expect do
         Rooms::Creator.new(room_params: { name: '' }, user: user).call
-      end.not_to(change{ Room.count })
+      end.not_to(change { Room.count })
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe Rooms::Creator do
     it 'expects not to create rooms_users if public room' do
       expect do
         Rooms::Creator.new(room_params: attributes_for(:room, public: true), user: user).call
-      end.not_to(change{ RoomsUser.count })
+      end.not_to(change { RoomsUser.count })
     end
 
     it 'expects to create rooms_users for all participants' do
@@ -53,7 +53,7 @@ RSpec.describe Rooms::Creator do
           users_ids: participants_ids.join(','),
           user: user
         ).call
-      end.to(change{ RoomsUser.count }.by(participants_ids.length + 1)) # participants + owner
+      end.to(change { RoomsUser.count }.by(participants_ids.length + 1)) # participants + owner
     end
 
     it 'expects not to create rooms_users if room is invalid' do
@@ -63,7 +63,7 @@ RSpec.describe Rooms::Creator do
           users_ids: participants_ids.join(','),
           user: user
         ).call
-      end.not_to(change{ RoomsUser.count })
+      end.not_to(change { RoomsUser.count })
     end
   end
 end
