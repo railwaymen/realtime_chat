@@ -10,7 +10,7 @@ class RoomsList extends Component {
 
     this.state = {
       currentUserId: props.data.current_user.id,
-      currentUserActivity: props.data.current_user.rooms_activity,
+      userActivity: props.data.current_user.rooms_activity,
       rooms: props.data.rooms,
       filteredRooms: props.data.rooms,
       searchValue: '',
@@ -59,6 +59,9 @@ class RoomsList extends Component {
       case 'room_destroy':
         this.handleDestroyedRoom(response.data);
         break;
+      case 'room_message_create':
+        this.updateUserActivity(response.data);
+        break;
       default:
         break;
     }
@@ -91,17 +94,28 @@ class RoomsList extends Component {
     this.filterRooms();
   }
 
+  updateUserActivity = (message) => {
+    const rooms = [...this.state.rooms];
+    const room = _.find(rooms, { id: message.room_id });
+
+    room.last_message_at = message.created_at;
+    this.setState({ rooms });
+  }
+
   handleSearch = async (e) => {
     await this.setState({ searchValue: e.target.value });
     this.filterRooms();
   }
+
+  unreadMessage = room => (
+    room.last_message_at && new Date(room.last_message_at) > new Date(this.state.userActivity[room.id])
+  )
 
   render() {
     const {
       filteredRooms,
       currentUserId,
       searchValue,
-      currentUserActivity,
     } = this.state;
 
     return (
@@ -122,7 +136,7 @@ class RoomsList extends Component {
               key={room.id}
               room={room}
               currentUserId={currentUserId}
-              lastActivity={currentUserActivity[room.id]}
+              unreadMessage={this.unreadMessage(room)}
             />
           ))}
         </div>
