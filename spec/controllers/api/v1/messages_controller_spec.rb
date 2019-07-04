@@ -74,6 +74,14 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
         expect_api_response(expected_response(last_message).to_json)
       end
 
+      it 'expects to respond with error if empty name' do
+        expect do
+          post :create, params: { name: '', room_id: room.id }, as: :json
+        end.not_to(change { room.messages.count })
+
+        expect(response).to have_http_status 422
+      end
+
       it 'expects to broadcast new message' do
         expect do
           post :create, params: params, as: :json

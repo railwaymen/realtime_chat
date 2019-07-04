@@ -10,10 +10,12 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       id: room.id,
       name: room.name,
       channel_name: room.channel_name,
+      deleted: room.discarded?,
       user_id: room.user_id,
       public: room.public,
-      room_path: room_path(room),
-      last_message_at: nil
+      last_message_at: nil,
+      participants_ids: room.users.pluck(:id),
+      room_path: room_path(room)
     }
   end
 
@@ -75,6 +77,14 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
         end.to(change { RoomsUser.count }.by(1))
 
         expect(RoomsUser.last.user).to eql(user)
+      end
+
+      it 'expects to respond with error if empty name' do
+        expect do
+          post :create, params: { name: '' }, as: :json
+        end.not_to(change { Room.count })
+
+        expect(response).to have_http_status 422
       end
 
       it 'expects to broadcast new room' do
@@ -146,12 +156,6 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
         expect do
           delete :destroy, params: { id: room.id }, as: :json
         end.to have_broadcasted_to(:app).from_channel(AppChannel)
-      end
-
-      it 'expects to broadcast close room action' do
-        expect do
-          delete :destroy, params: { id: room.id }, as: :json
-        end.to have_broadcasted_to(room).from_channel(RoomChannel)
       end
     end
   end
