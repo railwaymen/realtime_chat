@@ -21,8 +21,17 @@
     position: relative;
 
     p {
-      margin: 0;
+      margin-bottom: 1rem;
       padding-right: 5rem;
+    }
+
+    blockquote {
+      padding: .5rem 1.5rem;
+      background-color: #eee;
+    }
+
+    ul, ol {
+      margin-left: 2rem;
     }
 
     .message__actions {
