@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 
 import { updateMessage, deleteMessage } from '@/actions/chat';
+import markdownRenderer from '@/utils/markdown_renderer';
 
 class ConverationItem extends Component {
   constructor(props) {
@@ -73,9 +74,8 @@ class ConverationItem extends Component {
         <div className="message__container">
           {this.state.editing ? (
             <div className="input-group">
-              <input
+              <textarea
                 className="form-control"
-                type="text"
                 value={this.state.value}
                 onChange={this.handleBodyChange}
               />
@@ -99,7 +99,7 @@ class ConverationItem extends Component {
             </div>
           ) : (
             <div className="message__body" onDoubleClick={this.handleDoubleClick}>
-              <p>{body}</p>
+              <p dangerouslySetInnerHTML={{ __html: markdownRenderer.render(body) }} />
 
               {!deleted && currentUserId === user_id && (
                 <div className="message__actions">

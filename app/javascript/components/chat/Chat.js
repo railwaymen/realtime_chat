@@ -4,6 +4,8 @@ import Conversation from './Conversation';
 
 import { createMessage, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
+import markdownRenderer from '@/utils/markdown_renderer';
+
 
 class Chat extends Component {
   constructor(props) {
@@ -160,16 +162,22 @@ class Chat extends Component {
           <p className="chat__info">Room was closed by owner</p>
         ) : (
           <form onSubmit={this.handleMessageSubmit} className="message-area">
-            <div className="input-group">
-              <input
-                value={currentMessage}
-                onChange={this.handleMessageChange}
-                onKeyUp={this.handleUserTyping}
-                className="form-control"
-              />
-              <div className="input-group-append">
-                <button type="submit" className="btn btn-primary">Send</button>
+            <div className="form-group">
+              <div className="input-group">
+                <textarea
+                  value={currentMessage}
+                  onChange={this.handleMessageChange}
+                  onKeyUp={this.handleUserTyping}
+                  className="form-control"
+                />
+                <div className="input-group-append">
+                  <button type="submit" className="btn btn-primary">Send</button>
+                </div>
               </div>
+
+              <small className="form-text text-muted">
+                <strong>**bold**</strong> | <em>*italic*</em> | > quote | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
+              </small>
             </div>
           </form>
         )}
