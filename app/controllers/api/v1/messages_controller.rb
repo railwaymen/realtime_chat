@@ -58,7 +58,7 @@ module Api
       end
 
       def message_params
-        params.permit(:body)
+        params.permit(:body, files: [])
       end
     end
   end

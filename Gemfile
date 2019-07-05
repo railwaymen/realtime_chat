@@ -37,6 +37,7 @@ group :development, :test do
   gem 'simplecov', '~> 0.16.1'
   gem 'rails-controller-testing'
   gem 'action-cable-testing'
+  gem 'carrierwave', '>= 2.0.0.rc', '< 3.0'
 end
 
 group :development do

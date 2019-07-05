@@ -5,6 +5,7 @@ class RoomMessage < ApplicationRecord
   include OwnerConcern
 
   belongs_to :room
+  has_many_attached :files
 
   # Validations
   validates :body, presence: true

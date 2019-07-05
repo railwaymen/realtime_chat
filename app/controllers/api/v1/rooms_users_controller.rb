@@ -14,7 +14,7 @@ module Api
         @rooms_user = room.rooms_users.build(rooms_user_params)
         authorize @rooms_user
 
-        @rooms_user.save
+        @rooms_user.save!
         render json: @rooms_user.serialized, status: 200
       end
 
