@@ -1,6 +1,21 @@
 .chat {
+  &__conversation {
+    min-height: 400px;
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+    padding: .5rem;
+  }
+
   &__info {
     text-align: center;
     font-weight: bold;
+  }
+
+  &__message-form {
+    margin-top: 1rem;
+  }
+
+  &__typers {
+    padding: .5rem 0;
   }
 }

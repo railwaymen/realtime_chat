@@ -161,7 +161,7 @@ class Chat extends Component {
         {!isAccessible ? (
           <p className="chat__info">Room was closed by owner</p>
         ) : (
-          <form onSubmit={this.handleMessageSubmit} className="message-area">
+          <form onSubmit={this.handleMessageSubmit} className="chat__message-form">
             <div className="form-group">
               <div className="input-group">
                 <textarea
