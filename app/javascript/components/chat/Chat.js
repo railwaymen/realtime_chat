@@ -115,6 +115,11 @@ class Chat extends Component {
   }
 
   handleUserTyping = (e) => {
+    if (e.which === 13 && !e.shiftKey) {
+      this.handleMessageSubmit(e);
+      return;
+    }
+
     const currentCharsCount = e.target.value.length;
     const typingStatusChanged = Boolean(currentCharsCount) !== Boolean(this.charsCount);
 
@@ -161,7 +166,7 @@ class Chat extends Component {
         {!isAccessible ? (
           <p className="chat__info">Room was closed by owner</p>
         ) : (
-          <form onSubmit={this.handleMessageSubmit} className="message-area">
+          <form onSubmit={this.handleMessageSubmit} className="chat__message-form">
             <div className="form-group">
               <div className="input-group">
                 <textarea
@@ -176,7 +181,12 @@ class Chat extends Component {
               </div>
 
               <small className="form-text text-muted">
-                <strong>**bold**</strong> | <em>*italic*</em> | > quote | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
+                <strong>**bold**</strong>
+                |
+                <em>*italic*</em>
+                |
+                &gt; quote
+                | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
               </small>
             </div>
           </form>

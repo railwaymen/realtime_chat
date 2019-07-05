@@ -91,10 +91,10 @@ class RoomsController < BaseController
   end
 
   def create_room_params
-    params.require(:room).permit(:name, :public)
+    params.require(:room).permit(:name, :description, :public)
   end
 
   def update_room_params
-    params.require(:room).permit(:name)
+    params.require(:room).permit(:name, :description)
   end
 end

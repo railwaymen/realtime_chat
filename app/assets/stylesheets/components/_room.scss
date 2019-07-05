@@ -1,9 +1,19 @@
 .room {
   position: relative;
+  height: 100%;
 
   .room__header {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .room__description {
+    padding: 0 2rem;
+    flex: 1 1 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .room__actions {

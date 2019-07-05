@@ -99,7 +99,7 @@ class ConverationItem extends Component {
             </div>
           ) : (
             <div className="message__body" onDoubleClick={this.handleDoubleClick}>
-              <p dangerouslySetInnerHTML={{ __html: markdownRenderer.render(body) }} />
+              <div dangerouslySetInnerHTML={{ __html: markdownRenderer.render(body) }} />
 
               {!deleted && currentUserId === user_id && (
                 <div className="message__actions">

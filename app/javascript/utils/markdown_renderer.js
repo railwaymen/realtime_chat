@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it';
 import emoji from 'markdown-it-emoji';
 
 const markdownRenderer = new MarkdownIt({
-  linkify: true
+  linkify: true,
 });
 
 markdownRenderer.use(emoji);

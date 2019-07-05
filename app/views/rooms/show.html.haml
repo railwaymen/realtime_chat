@@ -3,6 +3,9 @@
     .room__title
       %h2= @room.name
 
+    .room__description
+      %span.text-muted= @room.description
+
     .room__actions
       - if @room.user_id == current_user.id
         %ul
@@ -11,8 +14,8 @@
           %li.action__item
             = link_to 'Close room', room_path(@room), class: 'btn btn-sm btn-outline-danger', method: :delete, data: {confirm: 'Are you sure?' }
 
-.chat
-  #chat__component{ 'data-behavior': 'react' }
+  .chat
+    #chat__component{ 'data-behavior': 'react' }
 
 :javascript
   document.addEventListener('DOMContentLoaded', function() {

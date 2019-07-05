@@ -85,7 +85,8 @@ CREATE TABLE public.rooms (
     user_id bigint NOT NULL,
     discarded_at timestamp without time zone,
     public boolean DEFAULT true NOT NULL,
-    last_message_at timestamp without time zone
+    last_message_at timestamp without time zone,
+    description text
 );
 
 
@@ -389,6 +390,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190619084919'),
 ('20190619092829'),
 ('20190628104921'),
-('20190628154929');
+('20190628154929'),
+('20190705070039');
 
 

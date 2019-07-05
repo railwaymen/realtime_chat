@@ -10,6 +10,13 @@
           = @room.errors.full_messages_for(:name).first
 
   .row
+    .form-group.col-6
+      = f.label :description, class: 'form-label'
+
+      .input-group
+        = f.text_area :description, class: 'form-control'
+
+  .row
     - if @room.new_record?
       .form-group.form-check.col-6
         = f.check_box :public

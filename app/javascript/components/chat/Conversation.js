@@ -42,8 +42,8 @@ class Conversation extends Component {
     const { messages, currentUserId } = this.props;
 
     return (
-      <div className="conversation">
-        <div className="conversation__content">
+      <div className="chat__conversation">
+        <div className="chat__messages">
           {messages.length > 0 ? (
             messages.map(message => (
               <ConversationItem key={message.id} message={message} currentUserId={currentUserId} />
@@ -55,7 +55,7 @@ class Conversation extends Component {
           <div ref={el => this.messagesEnd = el} />
         </div>
 
-        <div className="conversation__typers">
+        <div className="chat__typers">
           {this.renderTypingMessage()}
         </div>
       </div>
