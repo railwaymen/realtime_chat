@@ -23,6 +23,11 @@
     p {
       margin-bottom: 1rem;
       padding-right: 5rem;
+      white-space: pre-line;
+
+      &:only-child {
+        margin: 0;
+      }
     }
 
     blockquote {

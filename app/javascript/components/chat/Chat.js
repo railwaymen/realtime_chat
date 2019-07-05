@@ -115,6 +115,11 @@ class Chat extends Component {
   }
 
   handleUserTyping = (e) => {
+    if (e.which === 13 && !e.shiftKey) {
+      this.handleMessageSubmit(e);
+      return;
+    }
+
     const currentCharsCount = e.target.value.length;
     const typingStatusChanged = Boolean(currentCharsCount) !== Boolean(this.charsCount);
 
