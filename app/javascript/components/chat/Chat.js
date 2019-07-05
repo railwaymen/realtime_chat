@@ -176,7 +176,12 @@ class Chat extends Component {
               </div>
 
               <small className="form-text text-muted">
-                <strong>**bold**</strong> | <em>*italic*</em> | > quote | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
+                <strong>**bold**</strong>
+                |
+                <em>*italic*</em>
+                |
+                &gt; quote
+                | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
               </small>
             </div>
           </form>

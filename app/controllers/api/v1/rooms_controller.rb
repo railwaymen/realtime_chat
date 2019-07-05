@@ -57,11 +57,11 @@ module Api
       private
 
       def create_room_params
-        params.permit(:name, :public)
+        params.permit(:name, :description, :public)
       end
 
       def update_room_params
-        params.permit(:name)
+        params.permit(:name, :description)
       end
     end
   end

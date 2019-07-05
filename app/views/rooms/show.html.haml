@@ -3,6 +3,9 @@
     .room__title
       %h2= @room.name
 
+    .room__description
+      %span.text-muted= @room.description
+
     .room__actions
       - if @room.user_id == current_user.id
         %ul

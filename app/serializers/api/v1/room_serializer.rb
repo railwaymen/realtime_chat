@@ -5,7 +5,7 @@ module Api
     class RoomSerializer < Blueprinter::Base
       identifier :id
 
-      fields :name, :channel_name, :public, :user_id, :last_message_at
+      fields :name, :description, :channel_name, :public, :user_id, :last_message_at
 
       field :deleted do |room, _options|
         room.discarded?

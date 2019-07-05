@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :room do
     sequence(:name) { |n| "Room #{n}" }
+    description     { 'Sample description' }
     public          { true } # rubocop:disable Layout/EmptyLinesAroundAccessModifier
 
     user

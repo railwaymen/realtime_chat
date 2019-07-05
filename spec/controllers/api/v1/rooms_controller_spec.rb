@@ -9,6 +9,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
     {
       id: room.id,
       name: room.name,
+      description: room.description,
       channel_name: room.channel_name,
       deleted: room.discarded?,
       user_id: room.user_id,
