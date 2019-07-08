@@ -4,8 +4,7 @@ import Conversation from './Conversation';
 
 import { createMessage, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
-import markdownRenderer from '@/utils/markdown_renderer';
-
+import { playAudio } from '@/utils/audio_player';
 
 class Chat extends Component {
   constructor(props) {
@@ -93,6 +92,8 @@ class Chat extends Component {
   handleNewMessage = (data) => {
     const messages = [...this.state.messages, data];
     this.setState({ messages });
+    
+    if (data.user_id != this.state.currentUserId) playAudio(this.props.data.sound_path)
   }
 
   handleUpdatedMessage = (data) => {
