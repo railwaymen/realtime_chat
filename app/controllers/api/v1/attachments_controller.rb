@@ -9,7 +9,7 @@ module Api
         attachment = current_user.attachments.build(attachment_params)
 
         if attachment.save
-          render json: Api::V1::AttachmentSerializer.render_as_hash(attachment), status: 200
+          render json: attachment.serialized, status: 200
         else
           render json: Api::V1::ErrorSerializer.render_as_hash(attachment), status: 422
         end
