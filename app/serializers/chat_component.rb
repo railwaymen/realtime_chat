@@ -16,4 +16,8 @@ class ChatComponent < Blueprinter::Base
   association :messages, blueprint: Api::V1::MessageSerializer do |_room, options|
     options[:messages]
   end
+
+  field :sound_path do
+    ActionController::Base.helpers.asset_path 'message.mp3'
+  end
 end

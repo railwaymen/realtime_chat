@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import Push from 'push.js'
 
 import Conversation from './Conversation';
 
 import { createMessage, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
-import markdownRenderer from '@/utils/markdown_renderer';
-
+import { playAudio } from '@/utils/audio_player';
 
 class Chat extends Component {
   constructor(props) {
@@ -93,6 +93,19 @@ class Chat extends Component {
   handleNewMessage = (data) => {
     const messages = [...this.state.messages, data];
     this.setState({ messages });
+    
+    if (data.user_id != this.state.currentUserId && !document.hasFocus()) {
+      playAudio(this.props.data.sound_path)
+
+      Push.create(`${data.user.username} is writing`, {
+        body: _.truncate(data.body),
+        timeout: 6000,
+        onClick: function () {
+          window.focus();
+          this.close();
+        }
+      });
+    }
   }
 
   handleUpdatedMessage = (data) => {
