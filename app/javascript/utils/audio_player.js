@@ -1,6 +1,6 @@
 const playAudio = (path) => {
-  const audioPlayer = new Audio(path);
-  audioPlayer.play();
+  const audio = new Audio(path);
+  audio.addEventListener('canplaythrough', audio.play , false);
 }
 
 export {

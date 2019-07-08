@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Push from 'push.js'
 
 import Conversation from './Conversation';
 
@@ -93,7 +94,18 @@ class Chat extends Component {
     const messages = [...this.state.messages, data];
     this.setState({ messages });
     
-    if (data.user_id != this.state.currentUserId) playAudio(this.props.data.sound_path)
+    if (data.user_id != this.state.currentUserId && !document.hasFocus()) {
+      playAudio(this.props.data.sound_path)
+
+      Push.create(`${data.user.username} is writing`, {
+        body: _.truncate(data.body),
+        timeout: 6000,
+        onClick: function () {
+          window.focus();
+          this.close();
+        }
+      });
+    }
   }
 
   handleUpdatedMessage = (data) => {
