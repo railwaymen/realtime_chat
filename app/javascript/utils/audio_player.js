@@ -1,8 +1,8 @@
-const playAudio = (path) => {
+const playAudio = async (path) => {
   const audio = new Audio(path);
-  audio.addEventListener('canplaythrough', audio.play , false);
-}
+  await audio.load();
 
-export {
-  playAudio
+  audio.addEventListener('canplaythrough', audio.play, false);
 };
+
+export default playAudio;

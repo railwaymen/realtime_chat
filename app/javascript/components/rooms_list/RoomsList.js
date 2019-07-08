@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Push from 'push.js';
 
 import createChannel from '@/utils/cable';
-import { playAudio } from '@/utils/audio_player';
+import playAudio from '@/utils/audio_player';
 
 import RoomItem from './RoomItem';
 
@@ -104,16 +104,16 @@ class RoomsList extends Component {
     room.last_message_at = message.created_at;
     this.setState({ rooms });
 
-    if (message.user_id != this.state.currentUserId) {
-      playAudio(this.props.data.sound_path)
+    if (message.user_id !== this.state.currentUserId) {
+      playAudio(this.props.data.sound_path);
 
       Push.create(`${message.user.username} is writing`, {
         body: _.truncate(message.body),
         timeout: 6000,
-        onClick: function () {
+        onClick() {
           window.focus();
           this.close();
-        }
+        },
       });
     }
   }
