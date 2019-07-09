@@ -24,8 +24,8 @@ class ConverationItem extends Component {
   }
 
   handleDoubleClick = () => {
-    const { currentUserId, message: { user_id } } = this.props;
-    if (currentUserId === user_id) this.setState({ editing: true });
+    const { currentUserId, message: { user_id: userId } } = this.props;
+    if (currentUserId === userId) this.setState({ editing: true });
   }
 
   handleMessageEdit = () => {
@@ -42,15 +42,15 @@ class ConverationItem extends Component {
   }
 
   handleMessageDelete = () => {
-    if (confirm('Are you sure?')) deleteMessage({ id: this.props.message.id });
+    if (window.confirm('Are you sure?')) deleteMessage({ id: this.props.message.id });
   }
 
   render() {
     const {
       message: {
         body,
-        user_id,
-        created_at,
+        user_id: userId,
+        created_at: createdAt,
         edited,
         deleted,
         user: {
@@ -61,13 +61,13 @@ class ConverationItem extends Component {
     } = this.props;
 
     const classes = ['message'];
-    classes.push(currentUserId === user_id ? 'message--own' : 'message--foreign');
+    classes.push(currentUserId === userId ? 'message--own' : 'message--foreign');
 
     return (
       <div className={classes.join(' ')}>
         <div className="message__info">
           <span className="username">{username}</span>
-          <span className="date">{moment(created_at).format('LLL')}</span>
+          <span className="date">{moment(createdAt).format('LLL')}</span>
           {edited && <span className="edited">(edited)</span>}
         </div>
 
@@ -101,7 +101,7 @@ class ConverationItem extends Component {
             <div className="message__body" onDoubleClick={this.handleDoubleClick}>
               <div dangerouslySetInnerHTML={{ __html: markdownRenderer.render(body) }} />
 
-              {!deleted && currentUserId === user_id && (
+              {!deleted && currentUserId === userId && (
                 <div className="message__actions">
                   <span
                     className="edit"

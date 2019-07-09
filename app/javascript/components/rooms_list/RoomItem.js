@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 function RoomItem(props) {
   const {
     room: {
       name,
-      user_id,
-      room_path,
+      user_id: userId,
+      room_path: roomPath,
     },
     currentUserId,
     unreadMessage,
   } = props;
 
   const classes = ['room__item'];
-  if (user_id === currentUserId) classes.push('room__item--own');
+  if (userId === currentUserId) classes.push('room__item--own');
 
   if (unreadMessage) classes.push('room__item--unread-message');
 
   return (
     <div className={classes.join(' ')}>
-      <a href={room_path}>{name}</a>
+      <a href={roomPath}>{name}</a>
     </div>
   );
 }
