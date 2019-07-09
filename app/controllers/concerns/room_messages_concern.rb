@@ -15,5 +15,10 @@ module RoomMessagesConcern
         end
       end
     end
+
+    def assign_attachments(message, ids)
+      attachments = policy_scope(Attachment).where(id: ids)
+      attachments.update_all(room_message_id: message.id, updated_at: Time.current)
+    end
   end
 end

@@ -9,7 +9,7 @@ module Api
 
       # rubocop:disable Metrics/AbcSize
       def index
-        @messages = room.messages.includes(:user).order(id: :desc).limit(MESSAGES_LIMIT)
+        @messages = room.messages.includes(:user, :attachments).order(id: :desc).limit(MESSAGES_LIMIT)
         @messages = @messages.where('id < ?', params[:last_id]) if params[:last_id].present?
 
         current_user.update_room_activity(room) if params[:last_id].nil?
@@ -22,6 +22,7 @@ module Api
         authorize @message
 
         if @message.save
+          assign_attachments(@message, params[:attachment_ids]) if params[:attachment_ids].present?
           broadcast_message(@message, :room_message_create)
           render json: @message.serialized, status: 200
         else

@@ -40,6 +40,41 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: attachments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.attachments (
+    id bigint NOT NULL,
+    room_message_id bigint,
+    user_id bigint NOT NULL,
+    file character varying NOT NULL,
+    content_type character varying NOT NULL,
+    file_size bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.attachments_id_seq OWNED BY public.attachments.id;
+
+
+--
 -- Name: room_messages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -190,6 +225,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: attachments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attachments ALTER COLUMN id SET DEFAULT nextval('public.attachments_id_seq'::regclass);
+
+
+--
 -- Name: room_messages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -223,6 +265,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: attachments attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attachments
+    ADD CONSTRAINT attachments_pkey PRIMARY KEY (id);
 
 
 --
@@ -263,6 +313,20 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_attachments_on_room_message_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_attachments_on_room_message_id ON public.attachments USING btree (room_message_id);
+
+
+--
+-- Name: index_attachments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_attachments_on_user_id ON public.attachments USING btree (user_id);
 
 
 --
@@ -350,6 +414,22 @@ CREATE TRIGGER update_rooms_last_message_at_trigger AFTER INSERT ON public.room_
 
 
 --
+-- Name: attachments fk_rails_5650a5e7db; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attachments
+    ADD CONSTRAINT fk_rails_5650a5e7db FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: attachments fk_rails_582448a1e3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attachments
+    ADD CONSTRAINT fk_rails_582448a1e3 FOREIGN KEY (room_message_id) REFERENCES public.room_messages(id);
+
+
+--
 -- Name: room_messages fk_rails_76bc7b974e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -391,6 +471,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190619092829'),
 ('20190628104921'),
 ('20190628154929'),
-('20190705070039');
+('20190705070039'),
+('20190705085446');
 
 

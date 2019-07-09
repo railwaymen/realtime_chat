@@ -276,6 +276,14 @@ paths:
           required: true
           type: string
           default: Hello
+        - in: formData
+          name: attachment_ids[]
+          required: false
+          type: array
+          collectionFormat: multi
+          items:
+            type: integer
+
       responses:
         200:
           description: OK
@@ -403,6 +411,48 @@ paths:
         204:
           description: No Content
 
+  /attachments:
+    post:
+      tags:
+        - Attachments
+      security:
+        - User: []
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The file to upload.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Attachment'
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                file:
+                  - error: blank
+  /attachments/{id}:
+    delete:
+      tags:
+        - Attachments
+      security:
+        - User: []
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+      responses:
+        204:
+          description: No Content
+
 definitions:
   Room:
     type: object
@@ -476,6 +526,10 @@ definitions:
         example: false
       user:
         $ref: '#/definitions/User'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
       created_at:
         type: string
         example: "2019-07-01T12:50:49Z"
@@ -492,3 +546,28 @@ definitions:
       email:
         type: string
         example: user1@example.com
+
+  Attachment:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      content_type:
+        type: string
+        example: image/jpeg
+      file_size:
+        type: integer
+        example: 1000
+      identifier:
+        type: string
+        example: 'example.jpeg'
+      url:
+        type: string
+        example: '/uploads/attachment/file/1/example.jpeg'
+      thumb_url:
+        type: string
+        example: '/uploads/attachment/file/1/thumb_example.jpeg'
+      created_at:
+        type: string
+        example: "2019-07-01T12:50:49Z"
