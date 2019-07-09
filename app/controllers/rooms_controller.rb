@@ -12,7 +12,7 @@ class RoomsController < BaseController
     @room = Room.kept.find(params[:id])
     authorize @room
 
-    messages = @room.messages.includes(:user).order(id: :asc)
+    messages = @room.messages.includes(:user).order(id: :desc).limit(20).reverse
     @chat_data = ChatComponent.render(@room, messages: messages, current_user: current_user)
 
     current_user.update_room_activity(@room)
