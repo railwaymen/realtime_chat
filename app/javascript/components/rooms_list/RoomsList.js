@@ -88,21 +88,25 @@ class RoomsList extends Component {
   }
 
   handleClosedRoom = (room) => {
-    const rooms = [...this.state.rooms];
-    const index = _.findIndex(rooms, { id: room.id });
+    this.setState((prevState) => {
+      const rooms = [...prevState.rooms];
+      const index = _.findIndex(rooms, { id: room.id });
 
-    rooms.splice(index, 1);
+      rooms.splice(index, 1);
+      return { rooms };
+    });
 
-    this.setState({ rooms });
     this.filterRooms();
   }
 
   updateUserActivity = (message) => {
-    const rooms = [...this.state.rooms];
-    const room = _.find(rooms, { id: message.room_id });
+    this.setState((prevState) => {
+      const rooms = [...prevState.rooms];
+      const room = _.find(rooms, { id: message.room_id });
 
-    room.last_message_at = message.created_at;
-    this.setState({ rooms });
+      room.last_message_at = message.created_at;
+      return { rooms };
+    });
 
     if (message.user_id !== this.state.currentUserId) {
       playAudio(this.props.data.sound_path);

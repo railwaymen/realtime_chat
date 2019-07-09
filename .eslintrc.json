@@ -31,17 +31,14 @@
         "jsx-a11y/label-has-for": [ "error", {
             "required": { "some": [ "nesting", "id"  ] }
         }],
-        "import/no-unresolved": "off",
+        "import/no-unresolved": [ "error", {
+              "ignore": [ "@/" ]
+            }
+        ],
         "react/prop-types": "off",
         "react/destructuring-assignment": "off",
-        "react/no-access-state-in-setstate": "off",
-        "no-undef": "off",
-        "camelcase": "off",
         "jsx-a11y/click-events-have-key-events": "off",
         "jsx-a11y/no-static-element-interactions": "off",
-        "no-unused-vars": "off",
-        "no-return-assign": "off",
-        "no-restricted-globals": "off",
         "no-alert":"off"
     },
     "parser": "babel-eslint"

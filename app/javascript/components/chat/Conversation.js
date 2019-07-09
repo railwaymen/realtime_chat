@@ -3,6 +3,11 @@ import React, { Component } from 'react';
 import ConversationItem from './ConversationItem';
 
 class Conversation extends Component {
+  constructor(props) {
+    super(props);
+    this.messagesEnd = React.createRef();
+  }
+
   componentDidMount() {
     this.scrollToBottom();
   }
@@ -35,7 +40,7 @@ class Conversation extends Component {
   }
 
   scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView();
+    this.messagesEnd.current.scrollIntoView();
   }
 
   render() {
@@ -52,7 +57,7 @@ class Conversation extends Component {
             <p>There are no messages</p>
           )}
 
-          <div ref={el => this.messagesEnd = el} />
+          <div ref={this.messagesEnd} />
         </div>
 
         <div className="chat__typers">

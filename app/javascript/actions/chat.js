@@ -39,8 +39,8 @@ const deleteMessage = (message) => {
   });
 };
 
-const updateActivity = (room_id) => {
-  fetch(`/rooms/${room_id}/update_activity`, {
+const updateActivity = (roomId) => {
+  fetch(`/rooms/${roomId}/update_activity`, {
     method: 'post',
     headers,
     body: JSON.stringify({

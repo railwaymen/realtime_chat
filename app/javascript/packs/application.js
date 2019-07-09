@@ -15,7 +15,7 @@
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-/* eslint-disable import/newline-after-import, import/first */
+/* eslint-disable import/newline-after-import, import/first, no-unused-vars */
 
 import _ from 'lodash';
 import 'bootstrap/dist/js/bootstrap';

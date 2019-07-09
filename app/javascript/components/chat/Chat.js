@@ -78,7 +78,7 @@ class Chat extends Component {
   }
 
   handleRoomAccess = (room) => {
-    this.setState((state, _props) => {
+    this.setState((state) => {
       const isAccessible = !room.deleted && (room.public || _.includes(room.participants_ids, state.currentUserId));
       return { isAccessible };
     });
@@ -91,27 +91,33 @@ class Chat extends Component {
   handleNewMessage = (data) => {
     if (data.room_id !== this.props.data.room_id) return;
 
-    const messages = [...this.state.messages, data];
-    this.setState({ messages });
+    this.setState((prevState) => {
+      const messages = [...prevState.messages, data];
+      return { messages };
+    });
   }
 
   handleUpdatedMessage = (data) => {
-    const messages = [...this.state.messages];
-    const index = _.findIndex(messages, { id: data.id });
+    this.setState((prevState) => {
+      const messages = [...prevState.messages];
+      const index = _.findIndex(messages, { id: data.id });
 
-    messages.splice(index, 1, data);
-    this.setState({ messages });
+      messages.splice(index, 1, data);
+      return { messages };
+    });
   }
 
   handleTypingAction = (data) => {
-    const typers = _.uniqBy([data.user, ...this.state.typers], 'id');
+    this.setState((prevState) => {
+      const typers = _.uniqBy([data.user, ...prevState.typers], 'id');
 
-    if (!data.typing || data.user.id === this.state.currentUserId) {
-      const index = typers.indexOf(data.user);
-      typers.splice(index, 1);
-    }
+      if (!data.typing || data.user.id === prevState.currentUserId) {
+        const index = typers.indexOf(data.user);
+        typers.splice(index, 1);
+      }
 
-    this.setState({ typers });
+      return { typers };
+    });
   }
 
   handleUserTyping = (e) => {
