@@ -277,7 +277,7 @@ paths:
           type: string
           default: Hello
         - in: formData
-          name: files[]
+          name: attachment_ids[]
           required: false
           type: array
           collectionFormat: multi
@@ -526,6 +526,10 @@ definitions:
         example: false
       user:
         $ref: '#/definitions/User'
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/Attachment'
       created_at:
         type: string
         example: "2019-07-01T12:50:49Z"
@@ -561,6 +565,9 @@ definitions:
       url:
         type: string
         example: '/uploads/attachment/file/1/example.jpeg'
+      thumb_url:
+        type: string
+        example: '/uploads/attachment/file/1/thumb_example.jpeg'
       created_at:
         type: string
         example: "2019-07-01T12:50:49Z"

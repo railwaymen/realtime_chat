@@ -15,4 +15,14 @@ describe AttachmentPolicy do
       expect(subject).to_not permit(user, attachment)
     end
   end
+
+  describe AttachmentPolicy::Scope do
+    it 'returns accessible attachments' do
+      attachment = create(:attachment, user: user)
+      create(:attachment)
+
+      rooms = AttachmentPolicy::Scope.new(user, Attachment).resolve
+      expect(rooms).to contain_exactly(attachment)
+    end
+  end
 end

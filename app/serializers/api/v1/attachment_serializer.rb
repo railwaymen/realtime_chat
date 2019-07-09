@@ -10,6 +10,10 @@ module Api
       field :url do |attachment|
         attachment.file.url
       end
+
+      field :thumb_url do |attachment|
+        attachment.file.thumb.url
+      end
     end
   end
 end

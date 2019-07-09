@@ -11,7 +11,8 @@ RSpec.describe Api::V1::AttachmentsController, type: :controller do
       content_type: attachment.content_type,
       file_size: attachment.file_size,
       file_identifier: attachment.file_identifier,
-      url: attachment.file.url
+      url: attachment.file.url,
+      thumb_url: attachment.file.thumb.url
     }
   end
 

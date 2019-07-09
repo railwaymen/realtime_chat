@@ -20,6 +20,7 @@ module Api
       end
 
       association :user, blueprint: Api::V1::UserSerializer
+      association :attachments, blueprint: Api::V1::AttachmentSerializer
     end
   end
 end

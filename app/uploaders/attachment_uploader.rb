@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
 class AttachmentUploader < CarrierWave::Uploader::Base
-  # Include RMagick or MiniMagick support:
-  # include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick
+  include CarrierWave::MiniMagick
 
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
+  version :thumb, if: :image? do
+    process resize_to_fit: [100, 100]
+  end
+
+  protected
+
+  def image?(new_file)
+    new_file.content_type.start_with? 'image'
   end
 
   # Process files as they are uploaded:
