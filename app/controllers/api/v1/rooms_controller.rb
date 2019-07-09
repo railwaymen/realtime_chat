@@ -8,7 +8,7 @@ module Api
       before_action :authenticate_user!
 
       def index
-        @rooms = policy_scope(Room).kept
+        @rooms = policy_scope(Room).kept.order(name: :asc)
         render json: Api::V1::RoomSerializer.render(@rooms), status: 200
       end
 
