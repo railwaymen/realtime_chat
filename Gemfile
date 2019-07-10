@@ -24,6 +24,7 @@ gem 'discard', '~> 1.0'
 gem 'webpacker', '~> 4.0', '>= 4.0.7'
 gem 'pundit'
 gem 'blueprinter', '~> 0.18.0'
+gem 'carrierwave', '>= 2.0.0.rc', '< 3.0'
 
 group :development, :test do
   gem 'better_errors'
@@ -37,7 +38,6 @@ group :development, :test do
   gem 'simplecov', '~> 0.16.1'
   gem 'rails-controller-testing'
   gem 'action-cable-testing'
-  gem 'carrierwave', '>= 2.0.0.rc', '< 3.0'
 end
 
 group :development do
