@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import PropTypes from 'prop-types';
 
 const UsersSelect = (props) => {
   const { options, values } = props.data;
@@ -19,6 +20,18 @@ const UsersSelect = (props) => {
       />
     </React.Fragment>
   );
+};
+
+UsersSelect.propTypes = {
+  data: PropTypes.shape({
+    options: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }).isRequired,
+    ),
+    values: PropTypes.string,
+  }).isRequired,
 };
 
 export default UsersSelect;
