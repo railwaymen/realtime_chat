@@ -8,11 +8,11 @@ class RoomMessagesController < BaseController
     authorize @room, :show?
 
     messages = @room.messages
-      .includes(:user)
-      .where("id < ?", params[:last_id])
-      .order(id: :desc)
-      .limit(20)
-      .reverse
+                    .includes(:user)
+                    .where('id < ?', params[:last_id])
+                    .order(id: :desc)
+                    .limit(20)
+                    .reverse
 
     if messages.present?
       render json: Api::V1::MessageSerializer.render(messages), status: 200

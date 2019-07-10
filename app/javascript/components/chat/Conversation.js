@@ -42,18 +42,29 @@ class Conversation extends Component {
   }
 
   scrollToBottom = () => {
-    const lastMessage = document.querySelector('.chat__messages .message:last-of-type')
+    const lastMessage = document.querySelector('.chat__messages .message:last-of-type');
     if (lastMessage) lastMessage.scrollIntoView();
   }
 
   render() {
-    const { messages, currentUserId, onLoadMessges, loadMore } = this.props;
+    const {
+      messages,
+      currentUserId,
+      onLoadMessges,
+      loadMore,
+    } = this.props;
 
     return (
       <div className="chat__conversation">
         {loadMore && (
           <div className="chat__load-more">
-            <a href='#' onClick={onLoadMessges}>Previous messages ...</a>
+            <button
+              type="button"
+              className="btn btn-light"
+              onClick={onLoadMessges}
+            >
+              Previous messages ...
+            </button>
           </div>
         )}
         <div className="chat__messages">

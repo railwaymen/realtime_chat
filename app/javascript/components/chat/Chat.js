@@ -79,23 +79,23 @@ class Chat extends Component {
   }
 
   handleMessagesLoading = () => {
-    const firstMessage = document.querySelector('.chat__messages .message:first-of-type')
-    const oldFirstMessageTopOffset = firstMessage.offsetTop; 
+    const firstMessage = document.querySelector('.chat__messages .message:first-of-type');
+    const oldFirstMessageTopOffset = firstMessage.offsetTop;
 
     loadMessages(this.props.data.room_id, this.state.messages[0].id)
       .then(response => response.json())
-      .then(data => {
-        const messages = [...data, ...this.state.messages]
-        this.setState({ messages, loadMoreVisible: data.length === 20 })
+      .then((data) => {
+        const messages = [...data, ...this.state.messages];
+        this.setState({ messages, loadMoreVisible: data.length === 20 });
       })
       .then(() => {
         process.nextTick(() => {
-          const scrollableContainer = document.querySelector('.chat__conversation')
+          const scrollableContainer = document.querySelector('.chat__conversation');
           const newFirstMessageTopOffset = firstMessage.offsetTop;
 
           scrollableContainer.scrollTop = newFirstMessageTopOffset - oldFirstMessageTopOffset;
-        })
-      })
+        });
+      });
   }
 
   handleRoomAccess = (room) => {

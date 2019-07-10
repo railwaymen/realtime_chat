@@ -6,6 +6,39 @@ RSpec.describe RoomMessagesController, type: :controller do
   let(:user) { create(:user_with_rooms) }
   let(:room) { user.rooms.first }
 
+  describe '#load_more' do
+    context 'unauthorized' do
+      it 'expects to respond with error' do
+        6.times { create(:room_message, room: room) }
+
+        get :load_more, params: { room_id: room.id, last_id: RoomMessage.last.id }
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    context 'authorized' do
+      before(:each) { sign_in user }
+
+      it 'expects to respond with json array of 5 items' do
+        6.times { create(:room_message, room: room) }
+
+        get :load_more, params: { room_id: room.id, last_id: RoomMessage.last.id }
+
+        expect(json_response.length).to eq 5
+        expect(response).to have_http_status 200
+      end
+
+      it 'expects to respond with json empty array' do
+        message = create(:room_message, room: room)
+
+        get :load_more, params: { room_id: room.id, last_id: message.id }
+
+        expect(json_response.length).to eq 0
+        expect(response).to have_http_status 404
+      end
+    end
+  end
+
   describe '#create' do
     let(:message_params) { attributes_for(:room_message).merge(room_id: room.id) }
 

@@ -5,12 +5,13 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-const loadMessages = (roomId, lastId) => {
-  return fetch(`/room_messages/load_more?room_id=${roomId}&last_id=${lastId}`, {
+const loadMessages = (roomId, lastId) => fetch(
+  `/room_messages/load_more?room_id=${roomId}&last_id=${lastId}`,
+  {
     method: 'get',
-    headers
-  })
-}
+    headers,
+  },
+);
 
 const createMessage = (message, successCallback) => {
   fetch('/room_messages', {
