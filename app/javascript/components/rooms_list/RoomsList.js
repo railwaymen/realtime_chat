@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Push from 'push.js';
 
 import createChannel from '@/utils/cable';
@@ -128,7 +129,7 @@ class RoomsList extends Component {
   }
 
   unreadMessage = room => (
-    room.last_message_at && new Date(room.last_message_at) > new Date(this.state.userActivity[room.id])
+    Boolean(room.last_message_at && new Date(room.last_message_at) > new Date(this.state.userActivity[room.id]))
   )
 
   render() {
@@ -164,5 +165,22 @@ class RoomsList extends Component {
     );
   }
 }
+
+RoomsList.propTypes = {
+  data: PropTypes.shape({
+    current_user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      rooms_activity: PropTypes.objectOf(PropTypes.string).isRequired,
+    }).isRequired,
+    rooms: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        last_message_at: PropTypes.string,
+      }),
+    ).isRequired,
+    sound_path: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default RoomsList;

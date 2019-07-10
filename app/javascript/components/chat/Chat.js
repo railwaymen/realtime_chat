@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Conversation from './Conversation';
 
@@ -201,5 +202,14 @@ class Chat extends Component {
     );
   }
 }
+
+Chat.propTypes = {
+  data: PropTypes.shape({
+    current_user_id: PropTypes.number.isRequired,
+    is_accessible: PropTypes.bool.isRequired,
+    room_id: PropTypes.number.isRequired,
+    messages: PropTypes.array.isRequired,
+  }).isRequired,
+};
 
 export default Chat;

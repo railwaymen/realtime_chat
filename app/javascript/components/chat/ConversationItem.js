@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import moment from 'moment';
 
 import { updateMessage, deleteMessage } from '@/actions/chat';
 import markdownRenderer from '@/utils/markdown_renderer';
 
-class ConverationItem extends Component {
+class ConversationItem extends Component {
   constructor(props) {
     super(props);
 
@@ -126,4 +127,21 @@ class ConverationItem extends Component {
   }
 }
 
-export default ConverationItem;
+ConversationItem.propTypes = {
+  message: PropTypes.shape({
+    attachments: PropTypes.arrayOf(PropTypes.object),
+    body: PropTypes.string,
+    created_at: PropTypes.string.isRequired,
+    deleted: PropTypes.bool.isRequired,
+    edited: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      username: PropTypes.string.isRequired,
+    }).isRequired,
+    user_id: PropTypes.number.isRequired,
+  }).isRequired,
+  currentUserId: PropTypes.number.isRequired,
+};
+
+export default ConversationItem;

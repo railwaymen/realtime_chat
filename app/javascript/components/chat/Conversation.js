@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import ConversationItem from './ConversationItem';
 
@@ -67,5 +68,16 @@ class Conversation extends Component {
     );
   }
 }
+
+Conversation.propTypes = {
+  currentUserId: PropTypes.number.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  typers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      username: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default Conversation;
