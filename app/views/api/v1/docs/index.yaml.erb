@@ -156,12 +156,23 @@ paths:
           name: name
           required: true
           type: string
-          default: Room 1
+        - in: formData
+          name: description
+          required: false
+          type: string
         - in: formData
           name: public
           required: false
           type: boolean
           default: true
+        - in: formData
+          name: users_ids
+          required: false
+          type: string
+          description: For private room - string of users ids separated with comas
+          schema:
+            type: string
+            example: 1,5,17
       responses:
         200:
           description: OK
@@ -190,10 +201,21 @@ paths:
           type: string
           required: true
         - in: formData
+          name: description
+          required: false
+          type: string
+        - in: formData
           name: name
           required: true
           type: string
-          default: Room 1
+        - in: formData
+          name: users_ids
+          required: false
+          type: string
+          description: For private room - string of users ids separated with comas
+          schema:
+            type: string
+            example: 1,5,17
       responses:
         200:
           description: OK
