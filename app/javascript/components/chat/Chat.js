@@ -6,17 +6,19 @@ import { loadMessages, createMessage, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
+  messagesLimit = 20
+
+  charCount = 0
+
   constructor(props) {
     super(props);
-
-    this.charsCount = 0;
 
     this.state = {
       isAccessible: props.data.is_accessible,
       messages: props.data.messages,
       currentUserId: props.data.current_user_id,
       currentMessage: '',
-      loadMoreVisible: props.data.messages.length === 20,
+      loadMoreVisible: props.data.messages.length === this.messagesLimit,
       typers: [],
     };
 
@@ -82,12 +84,18 @@ class Chat extends Component {
     const firstMessage = document.querySelector('.chat__messages .message:first-of-type');
     const oldFirstMessageTopOffset = firstMessage.offsetTop;
 
-    loadMessages(this.props.data.room_id, this.state.messages[0].id)
+    const params = {
+      roomId: this.props.data.room_id,
+      lastId: this.state.messages[0].id,
+      limit: this.messagesLimit,
+    };
+
+    loadMessages(params)
       .then(response => response.json())
-      .then((data) => {
-        const messages = [...data, ...this.state.messages];
-        this.setState({ messages, loadMoreVisible: data.length === 20 });
-      })
+      .then(data => this.setState(prevState => ({
+        messages: [...data, ...prevState.messages],
+        loadMoreVisible: data.length === this.messagesLimit,
+      })))
       .then(() => {
         process.nextTick(() => {
           const scrollableContainer = document.querySelector('.chat__conversation');

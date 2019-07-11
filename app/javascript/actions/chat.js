@@ -5,8 +5,8 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-const loadMessages = (roomId, lastId) => fetch(
-  `/room_messages/load_more?room_id=${roomId}&last_id=${lastId}`,
+const loadMessages = ({ roomId, lastId, limit }) => fetch(
+  `/room_messages/load_more?room_id=${roomId}&last_id=${lastId}&limit=${limit}`,
   {
     method: 'get',
     headers,

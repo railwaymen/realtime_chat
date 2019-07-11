@@ -7,11 +7,13 @@ RSpec.describe RoomMessagesController, type: :controller do
   let(:room) { user.rooms.first }
 
   describe '#load_more' do
+    let(:messages_limit) { 20 }
+
     context 'unauthorized' do
       it 'expects to respond with error' do
         6.times { create(:room_message, room: room) }
 
-        get :load_more, params: { room_id: room.id, last_id: RoomMessage.last.id }
+        get :load_more, params: { room_id: room.id, last_id: RoomMessage.last.id, limit: messages_limit }
         expect(response).to redirect_to new_user_session_path
       end
     end
@@ -22,7 +24,7 @@ RSpec.describe RoomMessagesController, type: :controller do
       it 'expects to respond with json array of 5 items' do
         6.times { create(:room_message, room: room) }
 
-        get :load_more, params: { room_id: room.id, last_id: RoomMessage.last.id }
+        get :load_more, params: { room_id: room.id, last_id: RoomMessage.last.id, limit: messages_limit }
 
         expect(json_response.length).to eq 5
         expect(response).to have_http_status 200
@@ -31,10 +33,10 @@ RSpec.describe RoomMessagesController, type: :controller do
       it 'expects to respond with json empty array' do
         message = create(:room_message, room: room)
 
-        get :load_more, params: { room_id: room.id, last_id: message.id }
+        get :load_more, params: { room_id: room.id, last_id: message.id, limit: messages_limit }
 
-        expect(json_response.length).to eq 0
-        expect(response).to have_http_status 404
+        expect(json_response).to eq []
+        expect(response).to have_http_status 200
       end
     end
   end

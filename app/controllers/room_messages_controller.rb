@@ -11,14 +11,10 @@ class RoomMessagesController < BaseController
                     .includes(:user)
                     .where('id < ?', params[:last_id])
                     .order(id: :desc)
-                    .limit(20)
+                    .limit(params[:limit])
                     .reverse
 
-    if messages.present?
-      render json: Api::V1::MessageSerializer.render(messages), status: 200
-    else
-      render json: [], status: 404
-    end
+    render json: Api::V1::MessageSerializer.render(messages), status: 200
   end
 
   def create
