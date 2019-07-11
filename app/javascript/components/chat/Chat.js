@@ -215,7 +215,9 @@ class Chat extends Component {
                   className="form-control"
                 />
                 <div className="input-group-append">
-                  <button type="submit" className="btn btn-primary">Send</button>
+                  <button type="submit" className="btn btn-secondary">
+                    <i className="icofont-attachment icofont-2x"></i>
+                  </button>
                 </div>
               </div>
 

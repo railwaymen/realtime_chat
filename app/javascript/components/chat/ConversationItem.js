@@ -86,7 +86,7 @@ class ConversationItem extends Component {
                   className="btn btn-outline-secondary"
                   type="button"
                 >
-                  &times;
+                  <i className="icofont-close-line"></i>
                 </button>
 
                 <button
@@ -94,7 +94,7 @@ class ConversationItem extends Component {
                   className="btn btn-outline-secondary"
                   type="button"
                 >
-                  &#10003;
+                  <i className="icofont-check-alt"></i>
                 </button>
               </div>
             </div>
@@ -108,14 +108,14 @@ class ConversationItem extends Component {
                     className="edit"
                     onClick={this.handleDoubleClick}
                   >
-                    &#128394;
+                    <i className="icofont-edit-alt"></i>
                   </span>
 
                   <span
                     className="destroy"
                     onClick={this.handleMessageDelete}
                   >
-                    &#128465;
+                    <i className="icofont-ui-delete"></i>
                   </span>
                 </div>
               )}
