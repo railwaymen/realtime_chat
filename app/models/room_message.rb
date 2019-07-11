@@ -2,8 +2,8 @@
 
 class RoomMessage < ApplicationRecord
   include Discard::Model
-  include OwnerConcern
 
+  belongs_to :user
   belongs_to :room
   has_many :attachments
 

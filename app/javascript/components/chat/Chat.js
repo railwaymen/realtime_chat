@@ -3,20 +3,23 @@ import PropTypes from 'prop-types';
 
 import Conversation from './Conversation';
 
-import { createMessage, updateActivity } from '@/actions/chat';
+import { loadMessages, createMessage, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
+  messagesLimit = 20
+
+  charCount = 0
+
   constructor(props) {
     super(props);
-
-    this.charsCount = 0;
 
     this.state = {
       isAccessible: props.data.is_accessible,
       messages: props.data.messages,
       currentUserId: props.data.current_user_id,
       currentMessage: '',
+      loadMoreVisible: props.data.messages.length === this.messagesLimit,
       typers: [],
     };
 
@@ -76,6 +79,32 @@ class Chat extends Component {
       default:
         break;
     }
+  }
+
+  handleMessagesLoading = () => {
+    const firstMessage = document.querySelector('.chat__messages .message:first-of-type');
+    const oldFirstMessageTopOffset = firstMessage.offsetTop;
+
+    const params = {
+      roomId: this.props.data.room_id,
+      lastId: this.state.messages[0].id,
+      limit: this.messagesLimit,
+    };
+
+    loadMessages(params)
+      .then(response => response.json())
+      .then(data => this.setState(prevState => ({
+        messages: [...data, ...prevState.messages],
+        loadMoreVisible: data.length === this.messagesLimit,
+      })))
+      .then(() => {
+        process.nextTick(() => {
+          const scrollableContainer = document.querySelector('.chat__conversation');
+          const newFirstMessageTopOffset = firstMessage.offsetTop;
+
+          scrollableContainer.scrollTop = newFirstMessageTopOffset - oldFirstMessageTopOffset;
+        });
+      });
   }
 
   handleRoomAccess = (room) => {
@@ -159,6 +188,7 @@ class Chat extends Component {
       messages,
       currentUserId,
       currentMessage,
+      loadMoreVisible,
       typers,
     } = this.state;
 
@@ -168,6 +198,8 @@ class Chat extends Component {
           currentUserId={currentUserId}
           messages={messages}
           typers={typers}
+          onLoadMessges={this.handleMessagesLoading}
+          loadMore={loadMoreVisible}
         />
 
         {!isAccessible ? (

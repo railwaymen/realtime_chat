@@ -3,6 +3,20 @@
 class RoomMessagesController < BaseController
   include RoomMessagesConcern
 
+  def load_more
+    @room = Room.kept.find(params[:room_id])
+    authorize @room, :show?
+
+    messages = @room.messages
+                    .includes(:user)
+                    .where('id < ?', params[:last_id])
+                    .order(id: :desc)
+                    .limit(params[:limit])
+                    .reverse
+
+    render json: Api::V1::MessageSerializer.render(messages), status: 200
+  end
+
   def create
     room = Room.kept.find params.dig(:room_message, :room_id)
     @message = room.messages.build(message_params.merge(user: current_user))

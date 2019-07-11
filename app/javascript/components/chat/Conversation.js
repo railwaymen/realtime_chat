@@ -13,8 +13,10 @@ class Conversation extends Component {
     this.scrollToBottom();
   }
 
-  componentDidUpdate() {
-    this.scrollToBottom();
+  componentDidUpdate(prevProps) {
+    if (_.last(prevProps.messages).id !== _.last(this.props.messages).id) {
+      this.scrollToBottom();
+    }
   }
 
   renderTypingMessage = () => {
@@ -41,14 +43,31 @@ class Conversation extends Component {
   }
 
   scrollToBottom = () => {
-    this.messagesEnd.current.scrollIntoView();
+    const lastMessage = document.querySelector('.chat__messages .message:last-of-type');
+    if (lastMessage) lastMessage.scrollIntoView();
   }
 
   render() {
-    const { messages, currentUserId } = this.props;
+    const {
+      messages,
+      currentUserId,
+      onLoadMessges,
+      loadMore,
+    } = this.props;
 
     return (
       <div className="chat__conversation">
+        {loadMore && (
+          <div className="chat__load-more">
+            <button
+              type="button"
+              className="btn btn-light"
+              onClick={onLoadMessges}
+            >
+              Previous messages ...
+            </button>
+          </div>
+        )}
         <div className="chat__messages">
           {messages.length > 0 ? (
             messages.map(message => (
@@ -57,8 +76,6 @@ class Conversation extends Component {
           ) : (
             <p>There are no messages</p>
           )}
-
-          <div ref={this.messagesEnd} />
         </div>
 
         <div className="chat__typers">

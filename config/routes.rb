@@ -3,7 +3,10 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  resources :room_messages
+  resources :room_messages do
+    get :load_more, on: :collection
+  end
+
   resources :rooms do
     post :update_activity, on: :member
   end
