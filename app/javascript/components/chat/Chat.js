@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Conversation from './Conversation';
 
-import { loadMessages, createMessage, updateActivity } from '@/actions/chat';
+import { loadMessages, createMessage, updateActivity, uploadFile } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
@@ -20,6 +20,7 @@ class Chat extends Component {
       currentUserId: props.data.current_user_id,
       currentMessage: '',
       loadMoreVisible: props.data.messages.length === this.messagesLimit,
+      attachments: [],
       typers: [],
     };
 
@@ -166,17 +167,45 @@ class Chat extends Component {
     this.charsCount = currentCharsCount;
   }
 
+  handleAttachmentsButton = (e) => {
+    e.preventDefault()
+    document.getElementById('attachments_input').click()
+  }
+
+  handleAttachmentsUpload = (e) => {
+    // const files = Array.from(e.target.files)
+
+    const formData = new FormData()
+    formData.append('file', e.target.files[0])
+
+    uploadFile(formData)
+      .then(response => response.json())
+      .then(attachment => this.setState(prevState => ({
+        attachments: [...prevState.attachments, attachment]
+      })))
+  }
+
   handleMessageSubmit = (e) => {
     e.preventDefault();
 
-    if (this.state.currentMessage !== '') {
+    const {
+      props: {
+        data,
+      },
+      state: {
+        currentMessage,
+        attachments
+      }
+    } = this;
+
+    if (currentMessage !== '') {
       const params = {
-        room_id: this.props.data.room_id,
-        body: this.state.currentMessage,
+        message: { body: currentMessage, room_id: data.room_id },
+        attachment_ids: _.map(attachments, 'id')
       };
 
       createMessage(params, () => {
-        this.setState({ currentMessage: '' });
+        this.setState({ currentMessage: '', attachments: [] });
         this.roomSubscription.userTyping(false);
       });
     }
@@ -205,32 +234,41 @@ class Chat extends Component {
         {!isAccessible ? (
           <p className="chat__info">Room was closed by owner</p>
         ) : (
-          <form onSubmit={this.handleMessageSubmit} className="chat__message-form">
-            <div className="form-group">
-              <div className="input-group">
-                <textarea
-                  value={currentMessage}
-                  onChange={this.handleMessageChange}
-                  onKeyUp={this.handleUserTyping}
-                  className="form-control"
-                />
-                <div className="input-group-append">
-                  <button type="submit" className="btn btn-secondary">
-                    <i className="icofont-attachment icofont-2x"></i>
-                  </button>
+          <div className="chat__message-form">
+            <form onSubmit={this.handleMessageSubmit}>
+              <div className="form-group">
+                <div className="input-group">
+                  <textarea
+                    value={currentMessage}
+                    onChange={this.handleMessageChange}
+                    onKeyUp={this.handleUserTyping}
+                    className="form-control"
+                  />
+                  <div className="input-group-append">
+                    <button onClick={this.handleAttachmentsButton} className="btn btn-secondary">
+                      <i className="icofont-attachment icofont-2x"></i>
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <small className="form-text text-muted">
-                <strong>**bold**</strong>
-                |
-                <em>*italic*</em>
-                |
-                &gt; quote
-                | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
-              </small>
-            </div>
-          </form>
+                <small className="form-text text-muted">
+                  <strong>**bold**</strong>
+                  |
+                  <em>*italic*</em>
+                  |
+                  &gt; quote
+                  | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
+                </small>
+              </div>
+            </form>
+
+            <input
+              type="file"
+              id="attachments_input"
+              style={{ display: 'none' }}
+              onChange={this.handleAttachmentsUpload}
+            />
+          </div>
         )}
       </div>
     );

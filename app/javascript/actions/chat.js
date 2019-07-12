@@ -13,13 +13,14 @@ const loadMessages = ({ roomId, lastId, limit }) => fetch(
   },
 );
 
-const createMessage = (message, successCallback) => {
+const createMessage = (params, successCallback) => {
   fetch('/room_messages', {
     method: 'post',
     headers,
     body: JSON.stringify({
       authenticity_token: csrf,
-      room_message: message,
+      room_message: params.message,
+      attachment_ids: params.attachment_ids
     }),
   })
     .then(response => response.ok && successCallback());
@@ -57,10 +58,24 @@ const updateActivity = (roomId) => {
   });
 };
 
+const uploadFile = (formData) => {
+  formData.append('authenticity_token', csrf)
+  
+  return fetch(
+    '/attachments',
+    {
+      method: 'post',
+      headers: { Accept: 'application/json' },
+      body: formData
+    },
+  );
+};
+
 export {
   loadMessages,
   createMessage,
   updateMessage,
   deleteMessage,
   updateActivity,
+  uploadFile
 };

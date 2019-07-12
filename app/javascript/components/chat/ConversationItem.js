@@ -49,6 +49,7 @@ class ConversationItem extends Component {
   render() {
     const {
       message: {
+        attachments,
         body,
         user_id: userId,
         created_at: createdAt,
@@ -119,6 +120,16 @@ class ConversationItem extends Component {
                   </span>
                 </div>
               )}
+
+              <div className="message__attachemnts">
+                {attachments.map(attachment => (
+                  <div key={attachment.id} className="attachemnt">
+                    <a href={attachment.url} target="_blank">
+                      <img src={attachment.thumb_url} />
+                    </a>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
