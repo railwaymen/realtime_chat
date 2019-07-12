@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  resources :attachments, only: %i[create]
+  resources :attachments, only: %i[create destroy]
 
   resources :room_messages do
     get :load_more, on: :collection

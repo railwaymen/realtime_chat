@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Attachments from './Attachments';
+
 import moment from 'moment';
 
 import { updateMessage, deleteMessage } from '@/actions/chat';
@@ -120,18 +122,12 @@ class ConversationItem extends Component {
                   </span>
                 </div>
               )}
-
-              <div className="message__attachemnts">
-                {attachments.map(attachment => (
-                  <div key={attachment.id} className="attachemnt">
-                    <a href={attachment.url} target="_blank">
-                      <img src={attachment.thumb_url} />
-                    </a>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
+
+            <div className="message__attachments">
+              <Attachments attachments={attachments} />
+            </div>
         </div>
       </div>
     );

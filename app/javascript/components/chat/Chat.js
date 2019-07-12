@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Conversation from './Conversation';
+import Attachments from './Attachments';
 
-import { loadMessages, createMessage, updateActivity, uploadFile } from '@/actions/chat';
+import { loadMessages, createMessage, updateActivity, uploadFile, deleteFile } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
@@ -172,8 +173,8 @@ class Chat extends Component {
     document.getElementById('attachments_input').click()
   }
 
-  handleAttachmentsUpload = (e) => {
-    // const files = Array.from(e.target.files)
+  handleAttachmentUpload = (e) => {
+    if (e.target.files[0] === undefined) return;
 
     const formData = new FormData()
     formData.append('file', e.target.files[0])
@@ -183,6 +184,15 @@ class Chat extends Component {
       .then(attachment => this.setState(prevState => ({
         attachments: [...prevState.attachments, attachment]
       })))
+  }
+
+  handleAttachmentDelete = (id) => {
+    deleteFile(id)
+      .then(() => {
+        this.setState(prevState => ({
+          attachments: prevState.attachments.filter(attachment => attachment.id !== id)
+        }))
+      })
   }
 
   handleMessageSubmit = (e) => {
@@ -218,6 +228,7 @@ class Chat extends Component {
       currentUserId,
       currentMessage,
       loadMoreVisible,
+      attachments,
       typers,
     } = this.state;
 
@@ -262,12 +273,16 @@ class Chat extends Component {
               </div>
             </form>
 
-            <input
-              type="file"
-              id="attachments_input"
-              style={{ display: 'none' }}
-              onChange={this.handleAttachmentsUpload}
-            />
+            <div className="message__attachments">
+              <input
+                type="file"
+                id="attachments_input"
+                style={{ display: 'none' }}
+                onChange={this.handleAttachmentUpload}
+              />
+
+              <Attachments attachments={attachments} onDelete={this.handleAttachmentDelete} editable />
+            </div>
           </div>
         )}
       </div>

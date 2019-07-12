@@ -71,11 +71,23 @@ const uploadFile = (formData) => {
   );
 };
 
+const deleteFile = (id) => fetch(
+  `/attachments/${id}`,
+  {
+    method: 'delete',
+    headers,
+    body: JSON.stringify({
+      authenticity_token: csrf,
+    }),
+  }
+);
+
 export {
   loadMessages,
   createMessage,
   updateMessage,
   deleteMessage,
   updateActivity,
-  uploadFile
+  uploadFile,
+  deleteFile
 };

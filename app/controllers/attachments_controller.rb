@@ -11,6 +11,14 @@ class AttachmentsController < BaseController
     end
   end
 
+  def destroy
+    attachment = Attachment.find(params[:id])
+    authorize attachment
+
+    attachment.destroy!
+    head :no_content
+  end
+
   private
 
   def attachment_params

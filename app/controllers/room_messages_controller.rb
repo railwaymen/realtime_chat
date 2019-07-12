@@ -8,7 +8,7 @@ class RoomMessagesController < BaseController
     authorize @room, :show?
 
     messages = @room.messages
-                    .includes(:user)
+                    .includes(:user, :attachments)
                     .where('id < ?', params[:last_id])
                     .order(id: :desc)
                     .limit(params[:limit])
