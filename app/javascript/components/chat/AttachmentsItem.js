@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import attachmentIconsMapper from '@/utils/attachment_icons_mapper';
+
 class AttachmentsItem extends Component {
   render() {
     const { attachment, editable, onDelete } = this.props;
@@ -13,7 +15,7 @@ class AttachmentsItem extends Component {
             <img src={attachment.thumb_url} />
           ) : (
             <span className="attachment__placeholder">
-              <i className={ `icofont-file-${extension}` }></i>
+              <i className={ `icofont-file-${attachmentIconsMapper(extension)}` }></i>
             </span>
           )}
         </a>
