@@ -22,8 +22,8 @@ class RoomMessagesController < BaseController
     @message = room.messages.build(message_params.merge(user: current_user))
     authorize @message
 
-    if @message.save
-      assign_attachments(@message, params[:attachment_ids]) if params[:attachment_ids].present?
+    if @message.save && params[:attachment_ids].present?
+      assign_attachments(@message, params[:attachment_ids])
     end
 
     broadcast_message(@message, :room_message_create) if @message.valid?
