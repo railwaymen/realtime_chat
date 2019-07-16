@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Conversation from './Conversation';
-import Attachments from './Attachments';
+import MessageForm from './MessageForm';
 
-import { loadMessages, createMessage, updateActivity, uploadFile, deleteFile } from '@/actions/chat';
+import { loadMessages, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
   messagesLimit = 20
-
-  charCount = 0
 
   constructor(props) {
     super(props);
@@ -19,10 +17,7 @@ class Chat extends Component {
       isAccessible: props.data.is_accessible,
       messages: props.data.messages,
       currentUserId: props.data.current_user_id,
-      currentMessage: '',
       loadMoreVisible: props.data.messages.length === this.messagesLimit,
-      attachments: [],
-      typers: [],
     };
 
     this.appSubscription = createChannel(
@@ -40,23 +35,6 @@ class Chat extends Component {
       },
       {
         received: this.handleChannelResponse,
-      },
-    );
-
-    this.roomSubscription = createChannel(
-      {
-        channel: 'RoomChannel',
-        room_id: props.data.room_id,
-      },
-      {
-        received: (response) => {
-          if (response.message === 'typing') {
-            this.handleTypingAction(response);
-          }
-        },
-        userTyping: (typing) => {
-          this.roomSubscription.perform('user_typing', { typing, room_id: props.data.room_id });
-        },
       },
     );
 
@@ -116,17 +94,9 @@ class Chat extends Component {
     });
   }
 
-  handleMessageChange = (e) => {
-    this.setState({ currentMessage: e.target.value });
-  }
-
   handleNewMessage = (data) => {
     if (data.room_id !== this.props.data.room_id) return;
-
-    this.setState((prevState) => {
-      const messages = [...prevState.messages, data];
-      return { messages };
-    });
+    this.setState(prevState => ({ messages: [...prevState.messages, data] }));
   }
 
   handleUpdatedMessage = (data) => {
@@ -139,151 +109,37 @@ class Chat extends Component {
     });
   }
 
-  handleTypingAction = (data) => {
-    this.setState((prevState) => {
-      const typers = _.uniqBy([data.user, ...prevState.typers], 'id');
-
-      if (!data.typing || data.user.id === prevState.currentUserId) {
-        const index = typers.indexOf(data.user);
-        typers.splice(index, 1);
-      }
-
-      return { typers };
-    });
-  }
-
-  handleUserTyping = (e) => {
-    if (e.which === 13 && !e.shiftKey) {
-      this.handleMessageSubmit(e);
-      return;
-    }
-
-    const currentCharsCount = e.target.value.length;
-    const typingStatusChanged = Boolean(currentCharsCount) !== Boolean(this.charsCount);
-
-    if (typingStatusChanged) {
-      this.setState({ currentMessage: e.target.value });
-      this.roomSubscription.userTyping(e.target.value !== '');
-    }
-    this.charsCount = currentCharsCount;
-  }
-
-  handleAttachmentsButton = (e) => {
-    e.preventDefault()
-    document.getElementById('attachments_input').click()
-  }
-
-  handleAttachmentUpload = (e) => {
-    if (e.target.files[0] === undefined) return;
-
-    const formData = new FormData()
-    formData.append('file', e.target.files[0])
-
-    uploadFile(formData)
-      .then(response => response.json())
-      .then(attachment => this.setState(prevState => ({
-        attachments: [...prevState.attachments, attachment]
-      })))
-  }
-
-  handleAttachmentDelete = (id) => {
-    deleteFile(id)
-      .then(() => {
-        this.setState(prevState => ({
-          attachments: prevState.attachments.filter(attachment => attachment.id !== id)
-        }))
-      })
-  }
-
-  handleMessageSubmit = (e) => {
-    e.preventDefault();
-
-    const {
-      props: {
-        data,
-      },
-      state: {
-        currentMessage,
-        attachments
-      }
-    } = this;
-
-    if (currentMessage !== '') {
-      const params = {
-        message: { body: currentMessage, room_id: data.room_id },
-        attachment_ids: _.map(attachments, 'id')
-      };
-
-      createMessage(params, () => {
-        this.setState({ currentMessage: '', attachments: [] });
-        this.roomSubscription.userTyping(false);
-      });
-    }
-  }
-
   render() {
     const {
-      isAccessible,
-      messages,
-      currentUserId,
-      currentMessage,
-      loadMoreVisible,
-      attachments,
-      typers,
-    } = this.state;
+      state: {
+        isAccessible,
+        messages,
+        loadMoreVisible,
+      },
+      props: {
+        data: {
+          current_user_id: currentUserId,
+          room_id: roomId,
+        },
+      },
+    } = this;
 
     return (
       <div className="chat">
         <Conversation
           currentUserId={currentUserId}
           messages={messages}
-          typers={typers}
-          onLoadMessges={this.handleMessagesLoading}
+          onLoadMessages={this.handleMessagesLoading}
           loadMore={loadMoreVisible}
         />
 
         {!isAccessible ? (
           <p className="chat__info">Room was closed by owner</p>
         ) : (
-          <div className="chat__message-form">
-            <form onSubmit={this.handleMessageSubmit}>
-              <div className="form-group">
-                <div className="input-group">
-                  <textarea
-                    value={currentMessage}
-                    onChange={this.handleMessageChange}
-                    onKeyUp={this.handleUserTyping}
-                    className="form-control"
-                  />
-                  <div className="input-group-append">
-                    <button onClick={this.handleAttachmentsButton} className="btn btn-secondary">
-                      <i className="icofont-attachment icofont-2x"></i>
-                    </button>
-                  </div>
-                </div>
-
-                <small className="form-text text-muted">
-                  <strong>**bold**</strong>
-                  |
-                  <em>*italic*</em>
-                  |
-                  &gt; quote
-                  | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
-                </small>
-              </div>
-            </form>
-
-            <div className="message__attachments">
-              <input
-                type="file"
-                id="attachments_input"
-                style={{ display: 'none' }}
-                onChange={this.handleAttachmentUpload}
-              />
-
-              <Attachments attachments={attachments} onDelete={this.handleAttachmentDelete} editable />
-            </div>
-          </div>
+          <MessageForm
+            roomId={roomId}
+            currentUserId={currentUserId}
+          />
         )}
       </div>
     );

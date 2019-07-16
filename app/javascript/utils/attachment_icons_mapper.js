@@ -10,7 +10,7 @@ const attachmentIconsMapper = (extension) => {
     case 'rb':
       return 'ruby';
     case 'py':
-      return 'python'
+      return 'python';
     case 'js':
       return 'javascript';
     case 'sql':
@@ -25,10 +25,10 @@ const attachmentIconsMapper = (extension) => {
       return 'word';
     case 'xls':
     case 'xlsx':
-      return 'excel'
+      return 'excel';
     default:
-      return 'file'
-  };
+      return 'file';
+  }
 };
 
 export default attachmentIconsMapper;

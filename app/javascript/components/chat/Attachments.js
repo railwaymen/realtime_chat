@@ -1,24 +1,34 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import AttachmentsItem from './AttachmentsItem';
 
-class Attachments extends Component {
-  render() {
-    const { attachments, editable, onDelete } = this.props;
+const Attachments = (props) => {
+  const { attachments, editable = false, onDelete } = props;
 
-    return (
-      <div className="attachments">
-        {attachments.map(attachment => (
-          <AttachmentsItem 
-            key={attachment.id}
-            attachment={attachment}
-            editable={editable}
-            onDelete={onDelete}
-          />
-        ))}
-      </div>
-    );
-  }
-}
- 
+  return (
+    <div className="attachments">
+      {attachments.map(attachment => (
+        <AttachmentsItem
+          key={attachment.id}
+          attachment={attachment}
+          editable={editable}
+          onDelete={onDelete}
+        />
+      ))}
+    </div>
+  );
+};
+
+Attachments.propTypes = {
+  attachments: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onDelete: PropTypes.func,
+  editable: PropTypes.bool,
+};
+
+Attachments.defaultProps = {
+  onDelete: undefined,
+  editable: false,
+};
+
 export default Attachments;

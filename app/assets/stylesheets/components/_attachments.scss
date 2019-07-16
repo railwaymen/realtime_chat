@@ -5,10 +5,10 @@
   .attachment {
     position: relative;
     margin: .5rem;
-    transition: transform 200ms ease-in;
+    transition: all 200ms ease-in;
 
     &:hover {
-      transform: scale(1.05)
+      box-shadow: 0 0 .5rem rgba(0,0,0,.5)
     }
 
     &__delete {
