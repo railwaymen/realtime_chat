@@ -13,29 +13,30 @@ const loadMessages = ({ roomId, lastId, limit }) => fetch(
   },
 );
 
-const createMessage = (message, successCallback) => {
-  fetch('/room_messages', {
+const createMessage = params => fetch(
+  '/room_messages',
+  {
     method: 'post',
     headers,
     body: JSON.stringify({
       authenticity_token: csrf,
-      room_message: message,
+      room_message: params.message,
+      attachment_ids: params.attachment_ids,
     }),
-  })
-    .then(response => response.ok && successCallback());
-};
+  },
+);
 
-const updateMessage = (message, successCallback) => {
-  fetch(`/room_messages/${message.id}`, {
+const updateMessage = message => fetch(
+  `/room_messages/${message.id}`,
+  {
     method: 'put',
     headers,
     body: JSON.stringify({
       authenticity_token: csrf,
       room_message: { body: message.body },
     }),
-  })
-    .then(response => response.ok && successCallback());
-};
+  },
+);
 
 const deleteMessage = (message) => {
   fetch(`/room_messages/${message.id}`, {
@@ -57,10 +58,36 @@ const updateActivity = (roomId) => {
   });
 };
 
+const uploadFile = (formData) => {
+  formData.append('authenticity_token', csrf);
+
+  return fetch(
+    '/attachments',
+    {
+      method: 'post',
+      headers: { Accept: 'application/json' },
+      body: formData,
+    },
+  );
+};
+
+const deleteFile = id => fetch(
+  `/attachments/${id}`,
+  {
+    method: 'delete',
+    headers,
+    body: JSON.stringify({
+      authenticity_token: csrf,
+    }),
+  },
+);
+
 export {
   loadMessages,
   createMessage,
   updateMessage,
   deleteMessage,
   updateActivity,
+  uploadFile,
+  deleteFile,
 };

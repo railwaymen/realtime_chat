@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import moment from 'moment';
+
+import Attachments from './Attachments';
 
 import { updateMessage, deleteMessage } from '@/actions/chat';
 import markdownRenderer from '@/utils/markdown_renderer';
@@ -36,9 +37,8 @@ class ConversationItem extends Component {
         body: this.state.value,
       };
 
-      updateMessage(params, () => {
-        this.setState({ editing: false });
-      });
+      updateMessage(params)
+        .then(() => this.setState({ editing: false }));
     }
   }
 
@@ -49,6 +49,7 @@ class ConversationItem extends Component {
   render() {
     const {
       message: {
+        attachments,
         body,
         user_id: userId,
         created_at: createdAt,
@@ -86,7 +87,7 @@ class ConversationItem extends Component {
                   className="btn btn-outline-secondary"
                   type="button"
                 >
-                  &times;
+                  <i className="icofont-close-line" />
                 </button>
 
                 <button
@@ -94,7 +95,7 @@ class ConversationItem extends Component {
                   className="btn btn-outline-secondary"
                   type="button"
                 >
-                  &#10003;
+                  <i className="icofont-check-alt" />
                 </button>
               </div>
             </div>
@@ -108,19 +109,23 @@ class ConversationItem extends Component {
                     className="edit"
                     onClick={this.handleDoubleClick}
                   >
-                    &#128394;
+                    <i className="icofont-edit-alt" />
                   </span>
 
                   <span
                     className="destroy"
                     onClick={this.handleMessageDelete}
                   >
-                    &#128465;
+                    <i className="icofont-ui-delete" />
                   </span>
                 </div>
               )}
             </div>
           )}
+
+          <div className="message__attachments">
+            <Attachments attachments={attachments} />
+          </div>
         </div>
       </div>
     );

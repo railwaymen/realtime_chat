@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Conversation from './Conversation';
+import MessageForm from './MessageForm';
 
-import { loadMessages, createMessage, updateActivity } from '@/actions/chat';
+import { loadMessages, updateActivity } from '@/actions/chat';
 import createChannel from '@/utils/cable';
 
 class Chat extends Component {
   messagesLimit = 20
-
-  charCount = 0
 
   constructor(props) {
     super(props);
@@ -18,9 +17,7 @@ class Chat extends Component {
       isAccessible: props.data.is_accessible,
       messages: props.data.messages,
       currentUserId: props.data.current_user_id,
-      currentMessage: '',
       loadMoreVisible: props.data.messages.length === this.messagesLimit,
-      typers: [],
     };
 
     this.appSubscription = createChannel(
@@ -38,23 +35,6 @@ class Chat extends Component {
       },
       {
         received: this.handleChannelResponse,
-      },
-    );
-
-    this.roomSubscription = createChannel(
-      {
-        channel: 'RoomChannel',
-        room_id: props.data.room_id,
-      },
-      {
-        received: (response) => {
-          if (response.message === 'typing') {
-            this.handleTypingAction(response);
-          }
-        },
-        userTyping: (typing) => {
-          this.roomSubscription.perform('user_typing', { typing, room_id: props.data.room_id });
-        },
       },
     );
 
@@ -114,17 +94,9 @@ class Chat extends Component {
     });
   }
 
-  handleMessageChange = (e) => {
-    this.setState({ currentMessage: e.target.value });
-  }
-
   handleNewMessage = (data) => {
     if (data.room_id !== this.props.data.room_id) return;
-
-    this.setState((prevState) => {
-      const messages = [...prevState.messages, data];
-      return { messages };
-    });
+    this.setState(prevState => ({ messages: [...prevState.messages, data] }));
   }
 
   handleUpdatedMessage = (data) => {
@@ -137,98 +109,37 @@ class Chat extends Component {
     });
   }
 
-  handleTypingAction = (data) => {
-    this.setState((prevState) => {
-      const typers = _.uniqBy([data.user, ...prevState.typers], 'id');
-
-      if (!data.typing || data.user.id === prevState.currentUserId) {
-        const index = typers.indexOf(data.user);
-        typers.splice(index, 1);
-      }
-
-      return { typers };
-    });
-  }
-
-  handleUserTyping = (e) => {
-    if (e.which === 13 && !e.shiftKey) {
-      this.handleMessageSubmit(e);
-      return;
-    }
-
-    const currentCharsCount = e.target.value.length;
-    const typingStatusChanged = Boolean(currentCharsCount) !== Boolean(this.charsCount);
-
-    if (typingStatusChanged) {
-      this.setState({ currentMessage: e.target.value });
-      this.roomSubscription.userTyping(e.target.value !== '');
-    }
-    this.charsCount = currentCharsCount;
-  }
-
-  handleMessageSubmit = (e) => {
-    e.preventDefault();
-
-    if (this.state.currentMessage !== '') {
-      const params = {
-        room_id: this.props.data.room_id,
-        body: this.state.currentMessage,
-      };
-
-      createMessage(params, () => {
-        this.setState({ currentMessage: '' });
-        this.roomSubscription.userTyping(false);
-      });
-    }
-  }
-
   render() {
     const {
-      isAccessible,
-      messages,
-      currentUserId,
-      currentMessage,
-      loadMoreVisible,
-      typers,
-    } = this.state;
+      state: {
+        isAccessible,
+        messages,
+        loadMoreVisible,
+      },
+      props: {
+        data: {
+          current_user_id: currentUserId,
+          room_id: roomId,
+        },
+      },
+    } = this;
 
     return (
       <div className="chat">
         <Conversation
           currentUserId={currentUserId}
           messages={messages}
-          typers={typers}
-          onLoadMessges={this.handleMessagesLoading}
+          onLoadMessages={this.handleMessagesLoading}
           loadMore={loadMoreVisible}
         />
 
         {!isAccessible ? (
           <p className="chat__info">Room was closed by owner</p>
         ) : (
-          <form onSubmit={this.handleMessageSubmit} className="chat__message-form">
-            <div className="form-group">
-              <div className="input-group">
-                <textarea
-                  value={currentMessage}
-                  onChange={this.handleMessageChange}
-                  onKeyUp={this.handleUserTyping}
-                  className="form-control"
-                />
-                <div className="input-group-append">
-                  <button type="submit" className="btn btn-primary">Send</button>
-                </div>
-              </div>
-
-              <small className="form-text text-muted">
-                <strong>**bold**</strong>
-                |
-                <em>*italic*</em>
-                |
-                &gt; quote
-                | `inline code` | ```preformatted``` | # heading | [placeholder](html://example.com)
-              </small>
-            </div>
-          </form>
+          <MessageForm
+            roomId={roomId}
+            currentUserId={currentUserId}
+          />
         )}
       </div>
     );

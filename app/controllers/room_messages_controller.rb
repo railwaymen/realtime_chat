@@ -8,7 +8,7 @@ class RoomMessagesController < BaseController
     authorize @room, :show?
 
     messages = @room.messages
-                    .includes(:user)
+                    .includes(:user, :attachments)
                     .where('id < ?', params[:last_id])
                     .order(id: :desc)
                     .limit(params[:limit])
@@ -22,7 +22,9 @@ class RoomMessagesController < BaseController
     @message = room.messages.build(message_params.merge(user: current_user))
     authorize @message
 
-    @message.save
+    if @message.save && params[:attachment_ids].present?
+      assign_attachments(@message, params[:attachment_ids])
+    end
 
     broadcast_message(@message, :room_message_create) if @message.valid?
   end
