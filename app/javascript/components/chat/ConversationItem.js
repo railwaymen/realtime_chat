@@ -74,7 +74,7 @@ class ConversationItem extends Component {
         </div>
 
         <div className="message__container">
-          {this.state.editing ? (
+          {!deleted && this.state.editing ? (
             <div className="input-group">
               <textarea
                 className="form-control"
