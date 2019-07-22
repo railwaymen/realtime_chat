@@ -89,7 +89,8 @@ class Chat extends Component {
 
   handleRoomAccess = (room) => {
     this.setState((state) => {
-      const isAccessible = !room.deleted && (room.public || _.includes(room.participants_ids, state.currentUserId));
+      const isAccessible = !room.deleted
+                           && (room.type === 'open' || !!_.find(room.participants, p => p.id === state.currentUserId));
       return { isAccessible };
     });
   }

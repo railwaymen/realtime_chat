@@ -4,12 +4,12 @@ FactoryBot.define do
   factory :room do
     sequence(:name) { |n| "Room #{n}" }
     description     { 'Sample description' }
-    public          { true } # rubocop:disable Layout/EmptyLinesAroundAccessModifier
+    type            { :open }
 
     user
 
     factory :room_with_participants do
-      public { false } # rubocop:disable Layout/EmptyLinesAroundAccessModifier
+      type { :closed }
 
       after(:create) do |room|
         3.times { create(:rooms_user, room: room) }

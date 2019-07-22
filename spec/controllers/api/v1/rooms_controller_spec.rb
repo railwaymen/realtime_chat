@@ -13,9 +13,9 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       channel_name: room.channel_name,
       deleted: room.discarded?,
       user_id: room.user_id,
-      public: room.public,
+      type: room.type,
       last_message_at: nil,
-      participants_ids: room.users.pluck(:id),
+      participants: room.users.map { |u| u.slice(:email, :id, :username) },
       room_path: room_path(room)
     }
   end
@@ -40,6 +40,16 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
         get :index, as: :json
         expect_api_response([expected_response(room)].to_json)
+      end
+
+      it 'expects to list direct rooms as json' do
+        direct_room = create :room, type: :direct, user: user
+        user2 = create :user, username: 'User 2'
+        create :rooms_user, room: direct_room, user: direct_room.user
+        create :rooms_user, room: direct_room, user: user2
+
+        get :index, as: :json
+        expect_api_response([expected_response(direct_room)].to_json)
       end
 
       it 'expects to respond with empty array' do
@@ -74,7 +84,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
       it 'expects to create new rooms_user for owner' do
         expect do
-          post :create, params: params.merge(public: false), as: :json
+          post :create, params: params.merge(type: :closed), as: :json
         end.to(change { RoomsUser.count }.by(1))
 
         expect(RoomsUser.last.user).to eql(user)

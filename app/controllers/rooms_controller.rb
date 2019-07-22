@@ -20,7 +20,7 @@ class RoomsController < BaseController
   end
 
   def new
-    @room = Room.new
+    @room = Room.new(type: :open)
     @selected_users = ''
   end
 
@@ -82,7 +82,7 @@ class RoomsController < BaseController
   private
 
   def fetch_rooms
-    rooms = policy_scope(Room).kept.order(name: :asc)
+    rooms = policy_scope(Room).includes(:users).kept.order(:type, name: :asc)
     @rooms_list_data = RoomsListComponent.render(current_user, rooms: rooms)
   end
 
@@ -91,7 +91,7 @@ class RoomsController < BaseController
   end
 
   def create_room_params
-    params.require(:room).permit(:name, :description, :public)
+    params.require(:room).permit(:name, :description, :type)
   end
 
   def update_room_params

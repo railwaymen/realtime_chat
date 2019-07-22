@@ -6,9 +6,10 @@ module Rooms
       ActiveRecord::Base.transaction do
         update_room
 
-        @room.valid? &&
-          update_rooms_users &&
+        if @room.valid?
+          update_rooms_users
           broadcast_room_message
+        end
       end
 
       @room
@@ -31,7 +32,7 @@ module Rooms
     end
 
     def update_rooms_users
-      return true if @room.public?
+      return if @room.open?
 
       separate_rooms_users
 
@@ -46,7 +47,7 @@ module Rooms
     end
 
     def broadcast_room_message
-      if @room.public?
+      if @room.open?
         AppChannel.broadcast_to('app', data: @room.serialized, type: :room_update)
       else
         @users_groups[:added].map do |user|

@@ -21,23 +21,23 @@ RSpec.describe Rooms::Updater do
   end
 
   describe '#update_rooms_users' do
-    let(:private_room) { create(:room_with_participants, user: user) }
+    let(:closed_room) { create(:room_with_participants, user: user) }
 
     it 'expects to delete excluded users' do
-      refreshed_users_ids = private_room.users.limit(2).pluck(:id)
+      refreshed_users_ids = closed_room.users.limit(2).pluck(:id)
 
       expect do
         Rooms::Updater.new(
           room_params: {},
           users_ids: refreshed_users_ids.join(','),
           user: user,
-          room: private_room
+          room: closed_room
         ).call
       end.to(change { RoomsUser.count }.by(-1))
     end
 
     it 'expects to add new users' do
-      room_users_ids = private_room.users.pluck(:id)
+      room_users_ids = closed_room.users.pluck(:id)
       room_users_ids.push(create(:user).id)
 
       expect do
@@ -45,7 +45,7 @@ RSpec.describe Rooms::Updater do
           room_params: {},
           users_ids: room_users_ids.join(','),
           user: user,
-          room: private_room
+          room: closed_room
         ).call
       end.to(change { RoomsUser.count }.by(1))
     end

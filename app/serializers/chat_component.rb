@@ -6,7 +6,7 @@ class ChatComponent < Blueprinter::Base
   end
 
   field :is_accessible do |room, options|
-    room.public? || room.rooms_users.where(user_id: options[:current_user]&.id).exists?
+    room.open? || room.rooms_users.where(user_id: options[:current_user]&.id).exists?
   end
 
   field :current_user_id do |_room, options|

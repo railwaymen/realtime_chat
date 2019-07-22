@@ -7,7 +7,7 @@ RSpec.describe Rooms::Creator do
 
   describe '#call' do
     it 'expects to return persisted Room object' do
-      result = Rooms::Creator.new(room_params: attributes_for(:room, public: true), user: user).call
+      result = Rooms::Creator.new(room_params: attributes_for(:room, type: :open), user: user).call
       expect(result).to be_a(Room).and be_persisted
     end
 
@@ -18,15 +18,15 @@ RSpec.describe Rooms::Creator do
   end
 
   describe '#create_room' do
-    it 'expects to create public new room' do
+    it 'expects to create open new room' do
       expect do
-        Rooms::Creator.new(room_params: attributes_for(:room, public: true), user: user).call
+        Rooms::Creator.new(room_params: attributes_for(:room, type: :open), user: user).call
       end.to(change { Room.count }.by(1))
     end
 
-    it 'expects to create private room with owner as participant' do
+    it 'expects to create closed room with owner as participant' do
       expect do
-        Rooms::Creator.new(room_params: attributes_for(:room, public: false), user: user).call
+        Rooms::Creator.new(room_params: attributes_for(:room, type: :closed), user: user).call
       end.to(change { RoomsUser.count }.by(1))
     end
 
@@ -37,19 +37,34 @@ RSpec.describe Rooms::Creator do
     end
   end
 
+  describe '#assign_room_name' do
+    it 'assigns commect room name' do
+      Rooms::Creator.any_instance.stub(:broadcast_room_message)
+
+      participant = create :user
+      room = Rooms::Creator.new(
+        room_params: attributes_for(:room, type: 'direct'),
+        user: user,
+        users_ids: participant.id.to_s
+      ).call
+
+      expect(room.name).to eq("__direct_room_#{[user.id, participant.id].sort.join('_')}")
+    end
+  end
+
   describe '#create_rooms_users' do
     let(:participants_ids) { [create(:user), create(:user)].map(&:id) }
 
-    it 'expects not to create rooms_users if public room' do
+    it 'expects not to create rooms_users if open room' do
       expect do
-        Rooms::Creator.new(room_params: attributes_for(:room, public: true), user: user).call
+        Rooms::Creator.new(room_params: attributes_for(:room, type: :open), user: user).call
       end.not_to(change { RoomsUser.count })
     end
 
     it 'expects to create rooms_users for all participants' do
       expect do
         Rooms::Creator.new(
-          room_params: attributes_for(:room, public: false),
+          room_params: attributes_for(:room, type: :closed),
           users_ids: participants_ids.join(','),
           user: user
         ).call

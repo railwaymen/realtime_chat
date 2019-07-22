@@ -5,19 +5,19 @@ describe RoomPolicy do
   let(:user) { create(:user) }
 
   permissions :show? do
-    it 'grants access to public public' do
+    it 'grants access to closed room' do
       room = create(:room)
       expect(subject).to permit(user, room)
     end
 
-    it 'grants access to private room when users is assigned' do
-      room = create(:room, public: false)
+    it 'grants access to closed room when users is assigned' do
+      room = create(:room, type: :closed)
       create(:rooms_user, user: user, room: room)
       expect(subject).to permit(user, room)
     end
 
-    it 'denies access to private room for other users' do
-      room = create(:room, public: false)
+    it 'denies access to closed room for other users' do
+      room = create(:room, type: :closed)
       expect(subject).to_not permit(user, room)
     end
   end
@@ -32,17 +32,22 @@ describe RoomPolicy do
       room = create(:room)
       expect(subject).to_not permit(user, room)
     end
+
+    it 'denies access for direct room' do
+      room = create(:room, user: user, type: :direct)
+      expect(subject).to_not permit(user, room)
+    end
   end
 
   describe RoomPolicy::Scope do
     it 'returns accessible rooms' do
-      public_room = create(:room, public: true)
-      private_room1 = create(:room, public: false)
-      create(:room, public: false)
-      create(:rooms_user, room: private_room1, user: user)
+      open_room = create(:room, type: :open)
+      closed_room1 = create(:room, type: :closed)
+      create(:room, type: :closed)
+      create(:rooms_user, room: closed_room1, user: user)
 
       rooms = RoomPolicy::Scope.new(user, Room).resolve
-      expect(rooms).to contain_exactly(public_room, private_room1)
+      expect(rooms).to contain_exactly(open_room, closed_room1)
     end
   end
 end

@@ -10,17 +10,17 @@ class RoomPolicy < ApplicationPolicy
     end
 
     def resolve
-      private_rooms_ids = user.rooms_users.pluck(:room_id)
-      scope.where('public = true OR id IN (?)', private_rooms_ids)
+      allowed_rooms_ids = user.rooms_users.pluck(:room_id)
+      scope.where("type = 'open' OR rooms.id IN (?)", allowed_rooms_ids)
     end
   end
 
   def show?
-    record.public? || record.rooms_users.where(user_id: user.id).exists?
+    record.open? || record.rooms_users.where(user_id: user.id).exists?
   end
 
   def update?
-    record.user_id == user.id
+    !record.direct? && record.user_id == user.id
   end
 
   def edit?

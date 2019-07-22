@@ -5,9 +5,11 @@ module Api
     class AuthenticationsController < Api::V1::BaseController
       def create
         @sign_in_form = SignInForm.new(email: params[:email], password: params[:password])
-        @sign_in_form.save
-
-        render json: Api::V1::AuthenticationSerializer.render(@sign_in_form.user, view: :auth), status: 200
+        if @sign_in_form.save
+          render json: Api::V1::AuthenticationSerializer.render(@sign_in_form.user, view: :auth), status: 200
+        else
+          render json: Api::V1::ErrorSerializer.render_as_hash(@sign_in_form), status: 422
+        end
       end
 
       def refresh

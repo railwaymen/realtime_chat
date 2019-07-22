@@ -7,7 +7,7 @@ module RoomMessagesConcern
     private
 
     def broadcast_message(message, type)
-      if message.room.public?
+      if message.room.open?
         AppChannel.broadcast_to('app', data: message.serialized, type: type)
       else
         message.room.rooms_users.includes(:user).each do |rooms_user|
