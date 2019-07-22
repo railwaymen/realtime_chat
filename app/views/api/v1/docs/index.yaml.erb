@@ -191,6 +191,7 @@ paths:
               errors:
                 name:
                   - error: blank
+                  - error: illegal_characters
   /rooms/{id}:
     put:
       description: Direct room cannot be updated
@@ -235,6 +236,7 @@ paths:
               errors:
                 name:
                   - error: blank
+                  - error: illegal_characters
     delete:
       description: Direct room cannot be deleted
       tags:
