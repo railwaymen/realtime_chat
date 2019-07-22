@@ -23,7 +23,8 @@ class SignInForm
     if @user&.valid_password?(password)
       generate_tokens
     else
-      errors.add(base: :email_or_password_invalid)
+      errors.add(:base, :email_or_password_invalid)
+      false
     end
   end
 

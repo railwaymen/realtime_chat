@@ -16,7 +16,7 @@ class Room < ApplicationRecord
   validates :name, :type, presence: true
   validates :name, uniqueness: true
 
-  validates :name, format: { with: /\A([a-zA-Z0-9]|\s)*\z/, message: 'You can not use special characters' },
+  validates :name, format: { with: /\A([a-zA-Z0-9]|\s)*\z/, message: 'You cannot use special characters' },
                    unless: :direct?
 
   def channel_name
