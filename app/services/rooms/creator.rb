@@ -4,11 +4,13 @@ module Rooms
   class Creator < Base
     def call
       ActiveRecord::Base.transaction do
+        extend_user_ids
         create_room
 
-        @room.valid? &&
-          create_rooms_users &&
+        if @room.valid?
+          create_rooms_users
           broadcast_room_message
+        end
       end
 
       @room
@@ -16,14 +18,21 @@ module Rooms
 
     private
 
+    def extend_user_ids
+      @users_ids.unshift(@user.id)
+    end
+
     def create_room
+      assign_room_name if @room_params[:type] == 'direct'
       @room = @user.rooms.create(@room_params)
     end
 
-    def create_rooms_users
-      return true if @room.public?
+    def assign_room_name
+      @room_params['name'] = "__direct_room_#{@users_ids.sort.join('_')}"
+    end
 
-      @users_ids.unshift(@user.id) unless @user.nil?
+    def create_rooms_users
+      return if @room.open?
 
       @users_ids.map do |user_id|
         @room.rooms_users.create!(user_id: user_id)
@@ -31,7 +40,7 @@ module Rooms
     end
 
     def broadcast_room_message
-      if @room.public?
+      if @room.open?
         AppChannel.broadcast_to('app', data: @room.serialized, type: :room_create)
       else
         @room.users.map do |user|

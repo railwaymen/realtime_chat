@@ -10,6 +10,17 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: room_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.room_type AS ENUM (
+    'open',
+    'closed',
+    'direct'
+);
+
+
+--
 -- Name: update_rooms_last_message_at(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -119,9 +130,9 @@ CREATE TABLE public.rooms (
     updated_at timestamp without time zone NOT NULL,
     user_id bigint NOT NULL,
     discarded_at timestamp without time zone,
-    public boolean DEFAULT true NOT NULL,
     last_message_at timestamp without time zone,
-    description text
+    description text,
+    type public.room_type NOT NULL
 );
 
 
@@ -472,6 +483,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190628104921'),
 ('20190628154929'),
 ('20190705070039'),
-('20190705085446');
+('20190705085446'),
+('20190711085013');
 
 

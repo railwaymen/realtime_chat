@@ -47,4 +47,5 @@ group :development do
   gem 'awesome_print'
   gem 'rubocop', require: false
   gem 'brakeman'
+  gem 'bullet'
 end

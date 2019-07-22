@@ -2,7 +2,7 @@
 
 class RoomMessagePolicy < ApplicationPolicy
   def create?
-    record.room.public? || record.room.rooms_users.where(user_id: user.id).exists?
+    record.room.open? || record.room.rooms_users.where(user_id: user.id).exists?
   end
 
   def update?

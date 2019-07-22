@@ -154,22 +154,24 @@ paths:
       parameters:
         - in: formData
           name: name
-          required: true
+          required: false
           type: string
+          description: Required for open and closed rooms, for direct will be ignored
+          example: Room 1
         - in: formData
           name: description
           required: false
           type: string
         - in: formData
-          name: public
-          required: false
-          type: boolean
-          default: true
+          name: type
+          required: true
+          type: string
+          enum: [open, closed, direct]
         - in: formData
           name: users_ids
           required: false
           type: string
-          description: For private room - string of users ids separated with comas
+          description: For closed or direct room - string of users ids separated with comas
           schema:
             type: string
             example: 1,5,17
@@ -191,6 +193,7 @@ paths:
                   - error: blank
   /rooms/{id}:
     put:
+      description: Direct room can not be updated
       tags:
         - Rooms
       security:
@@ -212,7 +215,7 @@ paths:
           name: users_ids
           required: false
           type: string
-          description: For private room - string of users ids separated with comas
+          description: For closed room - string of users ids separated with comas
           schema:
             type: string
             example: 1,5,17
@@ -233,6 +236,7 @@ paths:
                 name:
                   - error: blank
     delete:
+      description: Direct room can not be deleted
       tags:
         - Rooms
       security:
@@ -494,9 +498,9 @@ definitions:
       user_id:
         type: integer
         example: 1
-      public:
-        type: boolean
-        example: false
+      type:
+        type: string
+        example: open
       deleted:
         type: boolean
         example: false
@@ -506,9 +510,10 @@ definitions:
       last_message_at:
         type: string
         example: "2019-07-01T12:50:49Z"
-      participants_ids:
+      participants:
         type: array
-        example: [1, 2, 3]
+        items:
+          $ref: '#/definitions/User'
 
   RoomsUsers:
     type: object

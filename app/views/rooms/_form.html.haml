@@ -18,17 +18,18 @@
 
   .row
     - if @room.new_record?
-      .form-group.form-check.col-6
-        = f.check_box :public
-        = f.label :public, 'Public room', class: 'form-check-label'
+      .form-group.col-6
+        = f.label :type, 'Type', class: 'form-check-label'
+        .input-group
+          = f.select :type, { Open: :open, Closed: :closed }
     - else
       .col-6
-        #label.form-label= "Access: #{@room.public? ? 'Public' : 'Private'}"
+        #label.form-label= "Access: #{@room.type.capitalize}"
 
   .row
     .form-group.col-6
-      #users-select__component{ style: "display: #{!@room.public? ? 'block' : 'none'}", 'data-behavior': 'react' }
-      
+      #users-select__component{ style: "display: #{@room.open? ? 'none' : 'block'}", 'data-behavior': 'react' }
+
   .row
     .form-group.col-12
       = f.submit class: 'btn btn-primary'

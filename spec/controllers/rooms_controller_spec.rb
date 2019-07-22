@@ -96,11 +96,11 @@ RSpec.describe RoomsController, type: :controller do
         end.to have_broadcasted_to(:app).from_channel(AppChannel)
       end
 
-      it 'expects to broadcast new private room from UserChanel' do
+      it 'expects to broadcast new closed room from UserChanel' do
         participant = create(:user)
 
         expect do
-          post :create, params: { room: attributes_for(:room, public: false), users_ids: participant.id.to_s }
+          post :create, params: { room: attributes_for(:room, type: :closed), users_ids: participant.id.to_s }
         end.to have_broadcasted_to(participant).from_channel(UserChannel)
       end
     end
@@ -136,7 +136,7 @@ RSpec.describe RoomsController, type: :controller do
 
   describe '#update' do
     let(:room) { user.rooms.first }
-    let(:private_room) { create(:room_with_participants, user: user) }
+    let(:closed_room) { create(:room_with_participants, user: user) }
 
     context 'unauthorized' do
       it 'expects to respond with error' do
@@ -180,8 +180,8 @@ RSpec.describe RoomsController, type: :controller do
 
       it 'expects to broadcast updated room from UserChannel' do
         expect do
-          put :update, params: { id: private_room.id, room: { name: 'New name' } }
-        end.to have_broadcasted_to(private_room.users.last).from_channel(UserChannel)
+          put :update, params: { id: closed_room.id, room: { name: 'New name' } }
+        end.to have_broadcasted_to(closed_room.users.last).from_channel(UserChannel)
       end
     end
   end

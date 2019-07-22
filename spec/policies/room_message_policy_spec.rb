@@ -5,22 +5,22 @@ describe RoomMessagePolicy do
   let(:user) { create(:user) }
 
   permissions :create? do
-    it 'grants access to public room' do
-      room = create(:room, public: true)
+    it 'grants access to open room' do
+      room = create(:room, type: :open)
       create(:rooms_user, user: user, room: room)
       message = create(:room_message, user: user, room: room)
       expect(subject).to permit(user, message)
     end
 
-    it 'grants access to privare room when users is assigned' do
-      room = create(:room, public: false)
+    it 'grants access to closed room when users is assigned' do
+      room = create(:room, type: :closed)
       create(:rooms_user, user: user, room: room)
       message = create(:room_message, user: user, room: room)
       expect(subject).to permit(user, message)
     end
 
-    it 'denies access to private room for other users' do
-      room = create(:room, public: false)
+    it 'denies access to closed room for other users' do
+      room = create(:room, type: :closed)
       message = create(:room_message, user: user, room: room)
       expect(subject).to_not permit(user, message)
     end
