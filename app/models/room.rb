@@ -15,9 +15,7 @@ class Room < ApplicationRecord
   # Validations
   validates :name, :type, presence: true
   validates :name, uniqueness: true
-
-  validates :name, format: { with: /\A([a-zA-Z0-9]|\s)*\z/, message: 'You cannot use special characters' },
-                   unless: :direct?
+  validate :validate_name_format
 
   def channel_name
     [RoomChannel.channel_name, to_gid_param].join(':')
@@ -30,5 +28,13 @@ class Room < ApplicationRecord
 
   def serialized
     Api::V1::RoomSerializer.render_as_hash(self)
+  end
+
+  private
+
+  def validate_name_format
+    return if direct?
+
+    errors.add(:name, :illegal_characters) unless name =~ /\A([a-zA-Z0-9]|\s)*\z/
   end
 end
