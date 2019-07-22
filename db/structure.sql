@@ -418,6 +418,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
+-- Name: index_users_on_username; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (username);
+
+
+--
 -- Name: room_messages update_rooms_last_message_at_trigger; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -484,6 +491,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190628154929'),
 ('20190705070039'),
 ('20190705085446'),
-('20190711085013');
+('20190711085013'),
+('20190722151153');
 
 

@@ -2,7 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe RoomMessage, type: :model do
+RSpec.describe User, type: :model do
+  it { should validate_uniqueness_of(:username) }
+
   it 'update_room_activity' do
     room = create(:room)
     user = create(:user)

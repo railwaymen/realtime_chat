@@ -14,6 +14,8 @@ class User < ApplicationRecord
   has_many :messages, class_name: 'RoomMessage'
   has_many :attachments
 
+  validates :username, uniqueness: true
+
   def generate_authentication_token
     self.authentication_token = JwtService.encode(payload: { id: id, exp: TOKEN_EXPIRATION_LENGTH.from_now.to_i })
                                           .as_json
