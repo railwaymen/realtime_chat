@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import ConversationItem from './ConversationItem';
+import MessagesBubble from './MessagesBubble';
+import groupMessagesService from '@/utils/group_messages_service';
 
 class Conversation extends Component {
   componentDidMount() {
@@ -17,7 +18,7 @@ class Conversation extends Component {
   }
 
   scrollToBottom = () => {
-    const lastMessage = document.querySelector('.chat__messages .message:last-of-type');
+    const lastMessage = document.querySelector('.chat__messages .bubble:last-of-type');
     if (lastMessage) lastMessage.scrollIntoView(false);
   }
 
@@ -44,8 +45,8 @@ class Conversation extends Component {
         )}
         <div className="chat__messages">
           {messages.length > 0 ? (
-            messages.map(message => (
-              <ConversationItem key={message.id} message={message} currentUserId={currentUserId} />
+            _.map(groupMessagesService(messages), (bubbleMessages, index) => (
+              <MessagesBubble key={index} messages={bubbleMessages} currentUserId={currentUserId} />
             ))
           ) : (
             <p>There are no messages</p>

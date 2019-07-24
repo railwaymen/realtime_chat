@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 import Attachments from './Attachments';
 
 import { updateMessage, deleteMessage } from '@/actions/chat';
 import markdownRenderer from '@/utils/markdown_renderer';
 
-class ConversationItem extends Component {
+class MessageItem extends Component {
   constructor(props) {
     super(props);
 
@@ -52,27 +51,14 @@ class ConversationItem extends Component {
         attachments,
         body,
         user_id: userId,
-        created_at: createdAt,
         edited,
         deleted,
-        user: {
-          username,
-        },
       },
       currentUserId,
     } = this.props;
 
-    const classes = ['message'];
-    classes.push(currentUserId === userId ? 'message--own' : 'message--foreign');
-
     return (
-      <div className={classes.join(' ')}>
-        <div className="message__info">
-          <span className="username">{username}</span>
-          <span className="date">{moment(createdAt).format('LLL')}</span>
-          {edited && <span className="edited">(edited)</span>}
-        </div>
-
+      <div className="message">
         <div className="message__container">
           {!deleted && this.state.editing ? (
             <div className="input-group">
@@ -102,6 +88,7 @@ class ConversationItem extends Component {
           ) : (
             <div className="message__body" onDoubleClick={this.handleDoubleClick}>
               <div dangerouslySetInnerHTML={{ __html: markdownRenderer.render(body) }} />
+              {edited && !deleted && <div className="message__edited">(edited)</div>}
 
               {!deleted && currentUserId === userId && (
                 <div className="message__actions">
@@ -132,7 +119,7 @@ class ConversationItem extends Component {
   }
 }
 
-ConversationItem.propTypes = {
+MessageItem.propTypes = {
   message: PropTypes.shape({
     attachments: PropTypes.arrayOf(PropTypes.object),
     body: PropTypes.string,
@@ -149,4 +136,4 @@ ConversationItem.propTypes = {
   currentUserId: PropTypes.number.isRequired,
 };
 
-export default ConversationItem;
+export default MessageItem;
