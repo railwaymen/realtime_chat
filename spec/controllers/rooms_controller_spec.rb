@@ -79,7 +79,7 @@ RSpec.describe RoomsController, type: :controller do
           post :create, params: room_params
         end.to(change { Room.count }.by(1))
 
-        expect(response).to redirect_to rooms_path
+        expect(response).to redirect_to room_path(Room.last.id)
       end
 
       it 'expects to respond with error due to invalid params' do
@@ -100,7 +100,7 @@ RSpec.describe RoomsController, type: :controller do
         participant = create(:user)
 
         expect do
-          post :create, params: { room: attributes_for(:room, type: :closed), users_ids: participant.id.to_s }
+          post :create, params: { room: attributes_for(:room, type: :closed), user_ids: participant.id.to_s }
         end.to have_broadcasted_to(participant).from_channel(UserChannel)
       end
     end

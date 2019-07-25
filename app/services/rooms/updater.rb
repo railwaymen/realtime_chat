@@ -23,7 +23,7 @@ module Rooms
 
     def separate_rooms_users
       current_users = @room.users.where.not(id: @user.id)
-      new_users = User.where(id: @users_ids)
+      new_users = User.where(id: @user_ids)
 
       @users_groups = {
         deleted: current_users - new_users,
@@ -37,8 +37,8 @@ module Rooms
       separate_rooms_users
 
       # Remove users
-      deleted_users_ids = @users_groups[:deleted].map(&:id)
-      @room.rooms_users.where(user_id: deleted_users_ids).destroy_all
+      deleted_user_ids = @users_groups[:deleted].map(&:id)
+      @room.rooms_users.where(user_id: deleted_user_ids).destroy_all
 
       # Add users
       @users_groups[:added].map do |user|

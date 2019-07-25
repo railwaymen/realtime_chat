@@ -29,7 +29,7 @@ RSpec.describe Rooms::Updater do
       expect do
         Rooms::Updater.new(
           room_params: {},
-          users_ids: refreshed_users_ids.join(','),
+          user_ids: refreshed_users_ids.join(','),
           user: user,
           room: closed_room
         ).call
@@ -43,7 +43,7 @@ RSpec.describe Rooms::Updater do
       expect do
         Rooms::Updater.new(
           room_params: {},
-          users_ids: room_users_ids.join(','),
+          user_ids: room_users_ids.join(','),
           user: user,
           room: closed_room
         ).call

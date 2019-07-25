@@ -15,7 +15,7 @@ module Api
       def create
         @room = Rooms::Creator.new(
           room_params: create_room_params,
-          users_ids: params.fetch(:users_ids, ''),
+          user_ids: params.fetch(:users_ids, []),
           user: current_user
         ).call
 
@@ -32,7 +32,7 @@ module Api
 
         Rooms::Updater.new(
           room_params: update_room_params,
-          users_ids: params.fetch(:users_ids, ''),
+          user_ids: params.fetch(:users_ids, []),
           user: current_user,
           room: @room
         ).call

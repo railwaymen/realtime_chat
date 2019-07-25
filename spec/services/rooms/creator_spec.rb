@@ -45,7 +45,7 @@ RSpec.describe Rooms::Creator do
       room = Rooms::Creator.new(
         room_params: attributes_for(:room, type: 'direct'),
         user: user,
-        users_ids: participant.id.to_s
+        user_ids: participant.id.to_s
       ).call
 
       expect(room.name).to eq("__direct_room_#{[user.id, participant.id].sort.join('_')}")
@@ -65,7 +65,7 @@ RSpec.describe Rooms::Creator do
       expect do
         Rooms::Creator.new(
           room_params: attributes_for(:room, type: :closed),
-          users_ids: participants_ids.join(','),
+          user_ids: participants_ids.join(','),
           user: user
         ).call
       end.to(change { RoomsUser.count }.by(participants_ids.length + 1)) # participants + owner
@@ -75,7 +75,7 @@ RSpec.describe Rooms::Creator do
       expect do
         Rooms::Creator.new(
           room_params: { name: '' },
-          users_ids: participants_ids.join(','),
+          user_ids: participants_ids.join(','),
           user: user
         ).call
       end.not_to(change { RoomsUser.count })

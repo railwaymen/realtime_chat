@@ -29,7 +29,7 @@ class RoomsController < BaseController
 
     @room = Rooms::Creator.new(
       room_params: create_room_params,
-      users_ids: @selected_users,
+      user_ids: @selected_users,
       user: current_user
     ).call
 
@@ -56,7 +56,7 @@ class RoomsController < BaseController
 
     Rooms::Updater.new(
       room_params: update_room_params,
-      users_ids: @selected_users,
+      user_ids: @selected_users,
       user: current_user,
       room: @room
     ).call

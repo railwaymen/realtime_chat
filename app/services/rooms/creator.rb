@@ -19,7 +19,7 @@ module Rooms
     private
 
     def extend_user_ids
-      @users_ids.unshift(@user.id)
+      @user_ids.unshift(@user.id).uniq
     end
 
     def create_room
@@ -28,13 +28,13 @@ module Rooms
     end
 
     def assign_room_name
-      @room_params['name'] = "__direct_room_#{@users_ids.sort.join('_')}"
+      @room_params['name'] = "__direct_room_#{@user_ids.sort.join('_')}"
     end
 
     def create_rooms_users
       return if @room.open?
 
-      @users_ids.map do |user_id|
+      @user_ids.map do |user_id|
         @room.rooms_users.create!(user_id: user_id)
       end
     end
