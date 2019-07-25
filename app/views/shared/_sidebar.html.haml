@@ -1,13 +1,29 @@
 %nav.col-md-2.d-none.d-md-block.bg-light.sidebar
-  .sidebar-sticky
-    .username-info.my-3
-      = "Hello #{current_user.username}!"
+  .rooms.rooms--open
+    .rooms__header
+      %h3 Public rooms
+      .rooms__add-btn
+        = link_to '#' do
+          %i.icofont-plus
 
-    .rooms-action.my-3
-      = link_to new_room_path, class: 'btn btn-primary' do
-        Create a room
+    .rooms__list{ data: { behavior: 'react', type: 'open' } }
 
-    #rooms-list__component{ 'data-behavior': 'react' }
+  .rooms.rooms--closed
+    .rooms__header
+      %h3 Private rooms
+      .rooms__add-btn
+        = link_to '#' do
+          %i.icofont-plus
+    .rooms__list{ data: { behavior: 'react', type: 'closed' } }
+
+  .rooms.rooms--direct
+    .rooms__header
+      %h3 Direct messages
+      .rooms__add-btn
+        = link_to '#' do
+          %i.icofont-plus
+
+    .rooms__list{ data: { behavior: 'react', type: 'direct' } }
 
 :javascript
   document.addEventListener('DOMContentLoaded', function() {

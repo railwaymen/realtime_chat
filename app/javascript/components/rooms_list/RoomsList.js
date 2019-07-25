@@ -9,15 +9,12 @@ import RoomItem from './RoomItem';
 
 class RoomsList extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      currentUserId: props.data.current_user.id,
-      userActivity: props.data.current_user.rooms_activity,
-      rooms: props.data.rooms,
-      filteredRooms: props.data.rooms,
-      searchValue: '',
-    };
+      rooms: props.rooms || [],
+      userActivity: props.currentUser.rooms_activity,
+    }
 
     this.appSubscription = createChannel(
       {
@@ -38,20 +35,9 @@ class RoomsList extends Component {
     );
   }
 
-  filterRooms = () => {
-    const { searchValue, rooms } = this.state;
-    let filteredRooms;
-
-    if (searchValue.length > 0) {
-      filteredRooms = rooms.filter(room => room.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1);
-    } else {
-      filteredRooms = [...rooms];
-    }
-
-    this.setState({ filteredRooms });
-  }
-
   handleChannelResponse = (response) => {
+    if (response.data.type !== this.props.roomType) return;
+
     switch (response.type) {
       case 'room_create':
       case 'room_open':
@@ -61,10 +47,10 @@ class RoomsList extends Component {
         this.handleUpdatedRoom(response.data);
         break;
       case 'room_close':
-        this.handleClosedRoom(response.data);
+        this.handleDeletedRoom(response.data);
         break;
       case 'room_message_create':
-        this.updateUserActivity(response.data);
+        this.handleNewMessageNotification(response.data);
         break;
       default:
         break;
@@ -74,7 +60,6 @@ class RoomsList extends Component {
   handleNewRoom = (room) => {
     const sortedRooms = _.orderBy([...this.state.rooms, room], [r => r.name.toLowerCase()], ['asc']);
     this.setState({ rooms: _.uniqBy(sortedRooms, 'id') });
-    this.filterRooms();
   }
 
   handleUpdatedRoom = (room) => {
@@ -85,10 +70,9 @@ class RoomsList extends Component {
 
     const sortedRooms = _.orderBy(rooms, [r => r.name.toLowerCase()], ['asc']);
     this.setState({ rooms: sortedRooms });
-    this.filterRooms();
   }
 
-  handleClosedRoom = (room) => {
+  handleDeletedRoom = (room) => {
     this.setState((prevState) => {
       const rooms = [...prevState.rooms];
       const index = _.findIndex(rooms, { id: room.id });
@@ -96,11 +80,9 @@ class RoomsList extends Component {
       rooms.splice(index, 1);
       return { rooms };
     });
-
-    this.filterRooms();
   }
 
-  updateUserActivity = (message) => {
+  handleNewMessageNotification = (message) => {
     this.setState((prevState) => {
       const rooms = [...prevState.rooms];
       const room = _.find(rooms, { id: message.room_id });
@@ -110,7 +92,7 @@ class RoomsList extends Component {
     });
 
     if (message.user_id !== this.state.currentUserId) {
-      playAudio(this.props.data.sound_path);
+      playAudio(this.props.soundPath);
 
       Push.create(`${message.user.username} is writing`, {
         body: _.truncate(message.body),
@@ -123,64 +105,45 @@ class RoomsList extends Component {
     }
   }
 
-  handleSearch = async (e) => {
-    await this.setState({ searchValue: e.target.value });
-    this.filterRooms();
-  }
-
-  unreadMessage = room => (
+  hasUnreadMessage = room => (
     Boolean(room.last_message_at && new Date(room.last_message_at) > new Date(this.state.userActivity[room.id]))
   )
 
   render() {
-    const {
-      filteredRooms,
-      currentUserId,
-      searchValue,
-    } = this.state;
+    const { 
+      state: { rooms },
+      props: { currentUser }
+    } = this;
 
     return (
-      <div className="rooms">
-        <div className="rooms__search py-2">
-          <input
-            value={searchValue}
-            className="form-control"
-            type="text"
-            placeholder="Search..."
-            onChange={this.handleSearch}
+      <ul>
+        {rooms.map(room => (
+          <RoomItem
+            key={room.id}
+            room={room}
+            currentUserId={currentUser.id}
+            unreadMessage={this.hasUnreadMessage(room)}
           />
-        </div>
-
-        <div className="rooms__list mb-2">
-          {filteredRooms.map(room => (
-            <RoomItem
-              key={room.id}
-              room={room}
-              currentUserId={currentUserId}
-              unreadMessage={this.unreadMessage(room)}
-            />
-          ))}
-        </div>
-      </div>
+        ))}
+      </ul>
     );
   }
 }
 
 RoomsList.propTypes = {
-  data: PropTypes.shape({
-    current_user: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      rooms_activity: PropTypes.objectOf(PropTypes.string).isRequired,
-    }).isRequired,
-    rooms: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        last_message_at: PropTypes.string,
-      }),
-    ).isRequired,
-    sound_path: PropTypes.string.isRequired,
+  currentUser: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    rooms_activity: PropTypes.objectOf(PropTypes.string).isRequired,
   }).isRequired,
+  rooms: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      last_message_at: PropTypes.string,
+    }),
+  ),
+  soundPath: PropTypes.string.isRequired,
+  roomType: PropTypes.string.isRequired,
 };
 
 export default RoomsList;

@@ -6,8 +6,29 @@ import ReactDOM from 'react-dom';
 import RoomsList from '@/components/rooms_list/RoomsList';
 
 const initializeRoomsList = (data) => {
-  const el = document.querySelector('#rooms-list__component[data-behavior="react"]');
-  if (el != null) ReactDOM.render(<RoomsList data={data} />, el);
+  const roomsLists = document.querySelectorAll('.rooms__list[data-behavior="react"]');
+
+  const {
+    rooms,
+    current_user: currentUser,
+    sound_path: soundPath,
+  } = data;
+
+  const groupedRooms = _.groupBy(rooms, 'type');
+  
+  roomsLists.forEach((roomList) => {
+    const roomType = roomList.dataset.type;
+    
+    ReactDOM.render(
+      <RoomsList
+        roomType={roomType}
+        rooms={groupedRooms[roomType]}
+        currentUser={currentUser}
+        soundPath={soundPath}
+      />,
+      roomList
+    );
+  });
 };
 
 export default initializeRoomsList;
