@@ -20,7 +20,7 @@ class RoomsController < BaseController
   end
 
   def new
-    @room = Room.new(type: :open)
+    @room = Room.new(type: params[:type])
     @selected_users = ''
   end
 
@@ -35,7 +35,7 @@ class RoomsController < BaseController
 
     if @room.valid?
       flash[:success] = "Room #{@room.name} has been created successfully"
-      redirect_to rooms_path
+      redirect_to room_path(@room)
     else
       render :new
     end

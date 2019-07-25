@@ -1,34 +1,29 @@
 = form_for @room do |f|
-  .row
-    .form-group.col-6
-      = f.label :name, class: 'form-label'
-
-      .input-group
-        = f.text_field :name, class: ['form-control', ('is-invalid' if @room.errors.messages[:name].present?)]
-
-        .invalid-feedback
-          = @room.errors.full_messages_for(:name).first
-
-  .row
-    .form-group.col-6
-      = f.label :description, class: 'form-label'
-
-      .input-group
-        = f.text_area :description, class: 'form-control'
-
-  .row
-    - if @room.new_record?
+  - unless @room.direct?
+    .row
       .form-group.col-6
-        = f.label :type, 'Type', class: 'form-check-label'
+        = f.label :name, class: 'form-label'
+
         .input-group
-          = f.select :type, { Open: :open, Closed: :closed }
-    - else
-      .col-6
-        #label.form-label= "Access: #{@room.type.capitalize}"
+          = f.text_field :name, class: ['form-control', ('is-invalid' if @room.errors.messages[:name].present?)]
+
+          .invalid-feedback
+            = @room.errors.full_messages_for(:name).first
+
+    .row
+      .form-group.col-6
+        = f.label :description, class: 'form-label'
+
+        .input-group
+          = f.text_area :description, class: 'form-control'
 
   .row
     .form-group.col-6
-      #users-select__component{ style: "display: #{@room.open? ? 'none' : 'block'}", 'data-behavior': 'react' }
+      = f.hidden_field :type
+
+  .row
+    .form-group.col-6
+      #users-select__component{ 'data-behavior': 'react' }
 
   .row
     .form-group.col-12
@@ -36,8 +31,9 @@
 
 :javascript
   document.addEventListener('DOMContentLoaded', function() {
+    var type = #{ raw @room.type.to_json }
     var options = #{ raw @users_data }
     var values = #{ raw @selected_users.to_json }
 
-    window.initializeUsersSelect({ options, values })
+    if (type !== 'open') window.initializeUsersSelect({ options, values })
   });

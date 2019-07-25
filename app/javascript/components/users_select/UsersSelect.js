@@ -1,6 +1,6 @@
 import React from 'react';
-import Select from 'react-select';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
 
 const UsersSelect = (props) => {
   const { options, values } = props.data;
@@ -30,7 +30,7 @@ UsersSelect.propTypes = {
         value: PropTypes.number.isRequired,
       }).isRequired,
     ),
-    values: PropTypes.string,
+    values: PropTypes.string.isRequired,
   }).isRequired,
 };
 

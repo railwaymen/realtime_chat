@@ -3,7 +3,7 @@
     .rooms__header
       %h3 Public rooms
       .rooms__add-btn
-        = link_to '#' do
+        = link_to new_room_path(type: 'open') do
           %i.icofont-plus
 
     .rooms__list{ data: { behavior: 'react', type: 'open' } }
@@ -12,7 +12,7 @@
     .rooms__header
       %h3 Private rooms
       .rooms__add-btn
-        = link_to '#' do
+        = link_to new_room_path(type: 'closed') do
           %i.icofont-plus
     .rooms__list{ data: { behavior: 'react', type: 'closed' } }
 
@@ -20,7 +20,7 @@
     .rooms__header
       %h3 Direct messages
       .rooms__add-btn
-        = link_to '#' do
+        = link_to new_room_path(type: 'direct') do
           %i.icofont-plus
 
     .rooms__list{ data: { behavior: 'react', type: 'direct' } }
