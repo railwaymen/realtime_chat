@@ -31,6 +31,10 @@ window.initializeChat = initializeChat;
 import initializeRoomsList from '@/initializers/rooms_list';
 window.initializeRoomsList = initializeRoomsList;
 
+// RoomsJoin
+import initializeRoomsJoin from '@/initializers/rooms_join';
+window.initializeRoomsJoin = initializeRoomsJoin;
+
 // Chat
 import initializeUsersSelect from '@/initializers/users_select';
 window.initializeUsersSelect = initializeUsersSelect;

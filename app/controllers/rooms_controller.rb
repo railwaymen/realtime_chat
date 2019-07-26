@@ -8,6 +8,20 @@ class RoomsController < BaseController
 
   def index; end
 
+  def more
+    current_user_rooms = current_user.rooms_users.pluck(:room_id)
+    @rooms = Room.kept.open.where.not(id: current_user_rooms)
+  end
+
+  def join
+    room = Room.kept.open.find(params[:id])
+
+    RoomsUser.create!(user: current_user, room: room)
+    UserChannel.broadcast_to(current_user, data: room.serialized, type: :room_create)
+
+    head :ok
+  end
+
   def show
     @room = Room.kept.find(params[:id])
     authorize @room

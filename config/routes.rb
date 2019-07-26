@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   end
 
   resources :rooms do
+    get :more, on: :collection
+    put :join, on: :member
     post :update_activity, on: :member
   end
 

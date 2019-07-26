@@ -1,9 +1,10 @@
-.sidebar,
 .main-content {
-  height: calc(100vh - 40px);
+  height: calc(100vh - 4rem);
+  margin-top: 3rem;
 }
 
 .sidebar {
+  height: calc(100vh - 40px);
   position: fixed;
   top: 40px;
 }

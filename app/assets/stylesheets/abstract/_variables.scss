@@ -1,2 +1,28 @@
 $white: #FFF;
 $black: #000;
+
+$light-gray: #ddd;
+$gray: #aaa;
+$dark-gray: #666;
+
+$body-bg: #f3f3f3;
+
+$primary: #47A5ED;
+$secondary: #EB4A62;
+$success: #4EA44B;
+$info: #7EC6F2;
+$warning: #F59A30;
+$danger: #EF4535;
+$light: #FFFFFF;
+$dark: #333333;
+
+$theme-colors: (
+  primary: $primary,
+  secondary: $secondary,
+  success: $success,
+  info: $info,
+  warning: $warning,
+  danger: $danger,
+  light: $light,
+  dark: $dark
+);

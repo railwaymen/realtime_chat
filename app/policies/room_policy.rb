@@ -11,7 +11,7 @@ class RoomPolicy < ApplicationPolicy
 
     def resolve
       allowed_rooms_ids = user.rooms_users.pluck(:room_id)
-      scope.where("type = 'open' OR rooms.id IN (?)", allowed_rooms_ids)
+      scope.where("rooms.id IN (?)", allowed_rooms_ids)
     end
   end
 

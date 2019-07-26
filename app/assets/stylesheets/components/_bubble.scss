@@ -19,7 +19,7 @@
 
     .date {
       font-size: .8rem;
-      color: #888;
+      color: $gray;
     }
   }
 
@@ -41,20 +41,20 @@
 
   &--own {
     .bubble__body {
-      background-color: white;
+      background-color: $light;
 
       &::before {
-        border-color: white transparent transparent transparent;
+        border-color: $light transparent transparent transparent;
       }
     }
   }
 
   &--foreign {
     .bubble__body {
-      background-color: #7EC6F2;
+      background-color: $info;
 
       &::before {
-        border-color: #7EC6F2 transparent transparent transparent;
+        border-color: $info transparent transparent transparent;
       }
     }
   }
@@ -64,7 +64,7 @@
       width: 3rem;
       height: 3rem;
       border-radius: 50%;
-      background: #888;
+      background: $gray;
     }
   }
 }

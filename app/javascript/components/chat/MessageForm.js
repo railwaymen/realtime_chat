@@ -154,7 +154,7 @@ class MessageForm extends Component {
                 <button
                   type="button"
                   onClick={this.handleAttachmentButton}
-                  className="btn btn-secondary"
+                  className="btn btn-dark"
                 >
                   <i className="icofont-attachment icofont-2x" />
                 </button>

@@ -16,7 +16,7 @@
 
     blockquote {
       padding: .5rem 1.5rem;
-      background-color: #fafafa;
+      background-color: $light-gray;
     }
 
     ul, ol {
@@ -26,7 +26,7 @@
     .message__edited {
       padding-left: .5rem;
       font-size: .75rem;
-      color: #666;
+      color: $gray;
     }
 
     .message__actions {
