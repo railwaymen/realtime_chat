@@ -6,6 +6,8 @@ class RoomsController < BaseController
   before_action :fetch_rooms
   before_action :fetch_users, only: %i[new create edit update]
 
+  def video; end
+
   def index; end
 
   def show

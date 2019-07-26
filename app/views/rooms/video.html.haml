@@ -1,0 +1,40 @@
+:css
+  #outgoing {
+    width: 600px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+%form
+  %textarea#incoming
+  %button.btn.btn-primary{ type: :submit } OK
+%video{ width: 320, height: 240 }
+%pre#outgoing
+  VIDEO TEST
+%script{ src: 'https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.4.0/simplepeer.min.js' }
+:javascript
+  document.addEventListener('DOMContentLoaded', function() {
+    navigator.getUserMedia({ video: true, audio: true }, (stream) => {
+      const p = new SimplePeer({ initiator: location.hash === '#1', stream: stream, trickle: false })
+
+      p.on('error', err => console.log('error', err))
+
+      p.on('signal', data => {
+        console.log('SIGNAL', JSON.stringify(data))
+        document.querySelector('#outgoing').textContent = JSON.stringify(data)
+      })
+
+      document.querySelector('form').addEventListener('submit', ev => {
+        ev.preventDefault()
+        p.signal(JSON.parse(document.querySelector('#incoming').value))
+      })
+
+      p.on('stream', stream => {
+        // got remote video stream, now let's show it in a video tag
+        var video = document.querySelector('video')
+
+        video.srcObject = stream
+
+        video.play()
+      })
+    }, () => {})
+  });

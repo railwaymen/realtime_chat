@@ -23,7 +23,8 @@
     "rails-ujs": "^5.2.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-select": "^3.0.4"
+    "react-select": "^3.0.4",
+    "simple-peer": "^9.4.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

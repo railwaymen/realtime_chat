@@ -19,4 +19,18 @@ class RoomChannel < ApplicationCable::Channel
       }
     )
   end
+
+  def video(data)
+    @room = Room.kept.find data['room_id']
+
+    RoomChannel.broadcast_to(
+      @room,
+      message: :video,
+      data: data['data'],
+      user: {
+        id: current_user.id,
+        username: current_user.username
+      }
+    )
+  end
 end

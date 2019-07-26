@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   resources :rooms do
     post :update_activity, on: :member
+    get :video, on: :collection
   end
 
   namespace :api, defaults: { format: :json } do
