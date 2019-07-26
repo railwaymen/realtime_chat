@@ -22,6 +22,15 @@ class RoomsController < BaseController
     head :ok
   end
 
+  def leave
+    rooms_user = RoomsUser.includes(:room).find_by(user: current_user, room_id: params[:id])
+    authorize rooms_user.room
+
+    rooms_user.destroy!
+
+    redirect_to rooms_path, notice: "You have left #{rooms_user.room.name} room!"
+  end
+
   def show
     @room = Room.kept.find(params[:id])
     authorize @room

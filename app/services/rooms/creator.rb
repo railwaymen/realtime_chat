@@ -24,7 +24,13 @@ module Rooms
 
     def create_room
       assign_room_name if @room_params[:type] == 'direct'
-      @room = @user.rooms.create(@room_params)
+      @room = @user.rooms.find_by(name: @room_params['name'])
+
+      if @room.present?
+        @user_ids = [@user.id]
+      else
+        @user.rooms.create(@room_params)
+      end
     end
 
     def assign_room_name

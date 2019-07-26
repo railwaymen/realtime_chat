@@ -15,8 +15,12 @@ class RoomPolicy < ApplicationPolicy
     end
   end
 
+  def leave?
+    !(record.closed? && record.user_id == user.id)
+  end
+
   def show?
-    record.open? || record.rooms_users.where(user_id: user.id).exists?
+    record.rooms_users.where(user_id: user.id).exists?
   end
 
   def update?

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :rooms do
     get :more, on: :collection
     put :join, on: :member
+    put :leave, on: :member
     post :update_activity, on: :member
   end
 

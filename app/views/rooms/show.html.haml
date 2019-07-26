@@ -8,8 +8,11 @@
         %h2= @room.name
 
     .room__actions
-      - if @room.user_id == current_user.id
-        %ul
+      %ul
+        - if policy(@room).leave?
+          %li.action__item
+            = button_to 'Leave room', leave_room_path(@room), method: :put, class: ' btn btn-sm btn-outline-dark'
+        - if @room.user_id == current_user.id
           %li.action__item
             = link_to 'Edit room', edit_room_path(@room), class: 'btn btn-sm btn-outline-primary'
           %li.action__item
