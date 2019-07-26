@@ -11,9 +11,7 @@ module Api
         room.discarded?
       end
 
-      association :participants, blueprint: Api::V1::UserSerializer do |room, _options|
-        room.users
-      end
+      association :users, name: :participants, blueprint: Api::V1::UserSerializer
 
       field :room_path do |room, _options|
         Rails.application.routes.url_helpers.room_path(room)

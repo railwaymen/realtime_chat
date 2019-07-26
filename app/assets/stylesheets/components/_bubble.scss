@@ -1,0 +1,70 @@
+.bubble {
+  margin: 3rem .5rem 3rem 2rem;
+  position: relative;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &__header {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    transform: translate(-1.5rem, -2.5rem);
+
+    .username {
+      margin: 0 1rem;
+      font-weight: bold;
+    }
+
+    .date {
+      font-size: .8rem;
+      color: #888;
+    }
+  }
+
+  &__body {
+    padding: .5rem;
+    border-radius: .5rem;
+    margin-left: 2.5rem;
+
+    &::before {
+      content: ' ';
+      position: absolute;
+      width: 0;
+      height: 0;
+      top: 0;
+      left: 1.5rem;
+      border: 1rem solid;
+    }
+  }
+
+  &--own {
+    .bubble__body {
+      background-color: white;
+
+      &::before {
+        border-color: white transparent transparent transparent;
+      }
+    }
+  }
+
+  &--foreign {
+    .bubble__body {
+      background-color: #7EC6F2;
+
+      &::before {
+        border-color: #7EC6F2 transparent transparent transparent;
+      }
+    }
+  }
+
+  .avatar {
+    &__placeholder {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: #888;
+    }
+  }
+}
