@@ -14,7 +14,8 @@ RSpec.describe Api::V1::RoomsUsersController, type: :controller do
       user: {
         id: rooms_user.user.id,
         username: rooms_user.user.username,
-        email: rooms_user.user.email
+        email: rooms_user.user.email,
+        avatar_url: rooms_user.user.avatar.thumb.url
       }
     }
   end

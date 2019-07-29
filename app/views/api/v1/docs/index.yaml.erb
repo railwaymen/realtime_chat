@@ -94,6 +94,34 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
+    put:
+      tags:
+        - Users
+      security:
+        - User: []
+      parameters:
+        - in: formData
+          name: avatar
+          type: file
+          description: The image to upload.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        422:
+          description: Validation error
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+            example:
+              errors:
+                file:
+                  - error: "You are not allowed to upload \"mp4\" files, allowed types: jpg, jpeg, gif, png"
+                  - error: "File size should be less than 5 MB"
+
   /users/profile:
     get:
       tags:
@@ -122,6 +150,9 @@ paths:
                 example:
                   1: "2019-07-02T10:21:54Z"
                   2: "2019-07-02T09:45:30Z"
+              avatar_url:
+                type: string
+                example: /uploads/user/avatar/1/thumb_user.jpg
   /rooms:
     get:
       description: |
@@ -575,6 +606,9 @@ definitions:
       email:
         type: string
         example: user1@example.com
+      avatar_url:
+        type: string
+        example: /uploads/user/avatar/1/thumb_user.jpg
 
   Attachment:
     type: object

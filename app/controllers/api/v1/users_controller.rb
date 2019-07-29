@@ -13,6 +13,20 @@ module Api
       def profile
         render json: Api::V1::CurrentUserSerializer.render_as_hash(current_user), status: 200
       end
+
+      def update
+        if current_user.update(message_params)
+          render json: current_user.serialized, status: 200
+        else
+          render json: Api::V1::ErrorSerializer.render_as_hash(current_user), status: 422
+        end
+      end
+
+      private
+
+      def message_params
+        params.permit(:avatar)
+      end
     end
   end
 end

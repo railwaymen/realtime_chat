@@ -39,7 +39,7 @@ RSpec.describe Rooms::Creator do
 
   describe '#assign_room_name' do
     it 'assigns commect room name' do
-      Rooms::Creator.any_instance.stub(:broadcast_room_message)
+      allow_any_instance_of(Rooms::Creator).to receive(:broadcast_room_message)
 
       participant = create :user
       room = Rooms::Creator.new(

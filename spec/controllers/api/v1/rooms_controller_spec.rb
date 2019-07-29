@@ -15,7 +15,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       user_id: room.user_id,
       type: room.type,
       last_message_at: nil,
-      participants: room.users.map { |u| u.slice(:email, :id, :username) },
+      participants: room.users.map { |u| u.slice(:email, :id, :username).merge(avatar_url: u.avatar.thumb.url) },
       room_path: room_path(room)
     }
   end

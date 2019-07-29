@@ -9,6 +9,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  mount_uploader :avatar, AvatarUploader
+
   has_many :rooms
   has_many :rooms_users
   has_many :messages, class_name: 'RoomMessage'
@@ -29,5 +31,9 @@ class User < ApplicationRecord
   def update_room_activity(room)
     rooms_activity[room.id] = Time.current.to_s
     save
+  end
+
+  def serialized
+    Api::V1::UserSerializer.render_as_hash(self)
   end
 end
