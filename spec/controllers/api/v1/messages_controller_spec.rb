@@ -17,7 +17,8 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       user: {
         id: message.user.id,
         username: message.user.username,
-        email: message.user.email
+        email: message.user.email,
+        avatar_url: message.user.avatar.thumb.url
       },
       attachments: []
     }

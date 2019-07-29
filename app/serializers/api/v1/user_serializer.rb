@@ -6,6 +6,10 @@ module Api
       identifier :id
 
       fields :username, :email
+
+      field :avatar_url do |user, _options|
+        user.avatar.thumb.url
+      end
     end
   end
 end

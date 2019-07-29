@@ -15,7 +15,9 @@ const MessagesBubble = (props) => {
     <div className={classes.join(' ')}>
       <div className="bubble__header">
         <div className="avatar">
-          <div className="avatar__placeholder" />
+          <div className="avatar__placeholder">
+            <img className="avatar__placeholder rounded-circle" src={firstMessage.user.avatar_url} alt="User avatar" />
+          </div>
         </div>
 
         <div className="bubble__info">

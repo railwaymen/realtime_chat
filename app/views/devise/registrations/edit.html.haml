@@ -1,0 +1,22 @@
+%body
+  .container
+    .row
+      %h4 Change Avatar
+    .row
+      = form_for(resource, as: resource_name,
+                           url: registration_path(resource_name),
+                           multipart: true,
+                           html: { method: :put }) do |f|
+        - if resource.avatar.present?
+          %img.rounded-circle{ src: resource.avatar.thumb.url, alt: 'User avatar'}
+
+        .form-group
+          - if resource.errors[:avatar].present?
+            = f.file_field :avatar, class: 'form-control-file is-invalid', accept: '.jpg,.jpeg,.gif,.png'
+            .invalid-feedback
+              = resource.errors[:avatar].first.capitalize
+          - else
+            = f.file_field :avatar, class: 'form-control-file', accept: '.jpg,.jpeg,.gif,.png'
+
+          %small.form-text.text-muted JPEG, PNG, GIF, or BMP • 10 MB file limit • recommend 100x100px
+        = f.submit 'Save', class: 'btn btn-primary'

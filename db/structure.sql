@@ -212,7 +212,8 @@ CREATE TABLE public.users (
     updated_at timestamp without time zone NOT NULL,
     authentication_token character varying,
     refresh_token character varying,
-    rooms_activity jsonb DEFAULT '{}'::jsonb NOT NULL
+    rooms_activity jsonb DEFAULT '{}'::jsonb NOT NULL,
+    avatar character varying
 );
 
 
@@ -492,6 +493,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190705070039'),
 ('20190705085446'),
 ('20190711085013'),
-('20190722151153');
+('20190722151153'),
+('20190722160221');
 
 

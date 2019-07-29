@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, path: 'users', controllers: { registrations: 'registrations' }
 
   resources :attachments, only: %i[create destroy]
 
@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       resources :docs, only: %i[index]
       resources :users, only: %i[index] do
         get :profile, on: :collection
+        put :update, on: :collection
       end
       resources :attachments, only: %i[create destroy]
     end
