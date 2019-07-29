@@ -52,6 +52,16 @@ module Api
         head :no_content
       end
 
+      def search
+        @messages = policy_scope(RoomMessage).kept
+                                             .includes(:user, :attachments)
+                                             .where('body ILIKE ?', "%#{params.require(:phrase)}%")
+                                             .order(id: :desc)
+                                             .limit(MESSAGES_LIMIT)
+        @messages = @messages.where('id < ?', params[:last_id]) if params[:last_id].present?
+        render json: Api::V1::MessageSerializer.render(@messages.reverse), status: 200
+      end
+
       private
 
       def room

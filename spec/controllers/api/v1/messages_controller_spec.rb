@@ -156,4 +156,34 @@ RSpec.describe Api::V1::MessagesController, type: :controller do
       end
     end
   end
+
+  describe '#search' do
+    context 'unauthorized' do
+      it 'expects to respond with error' do
+        get :search, params: { phrase: 'test' }, as: :json
+        expect(response).to have_http_status 401
+      end
+    end
+
+    context 'authorized' do
+      before(:each) do
+        create(:rooms_user, room: room, user: user)
+        sign_in user
+      end
+
+      it 'expects to find messages with phrase' do
+        message = create(:room_message, user: user, room: room, body: 'test test')
+
+        get :search, params: { phrase: 'test' }, as: :json
+        expect_api_response([expected_response(message)].to_json)
+      end
+
+      it 'expects to respond with empty array' do
+        create(:room_message, user: user, room: room, body: 'some text')
+
+        get :search, params: { phrase: 'test' }, as: :json
+        expect_api_response([].to_json)
+      end
+    end
+  end
 end

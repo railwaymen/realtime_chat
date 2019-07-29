@@ -404,6 +404,28 @@ paths:
       responses:
         204:
           description: No Content
+  /messages/search:
+    get:
+      tags:
+        - Messages
+      security:
+        - User: []
+      parameters:
+        - in: query
+          name: phrase
+          type: string
+          required: true
+        - in: query
+          name: last_id
+          type: string
+          required: false
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Message'
   /rooms/{room_id}/rooms_users:
     get:
       tags:

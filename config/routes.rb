@@ -15,6 +15,9 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
+      resources :messages, only: [] do
+        get :search, on: :collection
+      end
       resources :rooms, only: %i[index show create update destroy] do
         resources :messages, shallow: true
         resources :rooms_users, only: %i[index create destroy], shallow: true

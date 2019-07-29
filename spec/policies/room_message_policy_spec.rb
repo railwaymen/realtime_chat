@@ -37,4 +37,18 @@ describe RoomMessagePolicy do
       expect(subject).to_not permit(user, message)
     end
   end
+
+  describe RoomMessagePolicy::Scope do
+    it 'returns accessible messages' do
+      closed_room1 = create(:room, type: :closed)
+      closed_room2 = create(:room, type: :closed)
+      create(:rooms_user, room: closed_room1, user: user)
+
+      message1 = create(:room_message, room: closed_room1)
+      create(:room_message, room: closed_room2)
+
+      messages = RoomMessagePolicy::Scope.new(user, RoomMessage).resolve
+      expect(messages).to contain_exactly(message1)
+    end
+  end
 end
