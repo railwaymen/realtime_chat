@@ -27,7 +27,7 @@ set :repo_url, 'https://github.com/railwaymen/realtime_chat.git'
 # Default value for :pty is false
 # set :pty, true
 
-set :linked_files, %w[Procfile.staging.options .env config/master.key config/database.yml]
+set :linked_files, %w[.env config/master.key config/database.yml]
 set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets vendor/bundle public/images]
 
 # Default value for default_env is {}
