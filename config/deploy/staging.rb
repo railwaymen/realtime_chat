@@ -10,9 +10,8 @@ namespace :deploy do
   after :db, :migrate do
     on roles(:app) do
       within release_path do
-        with rails_env: fetch(:rails_env) do
-          execute :bundle, :exec, 'procodile restart --procfile Procfile.staging'
-        end
+        execute 'systemctl --user restart rpc'
+        execute 'systemctl --user restart ws'
       end
     end
   end
