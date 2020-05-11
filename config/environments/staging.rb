@@ -24,7 +24,7 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-  config.action_cable.url = "ws://#{ENV['WEBSOCKET_HOST']}:#{ENV['WEBSOCKET_PORT']}/cable"
+  config.action_cable.url = ENV['WEBSOCKET_URL']
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = Uglifier.new(harmony: true)
